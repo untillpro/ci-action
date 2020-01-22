@@ -11,7 +11,11 @@
     "type": "git",
     "url": "git+https://github.com/untillpro/ci-action.git"
   },
-  "keywords": [],
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "CI"
+  ],
   "author": "unTill Pro",
   "license": "MIT",
   "bugs": {
