@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/untillpro/ci-action/issues"
   },
-  "homepage": "https://github.com/untillpro/ci-action#readme"
+  "homepage": "https://github.com/untillpro/ci-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.1",
+    "@actions/github": "^2.0.1"
+  }
 }
