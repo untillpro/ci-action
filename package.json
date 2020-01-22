@@ -4,6 +4,7 @@
   "description": "Continious Integration action for go- and node- projects",
   "main": "index.js",
   "scripts": {
+    "package": "ncc build index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,5 +21,8 @@
   "dependencies": {
     "@actions/core": "^1.2.1",
     "@actions/github": "^2.0.1"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.21.0"
   }
 }
