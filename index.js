@@ -7,8 +7,13 @@
  */
 const core = require('@actions/core')
 const github = require('@actions/github')
+const rejectHiddenFolders = require('./rejectHiddenFolders')
 
 try {
+	const expectedHiddenFolders = core.getInput('expectedHiddenFolders')
+	core.debug((new Date()).toTimeString())
+	console.log('Reject ".*" folders')
+	rejectHiddenFolders(expectedHiddenFolders)
 	core.debug((new Date()).toTimeString())
 	// Get the JSON webhook payload for the event that triggered the workflow
 	const payload = JSON.stringify(github.context.payload, undefined, 2)
