@@ -4,8 +4,9 @@
   "description": "Continious Integration action for go- and node- projects",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint index.js",
     "package": "ncc build index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "eslint index.js && jest"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,8 @@
     "@actions/github": "^2.0.1"
   },
   "devDependencies": {
-    "@zeit/ncc": "^0.21.0"
+    "@zeit/ncc": "^0.21.0",
+    "eslint": "^6.8.0",
+    "jest": "^25.1.0"
   }
 }

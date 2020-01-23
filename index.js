@@ -8,12 +8,16 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
 const rejectHiddenFolders = require('./rejectHiddenFolders')
+const checkSources = require('./checkSources')
 
 try {
 	const expectedHiddenFolders = core.getInput('expectedHiddenFolders')
 	core.debug((new Date()).toTimeString())
 	console.log('Reject ".*" folders')
 	rejectHiddenFolders(expectedHiddenFolders)
+	core.debug((new Date()).toTimeString())
+	console.log('Reject sources which do not have "Copyright" word in first comment')
+	checkSources.rejectSourcesWithoutCopyright()
 	core.debug((new Date()).toTimeString())
 	// Get the JSON webhook payload for the event that triggered the workflow
 	const payload = JSON.stringify(github.context.payload, undefined, 2)

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd. and Contributors
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
 const { readdirSync } = require('fs')
 
 const getSubFolders = source =>
@@ -6,7 +13,7 @@ const getSubFolders = source =>
 		.map(dirent => dirent.name)
 
 let rejectHiddenFolders = function (expectedHiddenFolders) {
-	var expectedHiddenFoldersArray = expectedHiddenFolders.split(',')
+	let expectedHiddenFoldersArray = expectedHiddenFolders.split(',')
 	getSubFolders(".").forEach(folder => {
 		if (folder.charAt(0) == '.' && folder != ".git" && folder != ".github") {
 			if (!expectedHiddenFoldersArray.includes(folder))
