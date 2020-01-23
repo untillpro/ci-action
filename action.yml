@@ -2,8 +2,11 @@ name: 'ci-action'
 description: 'Continious Integration action for go- and node- projects'
 inputs:
   expectedHiddenFolders:
-    description: Expected hidden folders
+    description: Expected hidden folders (comma separated)
     required: false
-runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  ignore:
+    description: Folders and files that will be ignored when checking (comma separated)
+    required: false
+  runs:
+    using: 'node12'
+    main: 'dist/index.js'

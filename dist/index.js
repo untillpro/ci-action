@@ -504,12 +504,22 @@ module.exports = require("os");
 const core = __webpack_require__(470)
 const github = __webpack_require__(469)
 const rejectHiddenFolders = __webpack_require__(424)
+const checkSources = __webpack_require__(886)
+
+const getInputAsArray = function(name) {
+	let input = core.getInput(name)
+	return !input ? [] : input.split(',')
+}
 
 try {
-	const expectedHiddenFolders = core.getInput('expectedHiddenFolders')
+	const expectedHiddenFolders = getInputAsArray('expectedHiddenFolders')
+	const ignore = getInputAsArray('ignore')
 	core.debug((new Date()).toTimeString())
 	console.log('Reject ".*" folders')
 	rejectHiddenFolders(expectedHiddenFolders)
+	core.debug((new Date()).toTimeString())
+	console.log('Reject sources which do not have "Copyright" word in first comment')
+	checkSources.rejectSourcesWithoutCopyright(ignore)
 	core.debug((new Date()).toTimeString())
 	// Get the JSON webhook payload for the event that triggered the workflow
 	const payload = JSON.stringify(github.context.payload, undefined, 2)
@@ -4635,6 +4645,13 @@ module.exports = require("stream");
 /***/ 424:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd. and Contributors
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
 const { readdirSync } = __webpack_require__(747)
 
 const getSubFolders = source =>
@@ -4643,10 +4660,9 @@ const getSubFolders = source =>
 		.map(dirent => dirent.name)
 
 let rejectHiddenFolders = function (expectedHiddenFolders) {
-	var expectedHiddenFoldersArray = expectedHiddenFolders.split(',')
 	getSubFolders(".").forEach(folder => {
 		if (folder.charAt(0) == '.' && folder != ".git" && folder != ".github") {
-			if (!expectedHiddenFoldersArray.includes(folder))
+			if (!expectedHiddenFolders.includes(folder))
 				throw new Error(`Unexpected hidden folder: "${folder}"`)
 		}
 	})
@@ -10402,6 +10418,60 @@ function set(object, path, value) {
 }
 
 module.exports = set;
+
+
+/***/ }),
+
+/***/ 886:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd. and Contributors
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+const fs = __webpack_require__(747)
+const path = __webpack_require__(622)
+
+const getSourceFiles = function (dir, ignore, files_) {
+	files_ = files_ || []
+	let files = fs.readdirSync(dir)
+	for (let i in files) {
+		let fileName = files[i]
+		if (fileName.charAt(0) === '.') continue
+		let filePath = path.join(dir, fileName)
+		if (ignore.includes(filePath) || ignore.includes(filePath.replace(/\\/g, '/'))) continue
+		if (fs.statSync(filePath).isDirectory()) {
+			getSourceFiles(filePath, ignore, files_)
+		} else {
+			if (['.go', '.js'].includes(path.extname(fileName)))
+				files_.push(filePath)
+		}
+	}
+	return files_
+}
+
+const getFirstComment = function (file) {
+	let content = fs.readFileSync(file, 'utf8')
+	let m = content.match(/^(\s|\/\/[^\n]*\n|\/\*([^*]|\*(?!\/))*\*\/)*/)
+	return m !== null && m.length > 0 ? m[0] : null
+}
+
+const rejectSourcesWithoutCopyright = function (ignore) {
+	let sourceFiles = getSourceFiles('.', ignore)
+	sourceFiles.forEach(file => {
+		let firstComment = getFirstComment(file)
+		if (firstComment === null || !firstComment.includes("Copyright"))
+			throw new Error(`Missing Copyright in first comment in file: "${file}"`)
+	})
+}
+
+module.exports = {
+	getSourceFiles,
+	rejectSourcesWithoutCopyright
+}
 
 
 /***/ }),

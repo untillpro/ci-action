@@ -8,17 +8,19 @@
 const fs = require('fs')
 const path = require('path')
 
-const getSourceFiles = function (dir, files_) {
+const getSourceFiles = function (dir, ignore, files_) {
 	files_ = files_ || []
 	let files = fs.readdirSync(dir)
 	for (let i in files) {
-		let name = dir + '/' + files[i]
-		if (fs.statSync(name).isDirectory()) {
-			if (name.charAt(0) !== '.')
-				getFiles(name, files_)
+		let fileName = files[i]
+		if (fileName.charAt(0) === '.') continue
+		let filePath = path.join(dir, fileName)
+		if (ignore.includes(filePath) || ignore.includes(filePath.replace(/\\/g, '/'))) continue
+		if (fs.statSync(filePath).isDirectory()) {
+			getSourceFiles(filePath, ignore, files_)
 		} else {
-			if (['.go', '.js'].includes(path.extname(name)))
-				files_.push(name)
+			if (['.go', '.js'].includes(path.extname(fileName)))
+				files_.push(filePath)
 		}
 	}
 	return files_
@@ -30,8 +32,8 @@ const getFirstComment = function (file) {
 	return m !== null && m.length > 0 ? m[0] : null
 }
 
-const rejectSourcesWithoutCopyright = function () {
-	let sourceFiles = getSourceFiles('.')
+const rejectSourcesWithoutCopyright = function (ignore) {
+	let sourceFiles = getSourceFiles('.', ignore)
 	sourceFiles.forEach(file => {
 		let firstComment = getFirstComment(file)
 		if (firstComment === null || !firstComment.includes("Copyright"))

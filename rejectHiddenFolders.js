@@ -13,10 +13,9 @@ const getSubFolders = source =>
 		.map(dirent => dirent.name)
 
 let rejectHiddenFolders = function (expectedHiddenFolders) {
-	let expectedHiddenFoldersArray = expectedHiddenFolders.split(',')
 	getSubFolders(".").forEach(folder => {
 		if (folder.charAt(0) == '.' && folder != ".git" && folder != ".github") {
-			if (!expectedHiddenFoldersArray.includes(folder))
+			if (!expectedHiddenFolders.includes(folder))
 				throw new Error(`Unexpected hidden folder: "${folder}"`)
 		}
 	})

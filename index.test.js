@@ -10,10 +10,10 @@ const path = require('path')
 const checkSources = require('./checkSources')
 
 test('test runs', () => {
-    const ip = path.join(__dirname, 'index.js')
-    console.log(cp.execSync(`node ${ip}`).toString())
+	const ip = path.join(__dirname, 'index.js')
+	console.log(cp.execSync(`node ${ip}`, { env: { 'INPUT_IGNORE': 'dist,node_modules' } }).toString())
 })
 
 test('test checkSources', () => {
-	console.log(checkSources.rejectSourcesWithoutCopyright())
+	checkSources.rejectSourcesWithoutCopyright(['dist', 'node_modules'])
 })
