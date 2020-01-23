@@ -7,6 +7,6 @@ inputs:
   ignore:
     description: Folders and files that will be ignored when checking (comma separated)
     required: false
-  runs:
-    using: 'node12'
-    main: 'dist/index.js'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
