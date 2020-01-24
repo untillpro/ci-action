@@ -69,9 +69,7 @@ async function run() {
 		}
 
 	} catch (error) {
-		if (error.name === 'warning') {
-			console.warn(error.message)
-		} else {
+		if (error.name !== 'warning') {
 			console.error(error)
 		}
 		core.setFailed(error.message)
