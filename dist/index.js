@@ -505,29 +505,54 @@ const core = __webpack_require__(470)
 const github = __webpack_require__(469)
 const rejectHiddenFolders = __webpack_require__(424)
 const checkSources = __webpack_require__(886)
+const util = __webpack_require__(669)
+const exec = util.promisify(__webpack_require__(129).exec)
 
-const getInputAsArray = function(name) {
+async function execute(command) {
+	console.log(`$ ${command}`)
+	const { stdout, stderr } = await exec(command)
+	if (stdout) console.log(stdout)
+	if (stderr) console.log(stderr)
+}
+
+const getInputAsArray = function (name) {
 	let input = core.getInput(name)
 	return !input ? [] : input.split(',')
 }
+async function run() {
+	try {
+		const expectedHiddenFolders = getInputAsArray('expectedHiddenFolders')
+		const ignore = getInputAsArray('ignore')
+		core.debug((new Date()).toTimeString())
+		console.log('Reject ".*" folders')
+		rejectHiddenFolders(expectedHiddenFolders)
+		core.debug((new Date()).toTimeString())
+		console.log('Reject sources which do not have "Copyright" word in first comment')
+		checkSources.rejectSourcesWithoutCopyright(ignore)
+		core.debug((new Date()).toTimeString())
+		// Get the JSON webhook payload for the event that triggered the workflow
+		const payload = JSON.stringify(github.context.payload, undefined, 2)
+		console.log(`The event payload: ${payload}`)
+		core.debug((new Date()).toTimeString())
 
-try {
-	const expectedHiddenFolders = getInputAsArray('expectedHiddenFolders')
-	const ignore = getInputAsArray('ignore')
-	core.debug((new Date()).toTimeString())
-	console.log('Reject ".*" folders')
-	rejectHiddenFolders(expectedHiddenFolders)
-	core.debug((new Date()).toTimeString())
-	console.log('Reject sources which do not have "Copyright" word in first comment')
-	checkSources.rejectSourcesWithoutCopyright(ignore)
-	core.debug((new Date()).toTimeString())
-	// Get the JSON webhook payload for the event that triggered the workflow
-	const payload = JSON.stringify(github.context.payload, undefined, 2)
-	console.log(`The event payload: ${payload}`)
-	core.debug((new Date()).toTimeString())
-} catch (error) {
-	core.setFailed(error.message)
+		let language = checkSources.detectLanguage()
+		if (language === "go") {
+			core.debug('Go project detected')
+			process.env.GOPRIVATE = (process.env.GOPRIVATE ? process.env.GOPRIVATE + ',' : '') + 'github.com/untillpro'
+			if (process.env.GITHUB_TOKEN) {
+				await execute(`git config --global url."https://${process.env.GITHUB_TOKEN}:x-oauth-basic@github.com/untillpro".insteadOf "https://github.com/untillpro"`)
+			}
+			await execute('go build ./...')
+			await execute('go test ./...')
+		}
+
+	} catch (error) {
+		console.error(error);
+		core.setFailed(error.message)
+	}
 }
+
+run()
 
 
 /***/ }),
@@ -10436,6 +10461,7 @@ const fs = __webpack_require__(747)
 const path = __webpack_require__(622)
 
 const getSourceFiles = function (dir, ignore, files_) {
+	ignore = ignore || []
 	files_ = files_ || []
 	let files = fs.readdirSync(dir)
 	for (let i in files) {
@@ -10451,6 +10477,18 @@ const getSourceFiles = function (dir, ignore, files_) {
 		}
 	}
 	return files_
+}
+
+const detectLanguage = function (ignore) {
+	let sourceFiles = getSourceFiles('.', ignore)
+	if (fs.existsSync('go.mod')) return "go"
+	sourceFiles.forEach(file => {
+		if (path.extname(file) === ".go") return "go"
+	})
+	sourceFiles.forEach(file => {
+		if (path.extname(file) === ".js") return "js"
+	})
+	return "unknown"
 }
 
 const getFirstComment = function (file) {
@@ -10470,6 +10508,7 @@ const rejectSourcesWithoutCopyright = function (ignore) {
 
 module.exports = {
 	getSourceFiles,
+	detectLanguage,
 	rejectSourcesWithoutCopyright
 }
 

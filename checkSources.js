@@ -9,6 +9,7 @@ const fs = require('fs')
 const path = require('path')
 
 const getSourceFiles = function (dir, ignore, files_) {
+	ignore = ignore || []
 	files_ = files_ || []
 	let files = fs.readdirSync(dir)
 	for (let i in files) {
@@ -24,6 +25,18 @@ const getSourceFiles = function (dir, ignore, files_) {
 		}
 	}
 	return files_
+}
+
+const detectLanguage = function (ignore) {
+	let sourceFiles = getSourceFiles('.', ignore)
+	if (fs.existsSync('go.mod')) return "go"
+	sourceFiles.forEach(file => {
+		if (path.extname(file) === ".go") return "go"
+	})
+	sourceFiles.forEach(file => {
+		if (path.extname(file) === ".js") return "js"
+	})
+	return "unknown"
 }
 
 const getFirstComment = function (file) {
@@ -43,5 +56,6 @@ const rejectSourcesWithoutCopyright = function (ignore) {
 
 module.exports = {
 	getSourceFiles,
+	detectLanguage,
 	rejectSourcesWithoutCopyright
 }
