@@ -30,13 +30,17 @@ async function run() {
 		const ignore = getInputAsArray('ignore')
 
 		let branchName = github.context.ref
-		if (branchName.indexOf('refs/heads/') > -1)
+		if (branchName && branchName.indexOf('refs/heads/') > -1)
 			branchName = branchName.slice('refs/heads/'.length)
 
-		console.log('Reject ".*" folders')
+		// Reject commits to master
+		if (branchName === 'master')
+			throw { name: 'warning', message: 'Unexpected commit to master branch'}
+
+		// Reject ".*" folders
 		rejectHiddenFolders(expectedHiddenFolders)
 
-		console.log('Reject sources which do not have "Copyright" word in first comment')
+		// Reject sources which do not have "Copyright" word in first comment
 		checkSources.rejectSourcesWithoutCopyright(ignore)
 
 		// Get the JSON webhook context
@@ -54,17 +58,22 @@ async function run() {
 			await execute('go test ./...')
 		}
 
+		// Automatically merge from develop to master
 		if (branchName === 'develop') {
 			core.info('Merge to master')
 			await execute(`git fetch --unshallow`)
 			await execute(`git fetch origin master`)
 			await execute(`git checkout master`)
 			await execute(`git merge ${github.context.sha}`)
-			await execute(`git push 2>&1`)
+			await execute(`git push`)
 		}
 
 	} catch (error) {
-		console.error(error);
+		if (error.name === 'warning') {
+			console.warn(error.message)
+		} else {
+			console.error(error)
+		}
 		core.setFailed(error.message)
 	}
 }

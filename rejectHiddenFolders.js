@@ -16,7 +16,7 @@ let rejectHiddenFolders = function (expectedHiddenFolders) {
 	getSubFolders(".").forEach(folder => {
 		if (folder.charAt(0) == '.' && folder != ".git" && folder != ".github") {
 			if (!expectedHiddenFolders.includes(folder))
-				throw new Error(`Unexpected hidden folder: "${folder}"`)
+				throw { name: 'warning', message: `Unexpected hidden folder: "${folder}"` }
 		}
 	})
 }

@@ -50,7 +50,7 @@ const rejectSourcesWithoutCopyright = function (ignore) {
 	sourceFiles.forEach(file => {
 		let firstComment = getFirstComment(file)
 		if (firstComment === null || !firstComment.includes("Copyright"))
-			throw new Error(`Missing Copyright in first comment in file: "${file}"`)
+			throw { name: 'warning', message: `Missing Copyright in first comment in file: "${file}"` }
 	})
 }
 
