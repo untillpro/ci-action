@@ -529,19 +529,15 @@ async function run() {
 		if (branchName.indexOf('refs/heads/') > -1)
 			branchName = branchName.slice('refs/heads/'.length)
 
-		core.debug((new Date()).toTimeString())
 		console.log('Reject ".*" folders')
 		rejectHiddenFolders(expectedHiddenFolders)
-		core.debug((new Date()).toTimeString())
+
 		console.log('Reject sources which do not have "Copyright" word in first comment')
 		checkSources.rejectSourcesWithoutCopyright(ignore)
-		core.debug((new Date()).toTimeString())
-		// Get the JSON webhook payload for the event that triggered the workflow
-		const payload = JSON.stringify(github.context.payload, undefined, 2)
-		console.log(`The event payload: ${payload}`)
-		core.debug((new Date()).toTimeString())
-		const github_json = JSON.stringify(github, undefined, 2)
-		console.log(`The event github_json: ${github_json}`)
+
+		// Get the JSON webhook context
+		const context = JSON.stringify(github.context, undefined, 2)
+		console.log(`The event context: ${context}`)
 
 		let language = checkSources.detectLanguage()
 		if (language === "go") {
@@ -556,9 +552,10 @@ async function run() {
 
 		if (branchName === 'develop') {
 			core.info('Merge to master')
+			await execute(`git fetch --unshallow`)
 			await execute(`git fetch origin master`)
 			await execute(`git checkout master`)
-			await execute(`git merge ${github.sha}`)
+			await execute(`git merge ${github.context.sha}`)
 			await execute(`git push 2>&1`)
 		}
 
