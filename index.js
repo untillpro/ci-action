@@ -23,10 +23,16 @@ const getInputAsArray = function (name) {
 	let input = core.getInput(name)
 	return !input ? [] : input.split(',')
 }
+
 async function run() {
 	try {
 		const expectedHiddenFolders = getInputAsArray('expectedHiddenFolders')
 		const ignore = getInputAsArray('ignore')
+
+		let branchName = github.context.ref
+		if (branchName.indexOf('refs/heads/') > -1)
+			branchName = branchName.slice('refs/heads/'.length)
+
 		core.debug((new Date()).toTimeString())
 		console.log('Reject ".*" folders')
 		rejectHiddenFolders(expectedHiddenFolders)
@@ -38,16 +44,26 @@ async function run() {
 		const payload = JSON.stringify(github.context.payload, undefined, 2)
 		console.log(`The event payload: ${payload}`)
 		core.debug((new Date()).toTimeString())
+		const github_json = JSON.stringify(github, undefined, 2)
+		console.log(`The event github_json: ${github_json}`)
 
 		let language = checkSources.detectLanguage()
 		if (language === "go") {
-			core.debug('Go project detected')
+			core.info('Go project detected')
 			process.env.GOPRIVATE = (process.env.GOPRIVATE ? process.env.GOPRIVATE + ',' : '') + 'github.com/untillpro'
 			if (process.env.GITHUB_TOKEN) {
 				await execute(`git config --global url."https://${process.env.GITHUB_TOKEN}:x-oauth-basic@github.com/untillpro".insteadOf "https://github.com/untillpro"`)
 			}
 			await execute('go build ./...')
 			await execute('go test ./...')
+		}
+
+		if (branchName === 'develop') {
+			core.info('Merge to master')
+			await execute(`git fetch origin master`)
+			await execute(`git checkout master`)
+			await execute(`git merge ${github.sha}`)
+			await execute(`git push 2>&1`)
 		}
 
 	} catch (error) {
