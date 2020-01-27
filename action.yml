@@ -7,6 +7,11 @@ inputs:
   ignore:
     description: Folders and files that will be ignored when checking (comma separated)
     required: false
+  organization:
+    description: The name of the organization on GitHub containing private repositories
+    default: untillpro
+  token:
+    description:  Auth token used to fetch dependencies from private repositories
 runs:
   using: 'node12'
   main: 'dist/index.js'
