@@ -31,23 +31,27 @@ async function run() {
 		const organization = core.getInput('organization')
 		const token = core.getInput('token')
 
+		const isNotFork = github && github.context && github.context.payload && github.context.payload.repository && !github.context.payload.repository.fork
+
 		let branchName = github.context.ref
 		if (branchName && branchName.indexOf('refs/heads/') > -1)
 			branchName = branchName.slice('refs/heads/'.length)
 
+		// Print data from webhook context
+		console.log(`actor: ${github.context.actor}`)
+		console.log(`eventName: ${github.context.eventName}`)
+		console.log(`isNotFork: ${isNotFork}`)
+		console.log(`branchName: ${branchName}`)
+
 		// Reject commits to master
-		if (branchName === 'master')
-			throw { name: 'warning', message: 'Unexpected commit to master branch'}
+		if (isNotFork && branchName === 'master')
+			throw { name: 'warning', message: 'Unexpected commit to master branch' }
 
 		// Reject ".*" folders
 		rejectHiddenFolders(expectedHiddenFolders)
 
 		// Reject sources which do not have "Copyright" word in first comment
 		checkSources.rejectSourcesWithoutCopyright(ignore)
-
-		// Get the JSON webhook context
-		const context = JSON.stringify(github.context, undefined, 2)
-		console.log(`The event context: ${context}`)
 
 		let language = checkSources.detectLanguage()
 		if (language === "go") {
@@ -61,7 +65,7 @@ async function run() {
 		}
 
 		// Automatically merge from develop to master
-		if (branchName === 'develop') {
+		if (isNotFork && branchName === 'develop') {
 			core.info('Merge to master')
 			await execute(`git fetch --unshallow`)
 			await execute(`git fetch origin master`)

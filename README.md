@@ -6,8 +6,8 @@ Continious Integration action for go- and node- projects
 * Reject sources which do not have "Copyright" word in first comment
 * TODO: Reject sources which have LICENSE word in first comment but LICENSE file does not exist
 * TODO: Reject go.mod with local replaces
-* Automatically merge from develop to master
-* Reject commits to master
+* Automatically merge from develop to master (only for base repo)
+* Reject commits to master (only for base repo)
 * For Go projects
   * Run `go build ./...` and `go test ./...`
 
