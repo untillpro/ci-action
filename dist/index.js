@@ -524,6 +524,8 @@ async function run() {
 	try {
 		const expectedHiddenFolders = getInputAsArray('expectedHiddenFolders')
 		const ignore = getInputAsArray('ignore')
+		const organization = core.getInput('organization')
+		const token = core.getInput('token')
 
 		let branchName = github.context.ref
 		if (branchName && branchName.indexOf('refs/heads/') > -1)
@@ -546,9 +548,9 @@ async function run() {
 		let language = checkSources.detectLanguage()
 		if (language === "go") {
 			core.info('Go project detected')
-			process.env.GOPRIVATE = (process.env.GOPRIVATE ? process.env.GOPRIVATE + ',' : '') + 'github.com/untillpro'
-			if (process.env.GITHUB_TOKEN) {
-				await execute(`git config --global url."https://${process.env.GITHUB_TOKEN}:x-oauth-basic@github.com/untillpro".insteadOf "https://github.com/untillpro"`)
+			process.env.GOPRIVATE = (process.env.GOPRIVATE ? process.env.GOPRIVATE + ',' : '') + `github.com/${organization}/*`
+			if (token) {
+				await execute(`git config --global url."https://${token}:x-oauth-basic@github.com/${organization}".insteadOf "https://github.com/${organization}"`)
 			}
 			await execute('go build ./...')
 			await execute('go test ./...')
