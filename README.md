@@ -30,6 +30,11 @@ Continious Integration action for go- and node- projects
 
 ### Go project
 
+* Create new default branch with name "develop"
+* [Create personal access token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token)
+* Create secret with the received token named "token"
+* Create action workflow "ci.yml" with the following contents:
+
 ```yaml
 on: [push]
 jobs:
@@ -41,6 +46,7 @@ jobs:
         go-version: 1.13
     - uses: actions/checkout@v2
     - uses: untillpro/ci-action@master
+      with:
         token: ${{ secrets.token }}
 ```
 
