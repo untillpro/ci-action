@@ -56,6 +56,11 @@ async function run() {
 		let language = checkSources.detectLanguage()
 		if (language === "go") {
 			core.info('Go project detected')
+
+			// Reject go.mod with local replaces
+			checkSources.checkGoMod()
+
+			// Build
 			process.env.GOPRIVATE = (process.env.GOPRIVATE ? process.env.GOPRIVATE + ',' : '') + `github.com/${organization}/*`
 			if (token) {
 				await execute(`git config --global url."https://${token}:x-oauth-basic@github.com/${organization}".insteadOf "https://github.com/${organization}"`)

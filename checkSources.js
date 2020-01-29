@@ -57,8 +57,19 @@ const checkFirstCommentInSources = function (ignore) {
 	})
 }
 
+const checkGoMod = function () {
+	if (!fs.existsSync('go.mod')) return
+	let goMod = fs.readFileSync('go.mod', 'utf8')
+	let matches = goMod.matchAll(/^\s*replace\s+(.*?)\s*=>\s*(.*?)\s*$/gm);
+	for (const match of matches) {
+		if (match[2].startsWith('.') || match[2].startsWith('/') || match[2].startsWith('\\'))
+			throw { name: 'warning', message: `The file go.mod contains a local replace: ${match[0].trim()}` }
+	}
+}
+
 module.exports = {
 	getSourceFiles,
 	detectLanguage,
-	checkFirstCommentInSources
+	checkFirstCommentInSources,
+	checkGoMod
 }

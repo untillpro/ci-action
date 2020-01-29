@@ -5,7 +5,7 @@ Continious Integration action for go- and node- projects
 * Reject ".*" folders
 * Reject sources which do not have "Copyright" word in first comment
 * Reject sources which have LICENSE word in first comment but LICENSE file does not exist
-* TODO: Reject go.mod with local replaces
+* Reject go.mod with local replaces
 * Automatically merge from develop to master (only for base repo)
 * Reject commits to master (only for base repo)
 * For Go projects

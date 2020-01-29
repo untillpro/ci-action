@@ -552,6 +552,11 @@ async function run() {
 		let language = checkSources.detectLanguage()
 		if (language === "go") {
 			core.info('Go project detected')
+
+			// Reject go.mod with local replaces
+			checkSources.checkGoMod()
+
+			// Build
 			process.env.GOPRIVATE = (process.env.GOPRIVATE ? process.env.GOPRIVATE + ',' : '') + `github.com/${organization}/*`
 			if (token) {
 				await execute(`git config --global url."https://${token}:x-oauth-basic@github.com/${organization}".insteadOf "https://github.com/${organization}"`)
@@ -10535,10 +10540,21 @@ const checkFirstCommentInSources = function (ignore) {
 	})
 }
 
+const checkGoMod = function () {
+	if (!fs.existsSync('go.mod')) return
+	let goMod = fs.readFileSync('go.mod', 'utf8')
+	let matches = goMod.matchAll(/^\s*replace\s+(.*?)\s*=>\s*(.*?)\s*$/gm);
+	for (const match of matches) {
+		if (match[2].startsWith('.') || match[2].startsWith('/') || match[2].startsWith('\\'))
+			throw { name: 'warning', message: `The file go.mod contains a local replace: ${match[0].trim()}` }
+	}
+}
+
 module.exports = {
 	getSourceFiles,
 	detectLanguage,
-	checkFirstCommentInSources
+	checkFirstCommentInSources,
+	checkGoMod
 }
 
 

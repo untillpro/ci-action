@@ -23,4 +23,5 @@ test('test rejectHiddenFolders', () => {
 
 test('test checkSources', () => {
 	checkSources.checkFirstCommentInSources(['dist', 'node_modules'])
+	checkSources.checkGoMod()
 })
