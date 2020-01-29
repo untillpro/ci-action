@@ -522,7 +522,6 @@ const getInputAsArray = function (name) {
 
 async function run() {
 	try {
-		const expectedHiddenFolders = getInputAsArray('expectedHiddenFolders')
 		const ignore = getInputAsArray('ignore')
 		const organization = core.getInput('organization')
 		const token = core.getInput('token')
@@ -544,10 +543,11 @@ async function run() {
 			throw { name: 'warning', message: 'Unexpected commit to master branch' }
 
 		// Reject ".*" folders
-		rejectHiddenFolders(expectedHiddenFolders)
+		rejectHiddenFolders(ignore)
 
 		// Reject sources which do not have "Copyright" word in first comment
-		checkSources.rejectSourcesWithoutCopyright(ignore)
+		// Reject sources which have LICENSE word in first comment but LICENSE file does not exist
+		checkSources.checkFirstCommentInSources(ignore)
 
 		let language = checkSources.detectLanguage()
 		if (language === "go") {
@@ -4710,10 +4710,10 @@ const getSubFolders = source =>
 		.filter(dirent => dirent.isDirectory())
 		.map(dirent => dirent.name)
 
-let rejectHiddenFolders = function (expectedHiddenFolders) {
+let rejectHiddenFolders = function (ignore) {
 	getSubFolders(".").forEach(folder => {
 		if (folder.charAt(0) == '.' && folder != ".git" && folder != ".github") {
-			if (!expectedHiddenFolders.includes(folder))
+			if (!ignore.includes(folder))
 				throw { name: 'warning', message: `Unexpected hidden folder: "${folder}"` }
 		}
 	})
@@ -10523,19 +10523,22 @@ const getFirstComment = function (file) {
 	return m !== null && m.length > 0 ? m[0] : null
 }
 
-const rejectSourcesWithoutCopyright = function (ignore) {
+const checkFirstCommentInSources = function (ignore) {
+	let rejectSourcesWhichHaveLicenseWord = !fs.existsSync('LICENSE')
 	let sourceFiles = getSourceFiles('.', ignore)
 	sourceFiles.forEach(file => {
 		let firstComment = getFirstComment(file)
-		if (firstComment === null || !firstComment.includes("Copyright"))
+		if (firstComment === null || !/\bCopyright\b/.test(firstComment))
 			throw { name: 'warning', message: `Missing Copyright in first comment in file: "${file}"` }
+		if (rejectSourcesWhichHaveLicenseWord && /\bLICENSE\b/.test(firstComment))
+			throw { name: 'warning', message: `LICENSE file does not exist but first comment has LICENSE word in file: "${file}"` }
 	})
 }
 
 module.exports = {
 	getSourceFiles,
 	detectLanguage,
-	rejectSourcesWithoutCopyright
+	checkFirstCommentInSources
 }
 
 

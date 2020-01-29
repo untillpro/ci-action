@@ -45,17 +45,20 @@ const getFirstComment = function (file) {
 	return m !== null && m.length > 0 ? m[0] : null
 }
 
-const rejectSourcesWithoutCopyright = function (ignore) {
+const checkFirstCommentInSources = function (ignore) {
+	let rejectSourcesWhichHaveLicenseWord = !fs.existsSync('LICENSE')
 	let sourceFiles = getSourceFiles('.', ignore)
 	sourceFiles.forEach(file => {
 		let firstComment = getFirstComment(file)
-		if (firstComment === null || !firstComment.includes("Copyright"))
+		if (firstComment === null || !/\bCopyright\b/.test(firstComment))
 			throw { name: 'warning', message: `Missing Copyright in first comment in file: "${file}"` }
+		if (rejectSourcesWhichHaveLicenseWord && /\bLICENSE\b/.test(firstComment))
+			throw { name: 'warning', message: `LICENSE file does not exist but first comment has LICENSE word in file: "${file}"` }
 	})
 }
 
 module.exports = {
 	getSourceFiles,
 	detectLanguage,
-	rejectSourcesWithoutCopyright
+	checkFirstCommentInSources
 }

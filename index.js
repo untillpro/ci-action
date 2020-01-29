@@ -26,7 +26,6 @@ const getInputAsArray = function (name) {
 
 async function run() {
 	try {
-		const expectedHiddenFolders = getInputAsArray('expectedHiddenFolders')
 		const ignore = getInputAsArray('ignore')
 		const organization = core.getInput('organization')
 		const token = core.getInput('token')
@@ -48,10 +47,11 @@ async function run() {
 			throw { name: 'warning', message: 'Unexpected commit to master branch' }
 
 		// Reject ".*" folders
-		rejectHiddenFolders(expectedHiddenFolders)
+		rejectHiddenFolders(ignore)
 
 		// Reject sources which do not have "Copyright" word in first comment
-		checkSources.rejectSourcesWithoutCopyright(ignore)
+		// Reject sources which have LICENSE word in first comment but LICENSE file does not exist
+		checkSources.checkFirstCommentInSources(ignore)
 
 		let language = checkSources.detectLanguage()
 		if (language === "go") {

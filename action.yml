@@ -1,9 +1,6 @@
 name: 'ci-action'
 description: 'Continious Integration action for go- and node- projects'
 inputs:
-  expectedHiddenFolders:
-    description: Expected hidden folders (comma separated)
-    required: false
   ignore:
     description: Folders and files that will be ignored when checking (comma separated)
     required: false

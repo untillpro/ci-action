@@ -4,9 +4,9 @@
   "description": "Continious Integration action for go- and node- projects",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint index.js",
+    "lint": "eslint .",
     "package": "ncc build index.js",
-    "test": "eslint index.js && jest"
+    "test": "eslint . && jest"
   },
   "repository": {
     "type": "git",

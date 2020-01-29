@@ -7,6 +7,7 @@
  */
 const cp = require('child_process')
 const path = require('path')
+const rejectHiddenFolders = require('./rejectHiddenFolders')
 const checkSources = require('./checkSources')
 
 test('test runs', () => {
@@ -16,6 +17,10 @@ test('test runs', () => {
 	console.log(cp.execSync(`node ${ip}`, { env: env }).toString())
 })
 
+test('test rejectHiddenFolders', () => {
+	rejectHiddenFolders()
+})
+
 test('test checkSources', () => {
-	checkSources.rejectSourcesWithoutCopyright(['dist', 'node_modules'])
+	checkSources.checkFirstCommentInSources(['dist', 'node_modules'])
 })

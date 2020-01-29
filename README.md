@@ -4,7 +4,7 @@ Continious Integration action for go- and node- projects
 
 * Reject ".*" folders
 * Reject sources which do not have "Copyright" word in first comment
-* TODO: Reject sources which have LICENSE word in first comment but LICENSE file does not exist
+* Reject sources which have LICENSE word in first comment but LICENSE file does not exist
 * TODO: Reject go.mod with local replaces
 * Automatically merge from develop to master (only for base repo)
 * Reject commits to master (only for base repo)
@@ -16,6 +16,9 @@ Continious Integration action for go- and node- projects
 ```yaml
 - uses: untillpro/ci-action@master
   with:
+    # Folders and files that will be ignored when checking (comma separated)
+    ignore: ''
+
     # The name of the organization on GitHub containing private repositories
     organization: 'untillpro'
 
