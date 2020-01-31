@@ -9,7 +9,7 @@ Continious Integration action for go- and node- projects
 * Automatically merge from develop to master (only for base repo)
 * Reject commits to master (only for base repo)
 * For Go projects
-  * Run `go build ./...` and `go test ./...`
+  * Run `go build ./...` and `go test ./... -race`
 
 ## Usage
 
@@ -24,6 +24,9 @@ Continious Integration action for go- and node- projects
 
     # Auth token used to fetch dependencies from private repositories
     token: ''
+
+    # Codecov token
+    codecov_token: ''
 ```
 
 ## Scenarios
@@ -32,7 +35,7 @@ Continious Integration action for go- and node- projects
 
 * Create new default branch with name "develop"
 * [Create personal access token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token)
-* Create secret with the received token named "token"
+* Create secret with the received token named "REPOREADING_TOKEN"
 * Create action workflow "ci.yml" with the following contents:
 
 ```yaml
@@ -47,7 +50,8 @@ jobs:
     - uses: actions/checkout@v2
     - uses: vitkud/ci-action@master
       with:
-        token: ${{ secrets.token }}
+        token: ${{ secrets.REPOREADING_TOKEN }}
+        codecov-token: ${{ secrets.CODECOV_TOKEN }}
 ```
 
 ## Development

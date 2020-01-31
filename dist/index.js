@@ -563,11 +563,13 @@ async function run() {
 				await execute(`git config --global url."https://${token}:x-oauth-basic@github.com/${organization}".insteadOf "https://github.com/${organization}"`)
 			}
 			await execute('go build ./...')
-			await execute('go test ./...')
 
 			// run Codecov
 			if (codecov_token) {
+				await execute('go test -race -coverprofile=coverage.txt -covermode=atomic')
 				await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecov_token}"`)
+			} else {
+				await execute('go test -race')
 			}
 		}
 
