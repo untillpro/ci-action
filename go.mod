@@ -1,3 +1,3 @@
-module github.com/untillpro/ci-action
+module github.com/vitkud/ci-action
 
 go 1.13

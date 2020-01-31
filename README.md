@@ -14,13 +14,13 @@ Continious Integration action for go- and node- projects
 ## Usage
 
 ```yaml
-- uses: untillpro/ci-action@master
+- uses: vitkud/ci-action@master
   with:
     # Folders and files that will be ignored when checking (comma separated)
     ignore: ''
 
     # The name of the organization on GitHub containing private repositories
-    organization: 'untillpro'
+    organization: 'vitkud'
 
     # Auth token used to fetch dependencies from private repositories
     token: ''
@@ -45,7 +45,7 @@ jobs:
       with:
         go-version: 1.13
     - uses: actions/checkout@v2
-    - uses: untillpro/ci-action@master
+    - uses: vitkud/ci-action@master
       with:
         token: ${{ secrets.token }}
 ```
