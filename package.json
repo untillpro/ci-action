@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/untillpro/ci-action.git"
+    "url": "git+https://github.com/vitkud/ci-action.git"
   },
   "keywords": [
     "GitHub",
@@ -20,9 +20,9 @@
   "author": "unTill Pro",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/untillpro/ci-action/issues"
+    "url": "https://github.com/vitkud/ci-action/issues"
   },
-  "homepage": "https://github.com/untillpro/ci-action#readme",
+  "homepage": "https://github.com/vitkud/ci-action#readme",
   "dependencies": {
     "@actions/core": "^1.2.1",
     "@actions/github": "^2.0.1"

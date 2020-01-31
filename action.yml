@@ -6,7 +6,7 @@ inputs:
     required: false
   organization:
     description: The name of the organization on GitHub containing private repositories
-    default: untillpro
+    default: vitkud
   token:
     description:  Auth token used to fetch dependencies from private repositories
 runs:
