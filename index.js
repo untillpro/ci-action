@@ -67,6 +67,9 @@ async function run() {
 			}
 			await execute('go build ./...')
 			await execute('go test ./...')
+
+			// run Codecov
+			// TODO: ...
 		}
 
 		// Automatically merge from develop to master
