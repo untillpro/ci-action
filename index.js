@@ -29,6 +29,7 @@ async function run() {
 		const ignore = getInputAsArray('ignore')
 		const organization = core.getInput('organization')
 		const token = core.getInput('token')
+		const codecov_token = core.getInput('codecov-token')
 
 		const isNotFork = github && github.context && github.context.payload && github.context.payload.repository && !github.context.payload.repository.fork
 
@@ -69,7 +70,9 @@ async function run() {
 			await execute('go test ./...')
 
 			// run Codecov
-			// TODO: ...
+			if (codecov_token) {
+				await execute(`bash <(curl -s https://codecov.io/bash) -t ${codecov_token}`)
+			}
 		}
 
 		// Automatically merge from develop to master
