@@ -567,7 +567,7 @@ async function run() {
 
 			// run Codecov
 			if (codecov_token) {
-				await execute(`bash <(curl -s https://codecov.io/bash) -t ${codecov_token}`)
+				await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecov_token}"`)
 			}
 		}
 
