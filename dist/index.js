@@ -570,8 +570,11 @@ async function run() {
 			if (codecov_token) {
 				await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic')
 				core.startGroup('Codecov')
-				await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecov_token}"`)
-				core.endGroup()
+				try {
+					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecov_token}"`)
+				} finally {
+					core.endGroup()
+				}
 			} else {
 				await execute('go test ./...')
 			}
@@ -580,12 +583,15 @@ async function run() {
 		// Automatically merge from develop to master
 		if (isNotFork && branchName === 'develop') {
 			core.startGroup('Merge to master')
-			await execute(`git fetch --prune --unshallow`)
-			await execute(`git fetch origin master`)
-			await execute(`git checkout master`)
-			await execute(`git merge ${github.context.sha}`)
-			await execute(`git push`)
-			core.endGroup()
+			try {
+				await execute(`git fetch --prune --unshallow`)
+				await execute(`git fetch origin master`)
+				await execute(`git checkout master`)
+				await execute(`git merge ${github.context.sha}`)
+				await execute(`git push`)
+			} finally {
+				core.endGroup()
+			}
 		}
 
 	} catch (error) {
