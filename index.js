@@ -38,10 +38,12 @@ async function run() {
 			branchName = branchName.slice('refs/heads/'.length)
 
 		// Print data from webhook context
-		console.log(`actor: ${github.context.actor}`)
-		console.log(`eventName: ${github.context.eventName}`)
-		console.log(`isNotFork: ${isNotFork}`)
-		console.log(`branchName: ${branchName}`)
+		core.startGroup("Context")
+		core.info(`actor: ${github.context.actor}`)
+		core.info(`eventName: ${github.context.eventName}`)
+		core.info(`isNotFork: ${isNotFork}`)
+		core.info(`branchName: ${branchName}`)
+		core.endGroup()
 
 		// Reject commits to master
 		if (isNotFork && branchName === 'master')
