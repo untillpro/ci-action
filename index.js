@@ -80,7 +80,7 @@ async function run() {
 		// Automatically merge from develop to master
 		if (isNotFork && branchName === 'develop') {
 			core.info('Merge to master')
-			await execute(`git fetch --unshallow`)
+			await execute(`git fetch --prune --unshallow`)
 			await execute(`git fetch origin master`)
 			await execute(`git checkout master`)
 			await execute(`git merge ${github.context.sha}`)
