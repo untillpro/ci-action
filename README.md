@@ -45,11 +45,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/setup-go@v1
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
       with:
         go-version: 1.13
-    - uses: actions/checkout@v2
-    - uses: vitkud/ci-action@master
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: CI
+      uses: vitkud/ci-action@master
       with:
         token: ${{ secrets.REPOREADING_TOKEN }}
         codecov-token: ${{ secrets.CODECOV_TOKEN }}
