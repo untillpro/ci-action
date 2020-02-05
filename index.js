@@ -13,7 +13,7 @@ const util = require('util')
 const exec = util.promisify(require('child_process').exec)
 
 async function execute(command) {
-	console.log(`$ ${command}`)
+	console.log(`[command]${command}`)
 	const { stdout, stderr } = await exec(command)
 	if (stdout) console.log(stdout)
 	if (stderr) console.log(stderr)

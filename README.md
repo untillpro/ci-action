@@ -39,6 +39,7 @@ Continious Integration action for go- and node- projects
 * Create action workflow "ci.yml" with the following contents:
 
 ```yaml
+name: CI-Go
 on: [push]
 jobs:
   build:
