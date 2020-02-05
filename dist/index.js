@@ -509,7 +509,7 @@ const util = __webpack_require__(669)
 const exec = util.promisify(__webpack_require__(129).exec)
 
 async function execute(command) {
-	console.log(`$ ${command}`)
+	console.log(`[command]${command}`)
 	const { stdout, stderr } = await exec(command)
 	if (stdout) console.log(stdout)
 	if (stderr) console.log(stderr)
@@ -564,19 +564,19 @@ async function run() {
 			}
 			await execute('go build ./...')
 
-			// run Codecov
+			// run Codecov / test
 			if (codecov_token) {
-				await execute('go test -race -coverprofile=coverage.txt -covermode=atomic')
+				await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic')
 				await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecov_token}"`)
 			} else {
-				await execute('go test -race')
+				await execute('go test ./...')
 			}
 		}
 
 		// Automatically merge from develop to master
 		if (isNotFork && branchName === 'develop') {
 			core.info('Merge to master')
-			await execute(`git fetch --unshallow`)
+			await execute(`git fetch --prune --unshallow`)
 			await execute(`git fetch origin master`)
 			await execute(`git checkout master`)
 			await execute(`git merge ${github.context.sha}`)

@@ -73,7 +73,7 @@ async function run() {
 				await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic')
 				await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecov_token}"`)
 			} else {
-				await execute('go test ./... -race')
+				await execute('go test ./...')
 			}
 		}
 
