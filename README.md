@@ -14,13 +14,13 @@ Continious Integration action for go- and node- projects
 ## Usage
 
 ```yaml
-- uses: vitkud/ci-action@master
+- uses: untillpro/ci-action@master
   with:
     # Folders and files that will be ignored when checking (comma separated)
     ignore: ''
 
     # The name of the organization on GitHub containing private repositories
-    organization: 'vitkud'
+    organization: 'untillpro'
 
     # Auth token used to fetch dependencies from private repositories
     token: ''
@@ -38,7 +38,7 @@ Continious Integration action for go- and node- projects
 * Allow push access for "github-actions":
 
 ```sh
-curl -u {{user}} -H "Content-Type: application/json" -X POST -d "[\"github-actions\"]" https://api.github.com/repos/{{owner}}/{{repo}}/branches/master/protection/restrictions/apps
+curl -u {{user}} -H "Content-Type: application/json" -X POST -d "[\"github-actions\"]" https://api.github.com/repos/{{organization}}/{{repo}}/branches/master/protection/restrictions/apps
 ```
 
 * If private modules are used:
@@ -69,7 +69,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-go-
     - name: CI
-      uses: vitkud/ci-action@master
+      uses: untillpro/ci-action@master
       with:
         token: ${{ secrets.REPOREADING_TOKEN }}
         codecov-token: ${{ secrets.CODECOV_TOKEN }}
