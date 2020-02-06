@@ -34,8 +34,18 @@ Continious Integration action for go- and node- projects
 ### Go project
 
 * Create new default branch with name "develop"
-* [Create personal access token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token)
-* Create secret with the received token named "REPOREADING_TOKEN"
+* Define branch protection rule to disable pushing to "master" branch
+* Allow push access for "github-actions":
+
+```sh
+curl -u {{user}} -H "Content-Type: application/json" -X POST -d "[\"github-actions\"]" https://api.github.com/repos/{{owner}}/{{repo}}/branches/master/protection/restrictions/apps
+```
+
+* If private modules are used:
+  * [Create personal access token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token)
+  * Create secret with the received token named "REPOREADING_TOKEN"
+* For automatic uploading reports to [Codecov] [Codecov](https://codecov.io/)
+  * Create secret with Codecov token named "CODECOV_TOKEN"
 * Create action workflow "ci.yml" with the following contents:
 
 ```yaml
@@ -51,6 +61,13 @@ jobs:
         go-version: 1.13
     - name: Checkout
       uses: actions/checkout@v2
+    - name: Cache Go - Modules
+      uses: actions/cache@v1
+      with:
+        path: ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
     - name: CI
       uses: vitkud/ci-action@master
       with:
