@@ -13,7 +13,7 @@ const util = require('util')
 const exec = util.promisify(require('child_process').exec)
 
 async function execute(command) {
-	console.log(`$ ${command}`)
+	console.log(`[command]${command}`)
 	const { stdout, stderr } = await exec(command)
 	if (stdout) console.log(stdout)
 	if (stderr) console.log(stderr)
@@ -29,6 +29,7 @@ async function run() {
 		const ignore = getInputAsArray('ignore')
 		const organization = core.getInput('organization')
 		const token = core.getInput('token')
+		const codecov_token = core.getInput('codecov-token')
 
 		const isNotFork = github && github.context && github.context.payload && github.context.payload.repository && !github.context.payload.repository.fork
 
@@ -37,10 +38,12 @@ async function run() {
 			branchName = branchName.slice('refs/heads/'.length)
 
 		// Print data from webhook context
-		console.log(`actor: ${github.context.actor}`)
-		console.log(`eventName: ${github.context.eventName}`)
-		console.log(`isNotFork: ${isNotFork}`)
-		console.log(`branchName: ${branchName}`)
+		core.startGroup("Context")
+		core.info(`actor: ${github.context.actor}`)
+		core.info(`eventName: ${github.context.eventName}`)
+		core.info(`isNotFork: ${isNotFork}`)
+		core.info(`branchName: ${branchName}`)
+		core.endGroup()
 
 		// Reject commits to master
 		if (isNotFork && branchName === 'master')
@@ -66,17 +69,33 @@ async function run() {
 				await execute(`git config --global url."https://${token}:x-oauth-basic@github.com/${organization}".insteadOf "https://github.com/${organization}"`)
 			}
 			await execute('go build ./...')
-			await execute('go test ./...')
+
+			// run Codecov / test
+			if (codecov_token) {
+				await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic')
+				core.startGroup('Codecov')
+				try {
+					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecov_token}"`)
+				} finally {
+					core.endGroup()
+				}
+			} else {
+				await execute('go test ./...')
+			}
 		}
 
 		// Automatically merge from develop to master
 		if (isNotFork && branchName === 'develop') {
-			core.info('Merge to master')
-			await execute(`git fetch --unshallow`)
-			await execute(`git fetch origin master`)
-			await execute(`git checkout master`)
-			await execute(`git merge ${github.context.sha}`)
-			await execute(`git push`)
+			core.startGroup('Merge to master')
+			try {
+				await execute(`git fetch --prune --unshallow`)
+				await execute(`git fetch origin master`)
+				await execute(`git checkout master`)
+				await execute(`git merge ${github.context.sha}`)
+				await execute(`git push`)
+			} finally {
+				core.endGroup()
+			}
 		}
 
 	} catch (error) {
