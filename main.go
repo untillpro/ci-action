@@ -41,9 +41,7 @@ func main() {
 		// },
 		Commands: []*cli.Command{
 			{
-				Name:    "list",
-				Aliases: []string{"l"},
-				Usage:   "show repository list",
+				Name: "list", Aliases: []string{"l"}, Usage: "show repository list",
 				Action: func(c *cli.Context) error {
 					fmt.Println("organization", organization)
 					fmt.Println("## Repositories:")
@@ -52,8 +50,23 @@ func main() {
 						log.Fatal(err)
 					}
 					for _, repo := range repos {
+						if repo.Fork != nil && *repo.Fork {
+							continue
+						}
 						fmt.Println(repo.GetName())
 					}
+					return nil
+				},
+			},
+			{
+				Name: "init", Aliases: []string{"i"}, Usage: "initialize repository",
+				Action: func(c *cli.Context) error {
+					if c.Args().Len() == 0 {
+						log.Fatal("specify the repository name")
+					}
+					repo := c.Args().First()
+					// TODO: ...
+					fmt.Println(repo)
 					return nil
 				},
 			},
