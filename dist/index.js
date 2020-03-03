@@ -5669,7 +5669,6 @@ var admzip = __webpack_require__(639);
 const execute = __webpack_require__(239).execute
 
 const publish = async function (artifact, token, organization, repositoryName) {
-	// TODO rename publish_file to artifact
 	if (!fs.existsSync(artifact))
 		throw { name: 'warning', message: `Artifact "${artifact}" is not found` }
 
@@ -5691,12 +5690,10 @@ const publish = async function (artifact, token, organization, repositoryName) {
 
 	// TODO: Remove Artifact if is exists
 
-	// TODO: Publish Artifact to: package = com.github.${organization}, version = master-SNAPSHOT
+	// Publish artifact to: com.github.${organization}:${repositoryName}:master-SNAPSHOT
 	await execute(`mvn deploy:deploy-file --batch-mode -DgroupId=com.github.${organization} \
 -DartifactId=${repositoryName} -Dversion=master-SNAPSHOT -DgeneratePom=true \
 -DrepositoryId=GitHubPackages -Durl=https://x-oauth-basic:${token}@maven.pkg.github.com/${organization}/${repositoryName} -Dfile="${artifactFile}"`)
-
-	// TODO: ...
 
 	// remove temporary file
 	if (zipped)
@@ -5704,6 +5701,7 @@ const publish = async function (artifact, token, organization, repositoryName) {
 }
 
 module.exports = publish
+
 
 /***/ }),
 
