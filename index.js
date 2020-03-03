@@ -97,7 +97,7 @@ async function run() {
 		if (publishArtifact) {
 			core.startGroup("Publish")
 			try {
-				publish(publishArtifact, publishToken, organization, repositoryName)
+				await publish(publishArtifact, publishToken, organization, repositoryName)
 			} finally {
 				core.endGroup()
 			}
