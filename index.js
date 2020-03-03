@@ -7,17 +7,10 @@
  */
 const core = require('@actions/core')
 const github = require('@actions/github')
+const execute = require('./common').execute
 const rejectHiddenFolders = require('./rejectHiddenFolders')
 const checkSources = require('./checkSources')
-const util = require('util')
-const exec = util.promisify(require('child_process').exec)
-
-async function execute(command) {
-	console.log(`[command]${command}`)
-	const { stdout, stderr } = await exec(command)
-	if (stdout) console.log(stdout)
-	if (stderr) console.log(stderr)
-}
+const publish = require('./publish')
 
 const getInputAsArray = function (name) {
 	let input = core.getInput(name)
@@ -29,7 +22,11 @@ async function run() {
 		const ignore = getInputAsArray('ignore')
 		const organization = core.getInput('organization')
 		const token = core.getInput('token')
-		const codecov_token = core.getInput('codecov-token')
+		const codecovToken = core.getInput('codecov-token')
+		const publishArtifact = core.getInput('publish-artifact')
+		const publishToken = core.getInput('publish-token')
+
+		const repositoryName = 'ci-actions' // XXX HARDCODED
 
 		const isNotFork = github && github.context && github.context.payload && github.context.payload.repository && !github.context.payload.repository.fork
 
@@ -37,8 +34,15 @@ async function run() {
 		if (branchName && branchName.indexOf('refs/heads/') > -1)
 			branchName = branchName.slice('refs/heads/'.length)
 
+		// Print githubJson
+		core.startGroup("githubJson")
+		const githubJson = JSON.stringify(github, undefined, 2)
+		core.info(githubJson)
+		core.endGroup()
+
 		// Print data from webhook context
 		core.startGroup("Context")
+		core.info(`repositoryName: ${repositoryName}`)
 		core.info(`actor: ${github.context.actor}`)
 		core.info(`eventName: ${github.context.eventName}`)
 		core.info(`isNotFork: ${isNotFork}`)
@@ -71,17 +75,31 @@ async function run() {
 			await execute('go build ./...')
 
 			// run Codecov / test
-			if (codecov_token) {
+			if (codecovToken) {
 				await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic')
 				core.startGroup('Codecov')
 				try {
-					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecov_token}"`)
+					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecovToken}"`)
 				} finally {
 					core.endGroup()
 				}
 			} else {
 				await execute('go test ./...')
 			}
+		}
+
+		if (publishArtifact) {
+			core.startGroup("Publish")
+			publish(publishArtifact, publishToken, organization, repositoryName)
+			github.context.ref
+			// if (!fs.existsSync(publish_file))
+			// 	throw { name: 'warning', message: 'Published file was not found' }
+			// path.extname(publish_file)
+			// 	// returns
+			// 	'.html'
+			// TODO: Remove Artifact if is exists
+			// TODO: Publish Artifact to: package = com.github.${organization}, version = master-SNAPSHOT
+			// TODO: ...
 		}
 
 		// Automatically merge from develop to master

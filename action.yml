@@ -11,6 +11,11 @@ inputs:
     description: Auth token used to fetch dependencies from private repositories
   codecov-token:
     description: Codecov token
+  publish-artifact:
+    description: File / dir name to publish
+  publish-token:
+    description: Auth token used to publish
+    default: ${{ github.token }}
 runs:
   using: 'node12'
   main: 'dist/index.js'
