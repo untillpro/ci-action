@@ -26,9 +26,10 @@ async function run() {
 		const publishArtifact = core.getInput('publish-artifact')
 		const publishToken = core.getInput('publish-token')
 
-		const repositoryName = 'ci-actions' // XXX HARDCODED
+		const repositoryName = github.context.payload && github.context.payload.repository && github.context.payload.repository.name ||
+			github.repositoryName && github.repositoryName.split('/').pop()
 
-		const isNotFork = github && github.context && github.context.payload && github.context.payload.repository && !github.context.payload.repository.fork
+		const isNotFork = github.context.payload && github.context.payload.repository && !github.context.payload.repository.fork
 
 		let branchName = github.context.ref
 		if (branchName && branchName.indexOf('refs/heads/') > -1)
@@ -42,6 +43,7 @@ async function run() {
 
 		// Print data from webhook context
 		core.startGroup("Context")
+		core.info(`github.repository: ${github.repository}`)
 		core.info(`repositoryName: ${repositoryName}`)
 		core.info(`actor: ${github.context.actor}`)
 		core.info(`eventName: ${github.context.eventName}`)

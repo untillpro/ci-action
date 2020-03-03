@@ -13,5 +13,7 @@ jobs:
     - name: CI
       uses: ./
       with:
+        organization: vitkud
         ignore: dist
         codecov-token: ${{ secrets.CODECOV_TOKEN }}
+        publish-artifact: ci-action
