@@ -19,14 +19,20 @@ Continious Integration action for go- and node- projects
     # Folders and files that will be ignored when checking (comma separated)
     ignore: ''
 
-    # The name of the organization on GitHub containing private repositories
-    organization: 'untillpro'
-
     # Auth token used to fetch dependencies from private repositories
     token: ''
 
     # Codecov token
     codecov_token: ''
+
+    # File / dir name to publish
+    publish-artifact: ''
+
+    # Auth token used to publish
+    publish-token: ${{ github.token }}
+
+    # Repository name with owner. For example, untillpro/ci-action
+    repository: ${{ github.repository }}
 ```
 
 ## Scenarios

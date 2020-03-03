@@ -516,14 +516,15 @@ const getInputAsArray = function (name) {
 async function run() {
 	try {
 		const ignore = getInputAsArray('ignore')
-		const organization = core.getInput('organization')
 		const token = core.getInput('token')
 		const codecovToken = core.getInput('codecov-token')
 		const publishArtifact = core.getInput('publish-artifact')
 		const publishToken = core.getInput('publish-token')
+		const repository = core.getInput('repository')
 
-		const repositoryName = github.context.payload && github.context.payload.repository && github.context.payload.repository.name ||
-			github.repositoryName && github.repositoryName.split('/').pop()
+		const organization = repository.split('/')[0]
+		const repositoryName = repository && repository.split('/')[1] ||
+			github.context.payload && github.context.payload.repository && github.context.payload.repository.name
 
 		const isNotFork = github.context.payload && github.context.payload.repository && !github.context.payload.repository.fork
 
@@ -540,6 +541,9 @@ async function run() {
 		// Print data from webhook context
 		core.startGroup("Context")
 		core.info(`github.repository: ${github.repository}`)
+		core.info(`github.token: ${github.token}`)
+		core.info(`repository: ${repository}`)
+		core.info(`organization: ${organization}`)
 		core.info(`repositoryName: ${repositoryName}`)
 		core.info(`actor: ${github.context.actor}`)
 		core.info(`eventName: ${github.context.eventName}`)
@@ -588,16 +592,11 @@ async function run() {
 
 		if (publishArtifact) {
 			core.startGroup("Publish")
-			publish(publishArtifact, publishToken, organization, repositoryName)
-			github.context.ref
-			// if (!fs.existsSync(publish_file))
-			// 	throw { name: 'warning', message: 'Published file was not found' }
-			// path.extname(publish_file)
-			// 	// returns
-			// 	'.html'
-			// TODO: Remove Artifact if is exists
-			// TODO: Publish Artifact to: package = com.github.${organization}, version = master-SNAPSHOT
-			// TODO: ...
+			try {
+				publish(publishArtifact, publishToken, organization, repositoryName)
+			} finally {
+				core.endGroup()
+			}
 		}
 
 		// Automatically merge from develop to master

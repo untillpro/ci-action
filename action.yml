@@ -4,9 +4,6 @@ inputs:
   ignore:
     description: Folders and files that will be ignored when checking (comma separated)
     required: false
-  organization:
-    description: The name of the organization on GitHub containing private repositories
-    default: untillpro
   token:
     description: Auth token used to fetch dependencies from private repositories
   codecov-token:
@@ -16,6 +13,9 @@ inputs:
   publish-token:
     description: Auth token used to publish
     default: ${{ github.token }}
+  repository:
+    description: 'Repository name with owner. For example, untillpro/ci-action'
+    default: ${{ github.repository }}
 runs:
   using: 'node12'
   main: 'dist/index.js'
