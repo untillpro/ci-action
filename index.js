@@ -97,18 +97,17 @@ async function run() {
 			}
 		}
 
-		// TODO Publish only before merge
-		if (publishArtifact) {
-			core.startGroup("Publish")
-			try {
-				await publish(publishArtifact, publishToken, repositoryOwner, repositoryName)
-			} finally {
-				core.endGroup()
-			}
-		}
-
 		// Publish and automatically merge from develop to master
 		if (isNotFork && branchName === 'develop') {
+
+			if (publishArtifact) {
+				core.startGroup("Publish")
+				try {
+					await publish(publishArtifact, publishToken, repositoryOwner, repositoryName)
+				} finally {
+					core.endGroup()
+				}
+			}
 
 			core.startGroup('Merge to master')
 			try {
