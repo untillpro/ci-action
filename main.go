@@ -9,9 +9,72 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"log"
+	"os"
+
+	"github.com/google/go-github/v29/github"
+	"github.com/urfave/cli/v2"
 )
 
 func main() {
-	fmt.Println("Hello world")
+
+	var organization string
+
+	ctx := context.Background()
+	client := github.NewClient(nil)
+
+	app := &cli.App{
+		Name:  "ci-action",
+		Usage: "initialize repo for ci-action",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:        "organization",
+				Value:       "untillpro",
+				Usage:       "GitHub organization",
+				Destination: &organization,
+			},
+		},
+		// Action: func(c *cli.Context) error {
+		// 	return nil
+		// },
+		Commands: []*cli.Command{
+			{
+				Name: "list", Aliases: []string{"l"}, Usage: "show repository list",
+				Action: func(c *cli.Context) error {
+					fmt.Println("organization", organization)
+					fmt.Println("## Repositories:")
+					repos, _, err := client.Repositories.ListByOrg(ctx, organization, nil)
+					if err != nil {
+						log.Fatal(err)
+					}
+					for _, repo := range repos {
+						if repo.Fork != nil && *repo.Fork {
+							continue
+						}
+						fmt.Println(repo.GetName())
+					}
+					return nil
+				},
+			},
+			{
+				Name: "init", Aliases: []string{"i"}, Usage: "initialize repository",
+				Action: func(c *cli.Context) error {
+					if c.Args().Len() == 0 {
+						log.Fatal("specify the repository name")
+					}
+					repo := c.Args().First()
+					// TODO: ...
+					fmt.Println(repo)
+					return nil
+				},
+			},
+		},
+	}
+
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

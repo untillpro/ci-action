@@ -7,17 +7,10 @@
  */
 const core = require('@actions/core')
 const github = require('@actions/github')
+const execute = require('./common').execute
 const rejectHiddenFolders = require('./rejectHiddenFolders')
 const checkSources = require('./checkSources')
-const util = require('util')
-const exec = util.promisify(require('child_process').exec)
-
-async function execute(command) {
-	console.log(`[command]${command}`)
-	const { stdout, stderr } = await exec(command)
-	if (stdout) console.log(stdout)
-	if (stderr) console.log(stderr)
-}
+const publish = require('./publish')
 
 const getInputAsArray = function (name) {
 	let input = core.getInput(name)
@@ -29,16 +22,34 @@ async function run() {
 		const ignore = getInputAsArray('ignore')
 		const organization = core.getInput('organization')
 		const token = core.getInput('token')
-		const codecov_token = core.getInput('codecov-token')
+		const codecovToken = core.getInput('codecov-token')
+		const publishArtifact = core.getInput('publish-artifact')
+		const publishToken = core.getInput('publish-token')
+		const repository = core.getInput('repository')
 
-		const isNotFork = github && github.context && github.context.payload && github.context.payload.repository && !github.context.payload.repository.fork
+		const repositoryOwner = repository.split('/')[0]
+		const repositoryName = repository && repository.split('/')[1] ||
+			github.context.payload && github.context.payload.repository && github.context.payload.repository.name
+
+		const isNotFork = github.context.payload && github.context.payload.repository && !github.context.payload.repository.fork
 
 		let branchName = github.context.ref
 		if (branchName && branchName.indexOf('refs/heads/') > -1)
 			branchName = branchName.slice('refs/heads/'.length)
 
+		// Print githubJson
+		core.startGroup("githubJson")
+		const githubJson = JSON.stringify(github, undefined, 2)
+		core.info(githubJson)
+		core.endGroup()
+
 		// Print data from webhook context
 		core.startGroup("Context")
+		core.info(`github.repository: ${github.repository}`)
+		core.info(`github.token: ${github.token}`)
+		core.info(`repository: ${repository}`)
+		core.info(`organization: ${organization}`)
+		core.info(`repositoryName: ${repositoryName}`)
 		core.info(`actor: ${github.context.actor}`)
 		core.info(`eventName: ${github.context.eventName}`)
 		core.info(`isNotFork: ${isNotFork}`)
@@ -64,28 +75,40 @@ async function run() {
 			checkSources.checkGoMod()
 
 			// Build
-			process.env.GOPRIVATE = (process.env.GOPRIVATE ? process.env.GOPRIVATE + ',' : '') + `github.com/${organization}/*`
-			if (token) {
-				await execute(`git config --global url."https://${token}:x-oauth-basic@github.com/${organization}".insteadOf "https://github.com/${organization}"`)
-			}
-			await execute('go build ./...')
-
-			// run Codecov / test
-			if (codecov_token) {
-				await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic')
-				core.startGroup('Codecov')
-				try {
-					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecov_token}"`)
-				} finally {
-					core.endGroup()
+			core.startGroup('Build')
+			try {
+				process.env.GOPRIVATE = (process.env.GOPRIVATE ? process.env.GOPRIVATE + ',' : '') + `github.com/${organization}/*`
+				if (token) {
+					await execute(`git config --global url."https://${token}:x-oauth-basic@github.com/${organization}".insteadOf "https://github.com/${organization}"`)
 				}
-			} else {
-				await execute('go test ./...')
+				await execute('go build ./...')
+
+				// run Codecov / test
+				if (codecovToken) {
+					await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic')
+					core.endGroup()
+					core.startGroup('Codecov')
+					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecovToken}"`)
+				} else {
+					await execute('go test ./...')
+				}
+			} finally {
+				core.endGroup()
 			}
 		}
 
-		// Automatically merge from develop to master
+		// Publish and automatically merge from develop to master
 		if (isNotFork && branchName === 'develop') {
+
+			if (publishArtifact) {
+				core.startGroup("Publish")
+				try {
+					await publish(publishArtifact, publishToken, repositoryOwner, repositoryName)
+				} finally {
+					core.endGroup()
+				}
+			}
+
 			core.startGroup('Merge to master')
 			try {
 				await execute(`git fetch --prune --unshallow`)
@@ -96,6 +119,7 @@ async function run() {
 			} finally {
 				core.endGroup()
 			}
+
 		}
 
 	} catch (error) {

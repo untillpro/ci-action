@@ -27,6 +27,15 @@ Continious Integration action for go- and node- projects
 
     # Codecov token
     codecov_token: ''
+
+    # File / dir name to publish
+    publish-artifact: ''
+
+    # Auth token used to publish
+    publish-token: ${{ github.token }}
+
+    # Repository name with owner. For example, untillpro/ci-action
+    repository: ${{ github.repository }}
 ```
 
 ## Scenarios

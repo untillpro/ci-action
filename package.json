@@ -25,7 +25,8 @@
   "homepage": "https://github.com/untillpro/ci-action#readme",
   "dependencies": {
     "@actions/core": "^1.2.1",
-    "@actions/github": "^2.0.1"
+    "@actions/github": "^2.0.1",
+    "adm-zip": "^0.4.14"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.21.0",

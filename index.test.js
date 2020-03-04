@@ -13,12 +13,12 @@ const checkSources = require('./checkSources')
 test('test runs', () => {
 	const ip = path.join(__dirname, 'index.js')
 	let env = Object.assign({}, process.env)
-	env.INPUT_IGNORE = 'dist,node_modules'
+	env.INPUT_IGNORE = '.vscode,dist,node_modules'
 	console.log(cp.execSync(`node ${ip}`, { env: env }).toString())
 })
 
 test('test rejectHiddenFolders', () => {
-	rejectHiddenFolders()
+	rejectHiddenFolders(['.vscode'])
 })
 
 test('test checkSources', () => {
