@@ -11,7 +11,7 @@ const tmp = require('tmp');
 var admzip = require('adm-zip');
 const execute = require('./common').execute
 
-const publish = async function (artifact, token, organization, repositoryName) {
+const publish = async function (artifact, token, repositoryOwner, repositoryName) {
 	if (!fs.existsSync(artifact))
 		throw { name: 'warning', message: `Artifact "${artifact}" is not found` }
 
@@ -33,10 +33,10 @@ const publish = async function (artifact, token, organization, repositoryName) {
 
 	// TODO: Remove Artifact if is exists
 
-	// Publish artifact to: com.github.${organization}:${repositoryName}:master-SNAPSHOT
-	await execute(`mvn deploy:deploy-file --batch-mode -DgroupId=com.github.${organization} \
+	// Publish artifact to: com.github.${repositoryOwner}:${repositoryName}:master-SNAPSHOT
+	await execute(`mvn deploy:deploy-file --batch-mode -DgroupId=com.github.${repositoryOwner} \
 -DartifactId=${repositoryName} -Dversion=master-SNAPSHOT -DgeneratePom=true \
--DrepositoryId=GitHubPackages -Durl=https://x-oauth-basic:${token}@maven.pkg.github.com/${organization}/${repositoryName} -Dfile="${artifactFile}"`)
+-DrepositoryId=GitHubPackages -Durl=https://x-oauth-basic:${token}@maven.pkg.github.com/${repositoryOwner}/${repositoryName} -Dfile="${artifactFile}"`)
 
 	// remove temporary file
 	if (zipped)

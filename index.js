@@ -20,13 +20,14 @@ const getInputAsArray = function (name) {
 async function run() {
 	try {
 		const ignore = getInputAsArray('ignore')
+		const organization = core.getInput('organization')
 		const token = core.getInput('token')
 		const codecovToken = core.getInput('codecov-token')
 		const publishArtifact = core.getInput('publish-artifact')
 		const publishToken = core.getInput('publish-token')
 		const repository = core.getInput('repository')
 
-		const organization = repository.split('/')[0]
+		const repositoryOwner = repository.split('/')[0]
 		const repositoryName = repository && repository.split('/')[1] ||
 			github.context.payload && github.context.payload.repository && github.context.payload.repository.name
 
@@ -94,17 +95,18 @@ async function run() {
 			}
 		}
 
-		if (publishArtifact) {
-			core.startGroup("Publish")
-			try {
-				await publish(publishArtifact, publishToken, organization, repositoryName)
-			} finally {
-				core.endGroup()
-			}
-		}
-
-		// Automatically merge from develop to master
+		// Publish and automatically merge from develop to master
 		if (isNotFork && branchName === 'develop') {
+
+			if (publishArtifact) {
+				core.startGroup("Publish")
+				try {
+					await publish(publishArtifact, publishToken, repositoryOwner, repositoryName)
+				} finally {
+					core.endGroup()
+				}
+			}
+
 			core.startGroup('Merge to master')
 			try {
 				await execute(`git fetch --prune --unshallow`)
@@ -115,6 +117,7 @@ async function run() {
 			} finally {
 				core.endGroup()
 			}
+
 		}
 
 	} catch (error) {
