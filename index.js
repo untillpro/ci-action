@@ -75,23 +75,25 @@ async function run() {
 			checkSources.checkGoMod()
 
 			// Build
-			process.env.GOPRIVATE = (process.env.GOPRIVATE ? process.env.GOPRIVATE + ',' : '') + `github.com/${organization}/*`
-			if (token) {
-				await execute(`git config --global url."https://${token}:x-oauth-basic@github.com/${organization}".insteadOf "https://github.com/${organization}"`)
-			}
-			await execute('go build ./...')
-
-			// run Codecov / test
-			if (codecovToken) {
-				await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic')
-				core.startGroup('Codecov')
-				try {
-					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecovToken}"`)
-				} finally {
-					core.endGroup()
+			core.startGroup('Build')
+			try {
+				process.env.GOPRIVATE = (process.env.GOPRIVATE ? process.env.GOPRIVATE + ',' : '') + `github.com/${organization}/*`
+				if (token) {
+					await execute(`git config --global url."https://${token}:x-oauth-basic@github.com/${organization}".insteadOf "https://github.com/${organization}"`)
 				}
-			} else {
-				await execute('go test ./...')
+				await execute('go build ./...')
+
+				// run Codecov / test
+				if (codecovToken) {
+					await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic')
+					core.endGroup()
+					core.startGroup('Codecov')
+					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecovToken}"`)
+				} else {
+					await execute('go test ./...')
+				}
+			} finally {
+				core.endGroup()
 			}
 		}
 
