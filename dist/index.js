@@ -5739,7 +5739,10 @@ const publishAsRelease = async function (asset, token, repositoryOwner, reposito
 
 	// Create release
 	const createReleaseResponse = await octokit.repos.createRelease({
-		repositoryOwner, repositoryName, tag_name: version, name: version
+		owner: repositoryOwner,
+		repo: repositoryName,
+		tag_name: version,
+		name: version,
 	})
 	console.log(`createReleaseResponse.data.id: ${createReleaseResponse.data.id}`)
 	console.log(`createReleaseResponse.data.html_url: ${createReleaseResponse.data.html_url}`)
