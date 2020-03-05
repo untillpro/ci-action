@@ -547,6 +547,7 @@ async function run() {
 		//core.info(`github.context.repo: ${github.context.repo}`)
 		core.info(`repository: ${repository}`)
 		core.info(`organization: ${organization}`)
+		core.info(`repositoryOwner: ${repositoryOwner}`)
 		core.info(`repositoryName: ${repositoryName}`)
 		core.info(`actor: ${github.context.actor}`)
 		core.info(`eventName: ${github.context.eventName}`)
