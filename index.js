@@ -100,15 +100,6 @@ async function run() {
 		// Publish and automatically merge from develop to master
 		if (isNotFork && branchName === 'develop') {
 
-			if (publishArtifact) {
-				core.startGroup("Publish")
-				try {
-					await publish(publishArtifact, publishToken, repositoryOwner, repositoryName)
-				} finally {
-					core.endGroup()
-				}
-			}
-
 			core.startGroup('Merge to master')
 			try {
 				await execute(`git fetch --prune --unshallow`)
@@ -118,6 +109,15 @@ async function run() {
 				await execute(`git push`)
 			} finally {
 				core.endGroup()
+			}
+
+			if (publishArtifact) {
+				core.startGroup("Publish")
+				try {
+					await publish(publishArtifact, publishToken, repositoryOwner, repositoryName)
+				} finally {
+					core.endGroup()
+				}
 			}
 
 		}

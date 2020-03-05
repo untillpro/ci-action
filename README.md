@@ -7,6 +7,7 @@ Continious Integration action for go- and node- projects
 * Reject sources which have LICENSE word in first comment but LICENSE file does not exist
 * Reject go.mod with local replaces
 * Automatically merge from develop to master (only for base repo)
+  * Automatically publish artifact to Packages as Maven (group: com.github.`OWNER`, version: `DATE.TIME.mS`)
 * Reject commits to master (only for base repo)
 * For Go projects
   * Run `go build ./...` and `go test ./...`
