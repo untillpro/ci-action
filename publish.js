@@ -10,36 +10,79 @@ const path = require('path')
 const tmp = require('tmp');
 var admzip = require('adm-zip');
 const execute = require('./common').execute
+//const core = require('@actions/core')
+const github = require('@actions/github')
 
-const publish = async function (artifact, token, repositoryOwner, repositoryName) {
+function genVersion() {
+	// UTC date-time as yyyyMMdd.HHmmss.SSS
+	return new Date().toISOString().replace(/T/, '.').replace(/-|:|Z/g, '')
+}
+
+function prepareZip(source) {
+	let zipFile = source
+	const isDir = fs.lstatSync(source).isDirectory()
+	if (isDir || path.extname(source) !== '.zip') {
+		var zip = new admzip()
+		if (isDir)
+			zip.addLocalFolder(source)
+		else
+			zip.addLocalFile(source)
+		zipFile = tmp.tmpNameSync({ postfix: '.zip' })
+		zip.writeZip(zipFile)
+	}
+	return zipFile
+}
+
+const publishAsMavenArtifact = async function (artifact, token, repositoryOwner, repositoryName) {
 	if (!fs.existsSync(artifact))
 		throw { name: 'warning', message: `Artifact "${artifact}" is not found` }
 
-	// prepare artifactFile
-	let artifactFile = artifact
-	let zipped = false
-	const isDir = fs.lstatSync(artifact).isDirectory()
-	if (isDir || path.extname(artifact) !== '.zip') {
-		var zip = new admzip()
-		if (isDir)
-			zip.addLocalFolder(artifact)
-		else
-			zip.addLocalFile(artifact)
-		artifactFile = tmp.tmpNameSync({ postfix: '.zip' })
-		zip.writeZip(artifactFile)
-		zipped = true
-	}
+	const zipFile = prepareZip(artifact)
 
-	const version = new Date().toISOString().replace(/T/, '.').replace(/-|:|Z/g, '') // Fromat UTC date-time as yyyyMMdd.HHmmss.SSS
+	const version = genVersion()
 
-	// Publish artifact to: com.github.${repositoryOwner}:${repositoryName}:master-SNAPSHOT
+	// Publish artifact to: com.github.${repositoryOwner}:${repositoryName}:${version}:zip
 	await execute(`mvn deploy:deploy-file --batch-mode -DgroupId=com.github.${repositoryOwner} \
 -DartifactId=${repositoryName} -Dversion=${version} -DgeneratePom=true \
--DrepositoryId=GitHubPackages -Durl=https://x-oauth-basic:${token}@maven.pkg.github.com/${repositoryOwner}/${repositoryName} -Dfile="${artifactFile}"`)
+-DrepositoryId=GitHubPackages -Durl=https://x-oauth-basic:${token}@maven.pkg.github.com/${repositoryOwner}/${repositoryName} -Dfile="${zipFile}"`)
 
-	// remove temporary file
-	if (zipped)
-		fs.unlinkSync(artifactFile)
+	if (zipFile !== artifact)
+		fs.unlinkSync(zipFile)
 }
 
-module.exports = publish
+const publishAsRelease = async function (asset, token, repositoryOwner, repositoryName) {
+	if (!fs.existsSync(asset))
+		throw { name: 'warning', message: `Asset "${asset}" is not found` }
+
+	const version = genVersion()
+	const zipFile = prepareZip(asset)
+	const octokit = new github.GitHub(token);
+
+	// Create tag
+	await execute(`git tag ${version}`)
+	await execute(`git push origin ${version}`)
+
+	// Create release
+	const createReleaseResponse = await octokit.repos.createRelease({
+		repositoryOwner, repositoryName, tag_name: version, name: version
+	})
+	console.log(`createReleaseResponse.data.id: ${createReleaseResponse.data.id}`)
+	console.log(`createReleaseResponse.data.html_url: ${createReleaseResponse.data.html_url}`)
+	console.log(`createReleaseResponse.data.upload_url: ${createReleaseResponse.data.upload_url}`)
+
+	// TODO use target_commitish
+
+	// TODO Append asset
+
+	if (zipFile !== asset)
+		fs.unlinkSync(zipFile)
+
+	// TODO Additionaly:
+	// TODO Remove old releases
+	// TODO Remove old tags
+}
+
+module.exports = {
+	publishAsMavenArtifact,
+	publishAsRelease
+}

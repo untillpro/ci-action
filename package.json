@@ -4,6 +4,7 @@
   "description": "Continious Integration action for go- and node- projects",
   "main": "index.js",
   "scripts": {
+    "init": "npm install",
     "lint": "eslint .",
     "package": "ncc build index.js",
     "test": "eslint . && jest"

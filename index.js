@@ -27,7 +27,8 @@ async function run() {
 		const publishToken = core.getInput('publish-token')
 		const repository = core.getInput('repository')
 
-		const repositoryOwner = repository.split('/')[0]
+		const repositoryOwner = repository.split('/')[0] ||
+			github.context.payload && github.context.payload.repository && github.context.payload.repository.owner && github.context.payload.repository.owner.login
 		const repositoryName = repository && repository.split('/')[1] ||
 			github.context.payload && github.context.payload.repository && github.context.payload.repository.name
 
@@ -47,6 +48,7 @@ async function run() {
 		core.startGroup("Context")
 		core.info(`github.repository: ${github.repository}`)
 		core.info(`github.token: ${github.token}`)
+		//core.info(`github.context.repo: ${github.context.repo}`)
 		core.info(`repository: ${repository}`)
 		core.info(`organization: ${organization}`)
 		core.info(`repositoryName: ${repositoryName}`)
@@ -97,6 +99,16 @@ async function run() {
 			}
 		}
 
+		// TODO REMOVE THIS
+		if (publishArtifact) {
+			core.startGroup("Publish")
+			try {
+				await publish.publishAsRelease(publishArtifact, publishToken, repositoryOwner, repositoryName)
+			} finally {
+				core.endGroup()
+			}
+		}
+
 		// Publish and automatically merge from develop to master
 		if (isNotFork && branchName === 'develop') {
 
@@ -114,7 +126,7 @@ async function run() {
 			if (publishArtifact) {
 				core.startGroup("Publish")
 				try {
-					await publish(publishArtifact, publishToken, repositoryOwner, repositoryName)
+					await publish.publishAsMavenArtifact(publishArtifact, publishToken, repositoryOwner, repositoryName)
 				} finally {
 					core.endGroup()
 				}
