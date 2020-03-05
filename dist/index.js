@@ -596,15 +596,6 @@ async function run() {
 		// Publish and automatically merge from develop to master
 		if (isNotFork && branchName === 'develop') {
 
-			if (publishArtifact) {
-				core.startGroup("Publish")
-				try {
-					await publish(publishArtifact, publishToken, repositoryOwner, repositoryName)
-				} finally {
-					core.endGroup()
-				}
-			}
-
 			core.startGroup('Merge to master')
 			try {
 				await execute(`git fetch --prune --unshallow`)
@@ -614,6 +605,15 @@ async function run() {
 				await execute(`git push`)
 			} finally {
 				core.endGroup()
+			}
+
+			if (publishArtifact) {
+				core.startGroup("Publish")
+				try {
+					await publish(publishArtifact, publishToken, repositoryOwner, repositoryName)
+				} finally {
+					core.endGroup()
+				}
 			}
 
 		}
@@ -5681,7 +5681,7 @@ const publish = async function (artifact, token, repositoryOwner, repositoryName
 	let artifactFile = artifact
 	let zipped = false
 	const isDir = fs.lstatSync(artifact).isDirectory()
-	if (isDir || !path.extname(artifact)) {
+	if (isDir || path.extname(artifact) !== '.zip') {
 		var zip = new admzip()
 		if (isDir)
 			zip.addLocalFolder(artifact)
@@ -5691,13 +5691,12 @@ const publish = async function (artifact, token, repositoryOwner, repositoryName
 		zip.writeZip(artifactFile)
 		zipped = true
 	}
-	console.log(`artifactFile: ${artifactFile}`)
 
-	// TODO: Remove Artifact if is exists
+	const version = new Date().toISOString().replace(/T/, '.').replace(/-|:|Z/g, '') // Fromat UTC date-time as yyyyMMdd.HHmmss.SSS
 
 	// Publish artifact to: com.github.${repositoryOwner}:${repositoryName}:master-SNAPSHOT
 	await execute(`mvn deploy:deploy-file --batch-mode -DgroupId=com.github.${repositoryOwner} \
--DartifactId=${repositoryName} -Dversion=master-SNAPSHOT -DgeneratePom=true \
+-DartifactId=${repositoryName} -Dversion=${version} -DgeneratePom=true \
 -DrepositoryId=GitHubPackages -Durl=https://x-oauth-basic:${token}@maven.pkg.github.com/${repositoryOwner}/${repositoryName} -Dfile="${artifactFile}"`)
 
 	// remove temporary file
