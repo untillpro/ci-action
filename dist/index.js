@@ -519,11 +519,13 @@ async function run() {
 		const organization = core.getInput('organization')
 		const token = core.getInput('token')
 		const codecovToken = core.getInput('codecov-token')
-		const publishArtifact = core.getInput('publish-artifact')
+		const publishAsset = core.getInput('publish-asset')
 		const publishToken = core.getInput('publish-token')
+		const publishKeep = core.getInput('publish-keep')
 		const repository = core.getInput('repository')
 
-		const repositoryOwner = repository.split('/')[0]
+		const repositoryOwner = repository.split('/')[0] ||
+			github.context.payload && github.context.payload.repository && github.context.payload.repository.owner && github.context.payload.repository.owner.login
 		const repositoryName = repository && repository.split('/')[1] ||
 			github.context.payload && github.context.payload.repository && github.context.payload.repository.name
 
@@ -543,8 +545,10 @@ async function run() {
 		core.startGroup("Context")
 		core.info(`github.repository: ${github.repository}`)
 		core.info(`github.token: ${github.token}`)
+		//core.info(`github.context.repo: ${github.context.repo}`)
 		core.info(`repository: ${repository}`)
 		core.info(`organization: ${organization}`)
+		core.info(`repositoryOwner: ${repositoryOwner}`)
 		core.info(`repositoryName: ${repositoryName}`)
 		core.info(`actor: ${github.context.actor}`)
 		core.info(`eventName: ${github.context.eventName}`)
@@ -607,10 +611,10 @@ async function run() {
 				core.endGroup()
 			}
 
-			if (publishArtifact) {
+			if (publishAsset) {
 				core.startGroup("Publish")
 				try {
-					await publish(publishArtifact, publishToken, repositoryOwner, repositoryName)
+					await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
 				} finally {
 					core.endGroup()
 				}
@@ -2862,7 +2866,7 @@ module.exports = require("https");
 /***/ 215:
 /***/ (function(module) {
 
-module.exports = {"_args":[["@octokit/rest@16.37.0","C:\\github.com\\vitkud\\ci-action"]],"_from":"@octokit/rest@16.37.0","_id":"@octokit/rest@16.37.0","_inBundle":false,"_integrity":"sha512-qLPK9FOCK4iVpn6ghknNuv/gDDxXQG6+JBQvoCwWjQESyis9uemakjzN36nvvp8SCny7JuzHI2RV8ChbV5mYdQ==","_location":"/@octokit/rest","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"@octokit/rest@16.37.0","name":"@octokit/rest","escapedName":"@octokit%2frest","scope":"@octokit","rawSpec":"16.37.0","saveSpec":null,"fetchSpec":"16.37.0"},"_requiredBy":["/@actions/github"],"_resolved":"https://registry.npmjs.org/@octokit/rest/-/rest-16.37.0.tgz","_spec":"16.37.0","_where":"C:\\github.com\\vitkud\\ci-action","author":{"name":"Gregor Martynus","url":"https://github.com/gr2m"},"bugs":{"url":"https://github.com/octokit/rest.js/issues"},"bundlesize":[{"path":"./dist/octokit-rest.min.js.gz","maxSize":"33 kB"}],"contributors":[{"name":"Mike de Boer","email":"info@mikedeboer.nl"},{"name":"Fabian Jakobs","email":"fabian@c9.io"},{"name":"Joe Gallo","email":"joe@brassafrax.com"},{"name":"Gregor Martynus","url":"https://github.com/gr2m"}],"dependencies":{"@octokit/request":"^5.2.0","@octokit/request-error":"^1.0.2","atob-lite":"^2.0.0","before-after-hook":"^2.0.0","btoa-lite":"^1.0.0","deprecation":"^2.0.0","lodash.get":"^4.4.2","lodash.set":"^4.3.2","lodash.uniq":"^4.5.0","octokit-pagination-methods":"^1.1.0","once":"^1.4.0","universal-user-agent":"^4.0.0"},"description":"GitHub REST API client for Node.js","devDependencies":{"@gimenete/type-writer":"^0.1.3","@octokit/fixtures-server":"^5.0.6","@octokit/graphql":"^4.2.0","@types/node":"^13.1.0","bundlesize":"^0.18.0","chai":"^4.1.2","compression-webpack-plugin":"^3.0.0","cypress":"^3.0.0","glob":"^7.1.2","http-proxy-agent":"^3.0.0","lodash.camelcase":"^4.3.0","lodash.merge":"^4.6.1","lodash.upperfirst":"^4.3.1","mkdirp":"^0.5.1","mocha":"^6.0.0","mustache":"^4.0.0","nock":"^11.3.3","npm-run-all":"^4.1.2","nyc":"^15.0.0","prettier":"^1.14.2","proxy":"^1.0.0","semantic-release":"^16.0.0","sinon":"^8.0.0","sinon-chai":"^3.0.0","sort-keys":"^4.0.0","string-to-arraybuffer":"^1.0.0","string-to-jsdoc-comment":"^1.0.0","typescript":"^3.3.1","webpack":"^4.0.0","webpack-bundle-analyzer":"^3.0.0","webpack-cli":"^3.0.0"},"files":["index.js","index.d.ts","lib","plugins"],"homepage":"https://github.com/octokit/rest.js#readme","keywords":["octokit","github","rest","api-client"],"license":"MIT","name":"@octokit/rest","nyc":{"ignore":["test"]},"publishConfig":{"access":"public"},"release":{"publish":["@semantic-release/npm",{"path":"@semantic-release/github","assets":["dist/*","!dist/*.map.gz"]}]},"repository":{"type":"git","url":"git+https://github.com/octokit/rest.js.git"},"scripts":{"build":"npm-run-all build:*","build:browser":"npm-run-all build:browser:*","build:browser:development":"webpack --mode development --entry . --output-library=Octokit --output=./dist/octokit-rest.js --profile --json > dist/bundle-stats.json","build:browser:production":"webpack --mode production --entry . --plugin=compression-webpack-plugin --output-library=Octokit --output-path=./dist --output-filename=octokit-rest.min.js --devtool source-map","build:ts":"npm run -s update-endpoints:typescript","coverage":"nyc report --reporter=html && open coverage/index.html","generate-bundle-report":"webpack-bundle-analyzer dist/bundle-stats.json --mode=static --no-open --report dist/bundle-report.html","lint":"prettier --check '{lib,plugins,scripts,test}/**/*.{js,json,ts}' 'docs/*.{js,json}' 'docs/src/**/*' index.js README.md package.json","lint:fix":"prettier --write '{lib,plugins,scripts,test}/**/*.{js,json,ts}' 'docs/*.{js,json}' 'docs/src/**/*' index.js README.md package.json","postvalidate:ts":"tsc --noEmit --target es6 test/typescript-validate.ts","prebuild:browser":"mkdirp dist/","pretest":"npm run -s lint","prevalidate:ts":"npm run -s build:ts","start-fixtures-server":"octokit-fixtures-server","test":"nyc mocha test/mocha-node-setup.js \"test/*/**/*-test.js\"","test:browser":"cypress run --browser chrome","update-endpoints":"npm-run-all update-endpoints:*","update-endpoints:code":"node scripts/update-endpoints/code","update-endpoints:fetch-json":"node scripts/update-endpoints/fetch-json","update-endpoints:typescript":"node scripts/update-endpoints/typescript","validate:ts":"tsc --target es6 --noImplicitAny index.d.ts"},"types":"index.d.ts","version":"16.37.0"};
+module.exports = {"_args":[["@octokit/rest@16.37.0","c:\\github.com\\vitkud\\ci-action"]],"_from":"@octokit/rest@16.37.0","_id":"@octokit/rest@16.37.0","_inBundle":false,"_integrity":"sha512-qLPK9FOCK4iVpn6ghknNuv/gDDxXQG6+JBQvoCwWjQESyis9uemakjzN36nvvp8SCny7JuzHI2RV8ChbV5mYdQ==","_location":"/@octokit/rest","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"@octokit/rest@16.37.0","name":"@octokit/rest","escapedName":"@octokit%2frest","scope":"@octokit","rawSpec":"16.37.0","saveSpec":null,"fetchSpec":"16.37.0"},"_requiredBy":["/@actions/github"],"_resolved":"https://registry.npmjs.org/@octokit/rest/-/rest-16.37.0.tgz","_spec":"16.37.0","_where":"c:\\github.com\\vitkud\\ci-action","author":{"name":"Gregor Martynus","url":"https://github.com/gr2m"},"bugs":{"url":"https://github.com/octokit/rest.js/issues"},"bundlesize":[{"path":"./dist/octokit-rest.min.js.gz","maxSize":"33 kB"}],"contributors":[{"name":"Mike de Boer","email":"info@mikedeboer.nl"},{"name":"Fabian Jakobs","email":"fabian@c9.io"},{"name":"Joe Gallo","email":"joe@brassafrax.com"},{"name":"Gregor Martynus","url":"https://github.com/gr2m"}],"dependencies":{"@octokit/request":"^5.2.0","@octokit/request-error":"^1.0.2","atob-lite":"^2.0.0","before-after-hook":"^2.0.0","btoa-lite":"^1.0.0","deprecation":"^2.0.0","lodash.get":"^4.4.2","lodash.set":"^4.3.2","lodash.uniq":"^4.5.0","octokit-pagination-methods":"^1.1.0","once":"^1.4.0","universal-user-agent":"^4.0.0"},"description":"GitHub REST API client for Node.js","devDependencies":{"@gimenete/type-writer":"^0.1.3","@octokit/fixtures-server":"^5.0.6","@octokit/graphql":"^4.2.0","@types/node":"^13.1.0","bundlesize":"^0.18.0","chai":"^4.1.2","compression-webpack-plugin":"^3.0.0","cypress":"^3.0.0","glob":"^7.1.2","http-proxy-agent":"^3.0.0","lodash.camelcase":"^4.3.0","lodash.merge":"^4.6.1","lodash.upperfirst":"^4.3.1","mkdirp":"^0.5.1","mocha":"^6.0.0","mustache":"^4.0.0","nock":"^11.3.3","npm-run-all":"^4.1.2","nyc":"^15.0.0","prettier":"^1.14.2","proxy":"^1.0.0","semantic-release":"^16.0.0","sinon":"^8.0.0","sinon-chai":"^3.0.0","sort-keys":"^4.0.0","string-to-arraybuffer":"^1.0.0","string-to-jsdoc-comment":"^1.0.0","typescript":"^3.3.1","webpack":"^4.0.0","webpack-bundle-analyzer":"^3.0.0","webpack-cli":"^3.0.0"},"files":["index.js","index.d.ts","lib","plugins"],"homepage":"https://github.com/octokit/rest.js#readme","keywords":["octokit","github","rest","api-client"],"license":"MIT","name":"@octokit/rest","nyc":{"ignore":["test"]},"publishConfig":{"access":"public"},"release":{"publish":["@semantic-release/npm",{"path":"@semantic-release/github","assets":["dist/*","!dist/*.map.gz"]}]},"repository":{"type":"git","url":"git+https://github.com/octokit/rest.js.git"},"scripts":{"build":"npm-run-all build:*","build:browser":"npm-run-all build:browser:*","build:browser:development":"webpack --mode development --entry . --output-library=Octokit --output=./dist/octokit-rest.js --profile --json > dist/bundle-stats.json","build:browser:production":"webpack --mode production --entry . --plugin=compression-webpack-plugin --output-library=Octokit --output-path=./dist --output-filename=octokit-rest.min.js --devtool source-map","build:ts":"npm run -s update-endpoints:typescript","coverage":"nyc report --reporter=html && open coverage/index.html","generate-bundle-report":"webpack-bundle-analyzer dist/bundle-stats.json --mode=static --no-open --report dist/bundle-report.html","lint":"prettier --check '{lib,plugins,scripts,test}/**/*.{js,json,ts}' 'docs/*.{js,json}' 'docs/src/**/*' index.js README.md package.json","lint:fix":"prettier --write '{lib,plugins,scripts,test}/**/*.{js,json,ts}' 'docs/*.{js,json}' 'docs/src/**/*' index.js README.md package.json","postvalidate:ts":"tsc --noEmit --target es6 test/typescript-validate.ts","prebuild:browser":"mkdirp dist/","pretest":"npm run -s lint","prevalidate:ts":"npm run -s build:ts","start-fixtures-server":"octokit-fixtures-server","test":"nyc mocha test/mocha-node-setup.js \"test/*/**/*-test.js\"","test:browser":"cypress run --browser chrome","update-endpoints":"npm-run-all update-endpoints:*","update-endpoints:code":"node scripts/update-endpoints/code","update-endpoints:fetch-json":"node scripts/update-endpoints/fetch-json","update-endpoints:typescript":"node scripts/update-endpoints/typescript","validate:ts":"tsc --target es6 --noImplicitAny index.d.ts"},"types":"index.d.ts","version":"16.37.0"};
 
 /***/ }),
 
@@ -5672,39 +5676,133 @@ const path = __webpack_require__(622)
 const tmp = __webpack_require__(150);
 var admzip = __webpack_require__(639);
 const execute = __webpack_require__(239).execute
+//const core = require('@actions/core')
+const github = __webpack_require__(469)
 
-const publish = async function (artifact, token, repositoryOwner, repositoryName) {
+function genVersion() {
+	// UTC date-time as yyyyMMdd.HHmmss.SSS
+	return new Date().toISOString().replace(/T/, '.').replace(/-|:|Z/g, '')
+}
+
+function prepareZip(source) {
+	let zipFile = source
+	const isDir = fs.lstatSync(source).isDirectory()
+	if (isDir || path.extname(source) !== '.zip') {
+		var zip = new admzip()
+		if (isDir)
+			zip.addLocalFolder(source)
+		else
+			zip.addLocalFile(source)
+		zipFile = tmp.tmpNameSync({ postfix: '.zip' })
+		zip.writeZip(zipFile)
+	}
+	return zipFile
+}
+
+const publishAsMavenArtifact = async function (artifact, token, repositoryOwner, repositoryName) {
 	if (!fs.existsSync(artifact))
 		throw { name: 'warning', message: `Artifact "${artifact}" is not found` }
 
-	// prepare artifactFile
-	let artifactFile = artifact
-	let zipped = false
-	const isDir = fs.lstatSync(artifact).isDirectory()
-	if (isDir || path.extname(artifact) !== '.zip') {
-		var zip = new admzip()
-		if (isDir)
-			zip.addLocalFolder(artifact)
-		else
-			zip.addLocalFile(artifact)
-		artifactFile = tmp.tmpNameSync({ postfix: '.zip' })
-		zip.writeZip(artifactFile)
-		zipped = true
-	}
+	const zipFile = prepareZip(artifact)
 
-	const version = new Date().toISOString().replace(/T/, '.').replace(/-|:|Z/g, '') // Fromat UTC date-time as yyyyMMdd.HHmmss.SSS
+	const version = genVersion()
 
-	// Publish artifact to: com.github.${repositoryOwner}:${repositoryName}:master-SNAPSHOT
+	// Publish artifact to: com.github.${repositoryOwner}:${repositoryName}:${version}:zip
 	await execute(`mvn deploy:deploy-file --batch-mode -DgroupId=com.github.${repositoryOwner} \
 -DartifactId=${repositoryName} -Dversion=${version} -DgeneratePom=true \
--DrepositoryId=GitHubPackages -Durl=https://x-oauth-basic:${token}@maven.pkg.github.com/${repositoryOwner}/${repositoryName} -Dfile="${artifactFile}"`)
+-DrepositoryId=GitHubPackages -Durl=https://x-oauth-basic:${token}@maven.pkg.github.com/${repositoryOwner}/${repositoryName} -Dfile="${zipFile}"`)
 
-	// remove temporary file
-	if (zipped)
-		fs.unlinkSync(artifactFile)
+	if (zipFile !== artifact)
+		fs.unlinkSync(zipFile)
 }
 
-module.exports = publish
+const publishAsRelease = async function (asset, token, keep, repositoryOwner, repositoryName, targetCommitish) {
+	if (!fs.existsSync(asset))
+		throw { name: 'warning', message: `Asset "${asset}" is not found` }
+
+	if (!fs.existsSync('deployer.url'))
+		throw { name: 'warning', message: `File "deployer.url" missing` }
+
+	const version = genVersion()
+	const zipFile = prepareZip(asset)
+	const octokit = new github.GitHub(token);
+
+	// Create release (+tag)
+	const createReleaseResponse = await octokit.repos.createRelease({
+		owner: repositoryOwner,
+		repo: repositoryName,
+		tag_name: version,
+		target_commitish: targetCommitish,
+		name: version,
+	})
+	console.log(`Release ID: ${createReleaseResponse.data.id}`)
+	console.log(`Release URL: ${createReleaseResponse.data.html_url}`)
+
+	// Upload asset
+	const zipFileHeaders = {
+		'content-type': 'application/zip',
+		'content-length': fs.statSync(zipFile).size,
+	};
+	const uploadAssetResponse = await octokit.repos.uploadReleaseAsset({
+		url: createReleaseResponse.data.upload_url,
+		headers: zipFileHeaders,
+		name: `${repositoryName}-${version}.zip`,
+		file: fs.readFileSync(zipFile),
+	});
+
+	console.log(`Release asset URL: ${uploadAssetResponse.data.browser_download_url}`)
+
+	// Upload deploy.txt
+	const deployTxt = Buffer.concat([
+		Buffer.from(uploadAssetResponse.data.browser_download_url + '\n'),
+		fs.readFileSync('deployer.url'),
+	])
+	const deployTxtHeaders = {
+		'content-type': 'text/plain',
+		'content-length': deployTxt.length,
+	};
+	await octokit.repos.uploadReleaseAsset({
+		url: createReleaseResponse.data.upload_url,
+		headers: deployTxtHeaders,
+		name: 'deploy.txt',
+		file: deployTxt,
+	});
+
+	if (zipFile !== asset)
+		fs.unlinkSync(zipFile)
+
+	// get repo list
+	const releases = await octokit.repos.listReleases({
+		owner: repositoryOwner,
+		repo: repositoryName,
+	})
+
+	// Delete old releases (with tag)
+	if (keep && keep > 0)
+		releases.data
+			.filter(release => /^\d{8}\.\d{6}\.\d{3}$/.test(release.name)
+				&& release.tag_name === release.name)
+			.sort((a, b) => (b.name > a.name) ? 1 : ((a.name > b.name) ? -1 : 0))
+			.slice(keep)
+			.forEach(release => {
+				console.log(`Delete release ${release.name}`)
+				octokit.repos.deleteRelease({
+					owner: repositoryOwner,
+					repo: repositoryName,
+					release_id: release.id,
+				})
+				octokit.git.deleteRef({
+					owner: repositoryOwner,
+					repo: repositoryName,
+					ref: `tags/${release.tag_name}`,
+				})
+			})
+}
+
+module.exports = {
+	publishAsMavenArtifact,
+	publishAsRelease
+}
 
 
 /***/ }),

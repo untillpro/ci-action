@@ -23,11 +23,13 @@ async function run() {
 		const organization = core.getInput('organization')
 		const token = core.getInput('token')
 		const codecovToken = core.getInput('codecov-token')
-		const publishArtifact = core.getInput('publish-artifact')
+		const publishAsset = core.getInput('publish-asset')
 		const publishToken = core.getInput('publish-token')
+		const publishKeep = core.getInput('publish-keep')
 		const repository = core.getInput('repository')
 
-		const repositoryOwner = repository.split('/')[0]
+		const repositoryOwner = repository.split('/')[0] ||
+			github.context.payload && github.context.payload.repository && github.context.payload.repository.owner && github.context.payload.repository.owner.login
 		const repositoryName = repository && repository.split('/')[1] ||
 			github.context.payload && github.context.payload.repository && github.context.payload.repository.name
 
@@ -47,8 +49,10 @@ async function run() {
 		core.startGroup("Context")
 		core.info(`github.repository: ${github.repository}`)
 		core.info(`github.token: ${github.token}`)
+		//core.info(`github.context.repo: ${github.context.repo}`)
 		core.info(`repository: ${repository}`)
 		core.info(`organization: ${organization}`)
+		core.info(`repositoryOwner: ${repositoryOwner}`)
 		core.info(`repositoryName: ${repositoryName}`)
 		core.info(`actor: ${github.context.actor}`)
 		core.info(`eventName: ${github.context.eventName}`)
@@ -111,10 +115,10 @@ async function run() {
 				core.endGroup()
 			}
 
-			if (publishArtifact) {
+			if (publishAsset) {
 				core.startGroup("Publish")
 				try {
-					await publish(publishArtifact, publishToken, repositoryOwner, repositoryName)
+					await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
 				} finally {
 					core.endGroup()
 				}
