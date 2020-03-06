@@ -1,8 +1,5 @@
 name: CI-Go
-on:
-  push:
-    tags-ignore:
-      - "*"
+on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest

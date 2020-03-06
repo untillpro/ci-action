@@ -101,10 +101,10 @@ async function run() {
 		}
 
 		// TODO REMOVE THIS
-		if (publishArtifact) {
+		if (publishArtifact && branchName === 'master') {
 			core.startGroup("Publish")
 			try {
-				await publish.publishAsRelease(publishArtifact, publishToken, repositoryOwner, repositoryName)
+				await publish.publishAsRelease(publishArtifact, publishToken, repositoryOwner, repositoryName, github.context.sha)
 			} finally {
 				core.endGroup()
 			}
