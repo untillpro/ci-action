@@ -82,7 +82,7 @@ const publishAsRelease = async function (asset, token, repositoryOwner, reposito
 	const uploadAssetResponse = await octokit.repos.uploadReleaseAsset({
 		url: createReleaseResponse.data.upload_url,
 		headers,
-		name: repositoryName,
+		name: `${repositoryName}-${version}.zip`,
 		file: fs.readFileSync(zipFile)
 	});
 
