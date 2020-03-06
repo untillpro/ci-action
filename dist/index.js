@@ -5769,7 +5769,7 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 	])
 	const deployTxtHeaders = {
 		'content-type': 'text/plain',
-		'content-length': deployTxt.size,
+		'content-length': deployTxt.length,
 	};
 	await octokit.repos.uploadReleaseAsset({
 		url: createReleaseResponse.data.upload_url,
