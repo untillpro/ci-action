@@ -11,7 +11,7 @@ inputs:
     description: Auth token used to fetch dependencies from private repositories
   codecov-token:
     description: Codecov token
-  publish-artifact:
+  publish-asset:
     description: File / dir name to publish
   publish-token:
     description: Auth token used to publish

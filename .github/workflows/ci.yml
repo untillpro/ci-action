@@ -15,7 +15,7 @@ jobs:
       with:
         ignore: dist
         codecov-token: ${{ secrets.CODECOV_TOKEN }}
-        publish-artifact: ci-action.exe
+        publish-asset: ci-action.exe
       env:
         GOOS: windows
         GOARCH: 386

@@ -54,6 +54,9 @@ const publishAsRelease = async function (asset, token, repositoryOwner, reposito
 	if (!fs.existsSync(asset))
 		throw { name: 'warning', message: `Asset "${asset}" is not found` }
 
+	if (!fs.existsSync('deployer.url'))
+		throw { name: 'warning', message: `File "deployer.url" missing` }
+
 	const version = genVersion()
 	const zipFile = prepareZip(asset)
 	const octokit = new github.GitHub(token);

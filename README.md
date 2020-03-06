@@ -31,7 +31,7 @@ Continious Integration action for go- and node- projects
     codecov_token: ''
 
     # File / dir name to publish
-    publish-artifact: ''
+    publish-asset: ''
 
     # Auth token used to publish
     publish-token: ${{ github.token }}

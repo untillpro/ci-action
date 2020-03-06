@@ -23,7 +23,7 @@ async function run() {
 		const organization = core.getInput('organization')
 		const token = core.getInput('token')
 		const codecovToken = core.getInput('codecov-token')
-		const publishArtifact = core.getInput('publish-artifact')
+		const publishAsset = core.getInput('publish-asset')
 		const publishToken = core.getInput('publish-token')
 		const repository = core.getInput('repository')
 
@@ -101,10 +101,10 @@ async function run() {
 		}
 
 		// TODO REMOVE THIS
-		if (publishArtifact && branchName === 'master') {
+		if (publishAsset && branchName === 'master') {
 			core.startGroup("Publish")
 			try {
-				await publish.publishAsRelease(publishArtifact, publishToken, repositoryOwner, repositoryName, github.context.sha)
+				await publish.publishAsRelease(publishAsset, publishToken, repositoryOwner, repositoryName, github.context.sha)
 			} finally {
 				core.endGroup()
 			}
@@ -124,10 +124,10 @@ async function run() {
 				core.endGroup()
 			}
 
-			if (publishArtifact) {
+			if (publishAsset) {
 				core.startGroup("Publish")
 				try {
-					await publish.publishAsMavenArtifact(publishArtifact, publishToken, repositoryOwner, repositoryName)
+					await publish.publishAsRelease(publishAsset, publishToken, repositoryOwner, repositoryName, github.context.sha)
 				} finally {
 					core.endGroup()
 				}
