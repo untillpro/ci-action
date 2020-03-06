@@ -50,7 +50,7 @@ const publishAsMavenArtifact = async function (artifact, token, repositoryOwner,
 		fs.unlinkSync(zipFile)
 }
 
-const publishAsRelease = async function (asset, token, repositoryOwner, repositoryName, targetCommitish) {
+const publishAsRelease = async function (asset, token, keep, repositoryOwner, repositoryName, targetCommitish) {
 	if (!fs.existsSync(asset))
 		throw { name: 'warning', message: `Asset "${asset}" is not found` }
 
@@ -73,18 +73,34 @@ const publishAsRelease = async function (asset, token, repositoryOwner, reposito
 	console.log(`Release URL: ${createReleaseResponse.data.html_url}`)
 
 	// Upload asset
-	const headers = {
+	const zipFileHeaders = {
 		'content-type': 'application/zip',
-		'content-length': fs.statSync(zipFile).size
+		'content-length': fs.statSync(zipFile).size,
 	};
 	const uploadAssetResponse = await octokit.repos.uploadReleaseAsset({
 		url: createReleaseResponse.data.upload_url,
-		headers,
+		headers: zipFileHeaders,
 		name: `${repositoryName}-${version}.zip`,
 		file: fs.readFileSync(zipFile),
 	});
 
 	console.log(`Release asset URL: ${uploadAssetResponse.data.browser_download_url}`)
+
+	// Upload deploy.txt
+	const deployTxt = Buffer.concat([
+		new Buffer(uploadAssetResponse.data.browser_download_url + '\n'),
+		fs.readFileSync('deployer.url'),
+	])
+	const deployTxtHeaders = {
+		'content-type': 'text/plain',
+		'content-length': deployTxt.size,
+	};
+	await octokit.repos.uploadReleaseAsset({
+		url: createReleaseResponse.data.upload_url,
+		headers: deployTxtHeaders,
+		name: 'deploy.txt',
+		file: deployTxt,
+	});
 
 	if (zipFile !== asset)
 		fs.unlinkSync(zipFile)
@@ -96,24 +112,25 @@ const publishAsRelease = async function (asset, token, repositoryOwner, reposito
 	})
 
 	// Remove old releases (with tag)
-	releases.data
-		.filter(release => /^\d{8}\.\d{6}\.\d{3}$/.test(release.name)
-			&& release.tag_name === release.name)
-		.sort((a, b) => (b.name > a.name) ? 1 : ((a.name > b.name) ? -1 : 0))
-		.slice(5) // XXX Hard-coded
-		.forEach(release => {
-			console.log(`Remove release ${release.name}`)
-			octokit.repos.deleteRelease({
-				owner: repositoryOwner,
-				repo: repositoryName,
-				release_id: release.id,
+	if (keep && keep > 0)
+		releases.data
+			.filter(release => /^\d{8}\.\d{6}\.\d{3}$/.test(release.name)
+				&& release.tag_name === release.name)
+			.sort((a, b) => (b.name > a.name) ? 1 : ((a.name > b.name) ? -1 : 0))
+			.slice(keep)
+			.forEach(release => {
+				console.log(`Remove release ${release.name}`)
+				octokit.repos.deleteRelease({
+					owner: repositoryOwner,
+					repo: repositoryName,
+					release_id: release.id,
+				})
+				octokit.git.deleteRef({
+					owner: repositoryOwner,
+					repo: repositoryName,
+					ref: `tags/${release.tag_name}`,
+				})
 			})
-			octokit.git.deleteRef({
-				owner: repositoryOwner,
-				repo: repositoryName,
-				ref: `tags/${release.tag_name}`,
-			})
-		})
 }
 
 module.exports = {

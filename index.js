@@ -25,6 +25,7 @@ async function run() {
 		const codecovToken = core.getInput('codecov-token')
 		const publishAsset = core.getInput('publish-asset')
 		const publishToken = core.getInput('publish-token')
+		const publishKeep = core.getInput('publish-keep')
 		const repository = core.getInput('repository')
 
 		const repositoryOwner = repository.split('/')[0] ||
@@ -104,7 +105,7 @@ async function run() {
 		if (publishAsset && branchName === 'master') {
 			core.startGroup("Publish")
 			try {
-				await publish.publishAsRelease(publishAsset, publishToken, repositoryOwner, repositoryName, github.context.sha)
+				await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
 			} finally {
 				core.endGroup()
 			}
@@ -127,7 +128,7 @@ async function run() {
 			if (publishAsset) {
 				core.startGroup("Publish")
 				try {
-					await publish.publishAsRelease(publishAsset, publishToken, repositoryOwner, repositoryName, github.context.sha)
+					await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
 				} finally {
 					core.endGroup()
 				}

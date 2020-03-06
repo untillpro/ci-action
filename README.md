@@ -36,6 +36,9 @@ Continious Integration action for go- and node- projects
     # Auth token used to publish
     publish-token: ${{ github.token }}
 
+    # Number of kept releases (0 - all)
+    publish-keep: 8
+
     # Repository name with owner. For example, untillpro/ci-action
     repository: ${{ github.repository }}
 ```
