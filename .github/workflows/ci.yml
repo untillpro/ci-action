@@ -2,7 +2,7 @@ name: CI-Go
 on:
   push:
     tags-ignore:
-      - *
+      - "*"
 jobs:
   build:
     runs-on: ubuntu-latest
