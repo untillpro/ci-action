@@ -5764,7 +5764,7 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 
 	// Upload deploy.txt
 	const deployTxt = Buffer.concat([
-		new Buffer(uploadAssetResponse.data.browser_download_url + '\n'),
+		Buffer.from(uploadAssetResponse.data.browser_download_url + '\n'),
 		fs.readFileSync('deployer.url'),
 	])
 	const deployTxtHeaders = {
@@ -5787,7 +5787,7 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 		repo: repositoryName,
 	})
 
-	// Remove old releases (with tag)
+	// Delete old releases (with tag)
 	if (keep && keep > 0)
 		releases.data
 			.filter(release => /^\d{8}\.\d{6}\.\d{3}$/.test(release.name)
@@ -5795,7 +5795,7 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 			.sort((a, b) => (b.name > a.name) ? 1 : ((a.name > b.name) ? -1 : 0))
 			.slice(keep)
 			.forEach(release => {
-				console.log(`Remove release ${release.name}`)
+				console.log(`Delete release ${release.name}`)
 				octokit.repos.deleteRelease({
 					owner: repositoryOwner,
 					repo: repositoryName,
