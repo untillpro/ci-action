@@ -101,16 +101,6 @@ async function run() {
 			}
 		}
 
-		// TODO REMOVE THIS
-		if (publishAsset && branchName === 'master') {
-			core.startGroup("Publish")
-			try {
-				await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
-			} finally {
-				core.endGroup()
-			}
-		}
-
 		// Publish and automatically merge from develop to master
 		if (isNotFork && branchName === 'develop') {
 

@@ -137,16 +137,3 @@ module.exports = {
 	publishAsMavenArtifact,
 	publishAsRelease
 }
-
-async function main() {
-	try {
-		await publishAsRelease('asset.zip', '75f0a1ce307290922cba746741695b52e197360c', 'vitkud', 'ci-action', '5ed187007d6057525067e10a9820288694cb5916')
-	} catch (error) {
-		if (error.name !== 'warning') {
-			console.error(error)
-		}
-		console.log(error.message)
-	}
-}
-
-main()
