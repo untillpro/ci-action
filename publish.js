@@ -59,23 +59,34 @@ const publishAsRelease = async function (asset, token, repositoryOwner, reposito
 	const octokit = new github.GitHub(token);
 
 	// Create tag
-	await execute(`git tag ${version}`)
-	await execute(`git push origin ${version}`)
+	// await execute(`git tag ${version}`)
+	// await execute(`git push origin ${version}`)
 
 	// Create release
 	const createReleaseResponse = await octokit.repos.createRelease({
 		owner: repositoryOwner,
 		repo: repositoryName,
 		tag_name: version,
+		target_commitish: github.context.sha,
 		name: version,
 	})
 	console.log(`createReleaseResponse.data.id: ${createReleaseResponse.data.id}`)
 	console.log(`createReleaseResponse.data.html_url: ${createReleaseResponse.data.html_url}`)
 	console.log(`createReleaseResponse.data.upload_url: ${createReleaseResponse.data.upload_url}`)
 
-	// TODO use target_commitish
+	// Upload asset
+	const headers = {
+		'content-type': 'application/zip',
+		'content-length': fs.statSync(zipFile).size
+	};
+	const uploadAssetResponse = await octokit.repos.uploadReleaseAsset({
+		url: createReleaseResponse.data.upload_url,
+		headers,
+//		name: assetName,
+		file: fs.readFileSync(zipFile)
+	});
 
-	// TODO Append asset
+	console.log(`uploadAssetResponse.data.browser_download_url: ${uploadAssetResponse.data.browser_download_url}`)
 
 	if (zipFile !== asset)
 		fs.unlinkSync(zipFile)
