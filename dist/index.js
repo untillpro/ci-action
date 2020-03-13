@@ -556,10 +556,6 @@ async function run() {
 		core.info(`branchName: ${branchName}`)
 		core.endGroup()
 
-		// Reject commits to master
-		if (isNotFork && branchName === 'master')
-			throw { name: 'warning', message: 'Unexpected commit to master branch' }
-
 		// Reject ".*" folders
 		rejectHiddenFolders(ignore)
 
@@ -595,31 +591,38 @@ async function run() {
 			} finally {
 				core.endGroup()
 			}
-		}
 
-		// Publish and automatically merge from develop to master
-		if (isNotFork && branchName === 'develop') {
+		} if (language === "node_js") {
+			core.info('Node.js project detected')
 
-			core.startGroup('Merge to master')
+			// Build
+			core.startGroup('Build')
 			try {
-				await execute(`git fetch --prune --unshallow`)
-				await execute(`git fetch origin master`)
-				await execute(`git checkout master`)
-				await execute(`git merge ${github.context.sha}`)
-				await execute(`git push`)
+				await execute('npm install')
+				await execute('npm run build --if-present')
+				await execute('npm test')
+
+				// run Codecov
+				if (codecovToken) {
+					core.endGroup()
+					core.startGroup('Codecov')
+					await execute('npm install -g codecov')
+					await execute('istanbul cover ./node_modules/mocha/bin/_mocha --reporter lcovonly -- -R spec')
+					await execute(`codecov --token=${codecovToken}`)
+				}
 			} finally {
 				core.endGroup()
 			}
+		}
 
-			if (publishAsset) {
-				core.startGroup("Publish")
-				try {
-					await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
-				} finally {
-					core.endGroup()
-				}
+		// Publish asset
+		if (branchName === 'master' && publishAsset) {
+			core.startGroup("Publish")
+			try {
+				await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
+			} finally {
+				core.endGroup()
 			}
-
 		}
 
 	} catch (error) {
@@ -5746,7 +5749,7 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 	const uploadAssetResponse = await octokit.repos.uploadReleaseAsset({
 		url: createReleaseResponse.data.upload_url,
 		headers: zipFileHeaders,
-		name: `${repositoryName}-${version}.zip`,
+		name: `${repositoryName}.zip`,
 		file: fs.readFileSync(zipFile),
 	});
 
@@ -13718,7 +13721,7 @@ const detectLanguage = function (ignore) {
 		if (path.extname(file) === ".go") return "go"
 	})
 	sourceFiles.forEach(file => {
-		if (path.extname(file) === ".js") return "js"
+		if (path.extname(file) === ".js") return "node_js"
 	})
 	return "unknown"
 }
