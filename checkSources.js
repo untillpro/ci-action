@@ -34,7 +34,7 @@ const detectLanguage = function (ignore) {
 		if (path.extname(file) === ".go") return "go"
 	})
 	sourceFiles.forEach(file => {
-		if (path.extname(file) === ".js") return "js"
+		if (path.extname(file) === ".js") return "node_js"
 	})
 	return "unknown"
 }

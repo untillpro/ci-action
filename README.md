@@ -1,5 +1,4 @@
 # ci-action
-test1
 
 Continious Integration action for go- and node- projects
 
@@ -7,11 +6,11 @@ Continious Integration action for go- and node- projects
 * Reject sources which do not have "Copyright" word in first comment
 * Reject sources which have LICENSE word in first comment but LICENSE file does not exist
 * Reject go.mod with local replaces
-* Automatically merge from develop to master (only for base repo)
-  * Automatically publish artifact to Packages as Maven (group: com.github.`OWNER`, version: `DATE.TIME.mS`)
-* Reject commits to master (only for base repo)
 * For Go projects
   * Run `go build ./...` and `go test ./...`
+* For Node.js projects
+  * Run `npm install`, `npm run build --if-present` and `npm test`
+* Automatically publish Release (only for "master" branch)
 
 ## Usage
 
@@ -47,14 +46,6 @@ Continious Integration action for go- and node- projects
 
 ### Go project
 
-* Create new default branch with name "develop"
-* Define branch protection rule to disable pushing to "master" branch
-* Allow push access for "github-actions":
-
-```sh
-curl -u {{user}} -H "Content-Type: application/json" -X POST -d "[\"github-actions\"]" https://api.github.com/repos/{{organization}}/{{repo}}/branches/master/protection/restrictions/apps
-```
-
 * If private modules are used:
   * [Create personal access token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token)
   * Create secret with the received token named "REPOREADING_TOKEN"
@@ -89,9 +80,39 @@ jobs:
         codecov-token: ${{ secrets.CODECOV_TOKEN }}
 ```
 
-## Development
+### Node.js project
 
-Development should be done in the "develop" branch.
+* For automatic uploading reports to [Codecov] [Codecov](https://codecov.io/)
+  * Create secret with Codecov token named "CODECOV_TOKEN"
+* Create action workflow "ci.yml" with the following contents:
+
+```yaml
+name: CI-Node.js
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Cache Node - npm
+      uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - name: CI
+      uses: untillpro/ci-action@master
+      with:
+        codecov-token: ${{ secrets.CODECOV_TOKEN }}
+```
+
+## Development
 
 Install the dependencies
 
