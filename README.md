@@ -10,7 +10,7 @@ Continious Integration action for go- and node- projects
   * Run `go build ./...` and `go test ./...`
 * For Node.js projects
   * Run `npm install`, `npm run build --if-present` and `npm test`
-* Automatically publish Release (only for "master" branch)
+* Publish Release (only for "master" branch if `publish-asset` property is set)
 
 ## Usage
 
