@@ -2,9 +2,10 @@
 
 Continious Integration action for go- and node- projects
 
-* Reject ".*" folders
-* Reject sources which do not have "Copyright" word in first comment
-* Reject sources which have LICENSE word in first comment but LICENSE file does not exist
+* Reject ".*" folders (except `ignore` folders)
+* For sources, except `ignore` and first comments which include `DO NOT EDIT`:
+  * Reject sources which do not have "Copyright" word in first comment
+  * Reject sources which have LICENSE word in first comment but LICENSE file does not exist
 * Reject go.mod with local replaces
 * For Go projects
   * Run `go build ./...` and `go test ./...`

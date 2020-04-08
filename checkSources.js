@@ -50,6 +50,8 @@ const checkFirstCommentInSources = function (ignore) {
 	let sourceFiles = getSourceFiles('.', ignore)
 	sourceFiles.forEach(file => {
 		let firstComment = getFirstComment(file)
+		if (firstComment !== null && /\bDO NOT EDIT\b/.test(firstComment))
+			return // continue
 		if (firstComment === null || !/\bCopyright\b/.test(firstComment))
 			throw { name: 'warning', message: `Missing Copyright in first comment in file: "${file}"` }
 		if (rejectSourcesWhichHaveLicenseWord && /\bLICENSE\b/.test(firstComment))
