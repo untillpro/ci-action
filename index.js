@@ -125,7 +125,8 @@ async function run() {
 			try {
 				const res = await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
 				for (const name in res)
-					core.setOutput(name, res[name])
+					core.warning(name + ': ' + res[name])
+					// core.setOutput(name, res[name])
 			} finally {
 				core.endGroup()
 			}
