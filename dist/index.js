@@ -639,7 +639,7 @@ async function run() {
 		if (result !== null) {
 			for (const name in result) {
 				core.warning(name + ': ' + result[name])
-				core.setOutput(name, result[name])
+				core.setOutput(name, '!' + result[name])
 			}
 		}
 
