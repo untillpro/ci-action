@@ -10,7 +10,7 @@ const path = require('path')
 const tmp = require('tmp');
 var admzip = require('adm-zip');
 const execute = require('./common').execute
-//const core = require('@actions/core')
+const core = require('@actions/core')
 const github = require('@actions/github')
 
 function genVersion() {
@@ -71,6 +71,10 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 	})
 	console.log(`Release ID: ${createReleaseResponse.data.id}`)
 	console.log(`Release URL: ${createReleaseResponse.data.html_url}`)
+	core.setOutput('release_id', createReleaseResponse.data.id);
+	core.setOutput('release_name', createReleaseResponse.data.name);
+	core.setOutput('release_html_url', createReleaseResponse.data.html_url);
+	core.setOutput('release_upload_url', createReleaseResponse.data.upload_urltml_url);
 
 	// Upload asset
 	const zipFileHeaders = {
@@ -85,6 +89,7 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 	});
 
 	console.log(`Release asset URL: ${uploadAssetResponse.data.browser_download_url}`)
+	core.setOutput('asset_browser_download_url', uploadAssetResponse.data.browser_download_url);
 
 	// Upload deploy.txt
 	const deployTxt = Buffer.concat([

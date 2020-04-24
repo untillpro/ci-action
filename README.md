@@ -12,6 +12,7 @@ Continious Integration action for go- and node- projects
 * For Node.js projects
   * Run `npm install`, `npm run build --if-present` and `npm test`
 * Publish Release (only for "master" branch if `publish-asset` property is set)
+  * The `deployer.url` file must be present in the root of the repository
 
 ## Usage
 
@@ -42,6 +43,16 @@ Continious Integration action for go- and node- projects
     # Repository name with owner. For example, untillpro/ci-action
     repository: ${{ github.repository }}
 ```
+
+## Outputs
+
+In case of publish release:
+
+* `release_id`: The ID of the created Release
+* `release_name`: The name (version) of the created Release
+* `release_html_url`: The URL users can navigate to in order to view the release
+* `release_upload_url`: The URL for uploading assets to the release
+* `asset_browser_download_url`: The URL users can navigate to in order to download the uploaded asset
 
 ## Scenarios
 
