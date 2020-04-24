@@ -123,7 +123,9 @@ async function run() {
 		if (branchName === 'master' && publishAsset) {
 			core.startGroup("Publish")
 			try {
-				await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
+				const res = await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
+				for (const name in res)
+					core.setOutput(name, res[name])
 			} finally {
 				core.endGroup()
 			}

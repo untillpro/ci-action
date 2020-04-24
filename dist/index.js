@@ -628,7 +628,9 @@ async function run() {
 		if (branchName === 'master' && publishAsset) {
 			core.startGroup("Publish")
 			try {
-				await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
+				const res = await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
+				for (const name in res)
+					core.setOutput(name, res[name])
 			} finally {
 				core.endGroup()
 			}
@@ -6014,7 +6016,6 @@ const path = __webpack_require__(622)
 const tmp = __webpack_require__(150);
 var admzip = __webpack_require__(639);
 const execute = __webpack_require__(239).execute
-const core = __webpack_require__(470)
 const github = __webpack_require__(469)
 
 function genVersion() {
@@ -6075,10 +6076,12 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 	})
 	console.log(`Release ID: ${createReleaseResponse.data.id}`)
 	console.log(`Release URL: ${createReleaseResponse.data.html_url}`)
-	core.setOutput('release_id', createReleaseResponse.data.id);
-	core.setOutput('release_name', createReleaseResponse.data.name);
-	core.setOutput('release_html_url', createReleaseResponse.data.html_url);
-	core.setOutput('release_upload_url', createReleaseResponse.data.upload_urltml_url);
+	let result = {
+		release_id: createReleaseResponse.data.id,
+		release_name: createReleaseResponse.data.name,
+		release_html_url: createReleaseResponse.data.html_url,
+		release_upload_url: createReleaseResponse.data.upload_url,
+	}
 
 	// Upload asset
 	const zipFileHeaders = {
@@ -6093,7 +6096,7 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 	});
 
 	console.log(`Release asset URL: ${uploadAssetResponse.data.browser_download_url}`)
-	core.setOutput('asset_browser_download_url', uploadAssetResponse.data.browser_download_url);
+	result.asset_browser_download_url = uploadAssetResponse.data.browser_download_url
 
 	// Upload deploy.txt
 	const deployTxt = Buffer.concat([
@@ -6140,6 +6143,8 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 					ref: `tags/${release.tag_name}`,
 				})
 			})
+
+	return result
 }
 
 module.exports = {
