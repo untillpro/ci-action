@@ -86,7 +86,7 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 		url: createReleaseResponse.data.upload_url,
 		headers: zipFileHeaders,
 		name: `${repositoryName}.zip`,
-		file: fs.readFileSync(zipFile),
+		data: fs.readFileSync(zipFile),
 	});
 
 	console.log(`Release asset URL: ${uploadAssetResponse.data.browser_download_url}`)
@@ -105,7 +105,7 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 		url: createReleaseResponse.data.upload_url,
 		headers: deployTxtHeaders,
 		name: 'deploy.txt',
-		file: deployTxt,
+		data: deployTxt,
 	});
 
 	if (zipFile !== asset)

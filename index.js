@@ -119,16 +119,22 @@ async function run() {
 			}
 		}
 
+		let result = null
+
 		// Publish asset
 		if (branchName === 'master' && publishAsset) {
 			core.startGroup("Publish")
 			try {
-				const res = await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
-				for (const name in res)
-					core.warning(name + ': ' + res[name])
-					// core.setOutput(name, res[name])
+				result = await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
 			} finally {
 				core.endGroup()
+			}
+		}
+
+		if (result !== null) {
+			for (const name in result) {
+				core.warning(name + ': ' + result[name])
+				core.setOutput(name, result[name])
 			}
 		}
 

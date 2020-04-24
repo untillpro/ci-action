@@ -624,16 +624,22 @@ async function run() {
 			}
 		}
 
+		let result = null
+
 		// Publish asset
 		if (branchName === 'master' && publishAsset) {
 			core.startGroup("Publish")
 			try {
-				const res = await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
-				for (const name in res)
-					core.warning(name + ': ' + res[name])
-					// core.setOutput(name, res[name])
+				result = await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
 			} finally {
 				core.endGroup()
+			}
+		}
+
+		if (result !== null) {
+			for (const name in result) {
+				core.warning(name + ': ' + result[name])
+				core.setOutput(name, result[name])
 			}
 		}
 
@@ -6093,7 +6099,7 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 		url: createReleaseResponse.data.upload_url,
 		headers: zipFileHeaders,
 		name: `${repositoryName}.zip`,
-		file: fs.readFileSync(zipFile),
+		data: fs.readFileSync(zipFile),
 	});
 
 	console.log(`Release asset URL: ${uploadAssetResponse.data.browser_download_url}`)
@@ -6112,7 +6118,7 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 		url: createReleaseResponse.data.upload_url,
 		headers: deployTxtHeaders,
 		name: 'deploy.txt',
-		file: deployTxt,
+		data: deployTxt,
 	});
 
 	if (zipFile !== asset)
