@@ -10,7 +10,6 @@ const path = require('path')
 const tmp = require('tmp');
 var admzip = require('adm-zip');
 const execute = require('./common').execute
-//const core = require('@actions/core')
 const github = require('@actions/github')
 
 function genVersion() {
@@ -71,6 +70,12 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 	})
 	console.log(`Release ID: ${createReleaseResponse.data.id}`)
 	console.log(`Release URL: ${createReleaseResponse.data.html_url}`)
+	let result = {
+		release_id: createReleaseResponse.data.id,
+		release_name: createReleaseResponse.data.name,
+		release_html_url: createReleaseResponse.data.html_url,
+		release_upload_url: createReleaseResponse.data.upload_url,
+	}
 
 	// Upload asset
 	const zipFileHeaders = {
@@ -81,10 +86,11 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 		url: createReleaseResponse.data.upload_url,
 		headers: zipFileHeaders,
 		name: `${repositoryName}.zip`,
-		file: fs.readFileSync(zipFile),
+		data: fs.readFileSync(zipFile),
 	});
 
 	console.log(`Release asset URL: ${uploadAssetResponse.data.browser_download_url}`)
+	result.asset_browser_download_url = uploadAssetResponse.data.browser_download_url
 
 	// Upload deploy.txt
 	const deployTxt = Buffer.concat([
@@ -99,7 +105,7 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 		url: createReleaseResponse.data.upload_url,
 		headers: deployTxtHeaders,
 		name: 'deploy.txt',
-		file: deployTxt,
+		data: deployTxt,
 	});
 
 	if (zipFile !== asset)
@@ -131,6 +137,8 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 					ref: `tags/${release.tag_name}`,
 				})
 			})
+
+	return result
 }
 
 module.exports = {

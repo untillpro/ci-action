@@ -624,15 +624,21 @@ async function run() {
 			}
 		}
 
+		let publishResult = null
+
 		// Publish asset
 		if (branchName === 'master' && publishAsset) {
 			core.startGroup("Publish")
 			try {
-				await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
+				publishResult = await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)
 			} finally {
 				core.endGroup()
 			}
 		}
+
+		if (publishResult !== null)
+			for (const name in publishResult)
+				core.setOutput(name, `${publishResult[name] || ''}`)
 
 	} catch (error) {
 		if (error.name !== 'warning') {
@@ -6014,7 +6020,6 @@ const path = __webpack_require__(622)
 const tmp = __webpack_require__(150);
 var admzip = __webpack_require__(639);
 const execute = __webpack_require__(239).execute
-//const core = require('@actions/core')
 const github = __webpack_require__(469)
 
 function genVersion() {
@@ -6075,6 +6080,12 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 	})
 	console.log(`Release ID: ${createReleaseResponse.data.id}`)
 	console.log(`Release URL: ${createReleaseResponse.data.html_url}`)
+	let result = {
+		release_id: createReleaseResponse.data.id,
+		release_name: createReleaseResponse.data.name,
+		release_html_url: createReleaseResponse.data.html_url,
+		release_upload_url: createReleaseResponse.data.upload_url,
+	}
 
 	// Upload asset
 	const zipFileHeaders = {
@@ -6085,10 +6096,11 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 		url: createReleaseResponse.data.upload_url,
 		headers: zipFileHeaders,
 		name: `${repositoryName}.zip`,
-		file: fs.readFileSync(zipFile),
+		data: fs.readFileSync(zipFile),
 	});
 
 	console.log(`Release asset URL: ${uploadAssetResponse.data.browser_download_url}`)
+	result.asset_browser_download_url = uploadAssetResponse.data.browser_download_url
 
 	// Upload deploy.txt
 	const deployTxt = Buffer.concat([
@@ -6103,7 +6115,7 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 		url: createReleaseResponse.data.upload_url,
 		headers: deployTxtHeaders,
 		name: 'deploy.txt',
-		file: deployTxt,
+		data: deployTxt,
 	});
 
 	if (zipFile !== asset)
@@ -6135,6 +6147,8 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 					ref: `tags/${release.tag_name}`,
 				})
 			})
+
+	return result
 }
 
 module.exports = {

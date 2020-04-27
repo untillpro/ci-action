@@ -64,11 +64,12 @@ func main() {
 								continue
 							}
 							fmt.Print(repo.GetName())
-							if (checkForDevelopBranch(client, ctx, organization, repo.GetName())) {
-								fmt.Println(" (+)")
-							} else {
-								fmt.Println()
-							}
+							// if (checkForDevelopBranch(ctx, client, organization, repo.GetName())) {
+							// 	fmt.Println(" (+)")
+							// } else {
+							// 	fmt.Println()
+							// }
+							fmt.Println()
 						}
 						if resp.NextPage == 0 {
 							break
@@ -85,22 +86,22 @@ func main() {
 						log.Fatal("specify the repository name")
 					}
 					repo := c.Args().First()
-					client := getClient(ctx, token)
+					// client := getClient(ctx, token)
 
-					if checkForDevelopBranch(client, ctx, organization, repo) {
-						log.Print("\"develop\" branch already exist")
-					} else {
-						log.Print("Creating \"develop\" branch")
-						masterRef, _, err := client.Git.GetRef(ctx, organization, repo, "refs/heads/master")
-						if err != nil {
-							log.Fatalf("Unable to get \"master\" branch: %s\n", err)
-						}
-						developRef := &github.Reference{Ref: github.String("refs/heads/develop"), Object: &github.GitObject{SHA: masterRef.Object.SHA}}
-						_, _, err = client.Git.CreateRef(ctx, organization, repo, developRef)
-						if err != nil {
-							log.Fatalf("Unable to create \"develop\" branch: %s\n", err)
-						}
-					}
+					// if checkForDevelopBranch(ctx, client, organization, repo) {
+					// 	log.Print("\"develop\" branch already exist")
+					// } else {
+					// 	log.Print("Creating \"develop\" branch")
+					// 	masterRef, _, err := client.Git.GetRef(ctx, organization, repo, "refs/heads/master")
+					// 	if err != nil {
+					// 		log.Fatalf("Unable to get \"master\" branch: %s\n", err)
+					// 	}
+					// 	developRef := &github.Reference{Ref: github.String("refs/heads/develop"), Object: &github.GitObject{SHA: masterRef.Object.SHA}}
+					// 	_, _, err = client.Git.CreateRef(ctx, organization, repo, developRef)
+					// 	if err != nil {
+					// 		log.Fatalf("Unable to create \"develop\" branch: %s\n", err)
+					// 	}
+					// }
 
 					// TODO: ...
 					fmt.Println(repo)
@@ -127,15 +128,15 @@ func getClient(ctx context.Context, token string) *github.Client {
 	return github.NewClient(tc)
 }
 
-func checkForDevelopBranch(client *github.Client, ctx context.Context, owner, repo string) bool {
-	branches, _, err := client.Repositories.ListBranches(ctx, owner, repo, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	for _, branch := range branches {
-		if branch.GetName() == "develop" {
-			return true
-		}
-	}
-	return false
-}
+// func checkForDevelopBranch(ctx context.Context, client *github.Client, owner, repo string) bool {
+// 	branches, _, err := client.Repositories.ListBranches(ctx, owner, repo, nil)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	for _, branch := range branches {
+// 		if branch.GetName() == "develop" {
+// 			return true
+// 		}
+// 	}
+// 	return false
+// }
