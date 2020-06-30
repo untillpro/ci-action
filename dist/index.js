@@ -590,7 +590,7 @@ async function run() {
 
 				// run Codecov / test
 				if (codecovToken) {
-					await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic')
+					await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=github.com/untillpro/...')
 					core.endGroup()
 					core.startGroup('Codecov')
 					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecovToken}"`)
