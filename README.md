@@ -56,6 +56,12 @@ In case of publish release:
 
 ## Scenarios
 
+### Creaing CODECOV_TOKEN
+
+- Go to apropriate codecov resource, e.g. https://codecov.io/gh/untillpro/airs-istorage
+- Copy token from there
+- Use it for CODECOV_TOKEN secret, say https://github.com/untillpro/airs-istorage/settings/secrets
+
 ### Go project
 
 * If private modules are used:
