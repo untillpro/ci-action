@@ -25,13 +25,14 @@
   },
   "homepage": "https://github.com/untillpro/ci-action#readme",
   "dependencies": {
-    "@actions/core": "^1.2.4",
-    "@actions/github": "^2.2.0",
-    "adm-zip": "^0.4.16"
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0",
+    "adm-zip": "^0.4.16",
+    "tmp": "^0.2.1"
   },
   "devDependencies": {
-    "@zeit/ncc": "^0.22.3",
-    "eslint": "^6.8.0",
-    "jest": "^25.5.4"
+    "@vercel/ncc": "^0.24.1",
+    "eslint": "^7.11.0",
+    "jest": "^26.5.3"
   }
 }
