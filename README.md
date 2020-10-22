@@ -8,7 +8,7 @@ Continious Integration action for go- and node- projects
   * Reject sources which have LICENSE word in first comment but LICENSE file does not exist
 * Reject go.mod with local replaces
 * For Go projects
-  * Run `go build ./...` and `go test ./...`
+  * Run `go build f./...` and `go test ./...`
 * For Node.js projects
   * Run `npm install`, `npm run build --if-present` and `npm test`
 * Publish Release (only for "master" branch if `publish-asset` property is set)
@@ -73,7 +73,7 @@ In case of publish release:
 
 ```yaml
 name: CI-Go
-on: [push]
+on: [push, pull_request_target]
 jobs:
   build:
     runs-on: ubuntu-latest
