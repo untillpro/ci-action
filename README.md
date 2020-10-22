@@ -106,7 +106,7 @@ jobs:
 
 ```yaml
 name: CI-Node.js
-on: [push]
+on: [push,  pull_request_target]
 jobs:
   build:
     runs-on: ubuntu-latest
