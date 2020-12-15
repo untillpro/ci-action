@@ -65,7 +65,8 @@ In case of publish release:
 ### Go project
 
 * If private modules are used:
-  * [Create personal access token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token)
+  * [Create personal access token](https://github.com/settings/tokens)
+    * [See also](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token)
   * Create secret with the received token named "REPOREADING_TOKEN"
 * For automatic uploading reports to [Codecov] [Codecov](https://codecov.io/)
   * Create secret with Codecov token named "CODECOV_TOKEN"
