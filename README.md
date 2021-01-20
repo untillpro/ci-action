@@ -29,7 +29,10 @@ Continious Integration action for go- and node- projects
     token: ''
 
     # Codecov token
-    codecov_token: ''
+    codecov-token: ''
+
+    # Codecov: use Go Race Detector
+    codecov-go-race: true
 
     # File / dir name to publish
     publish-asset: ''
@@ -58,9 +61,9 @@ In case of publish release:
 
 ### Creaing CODECOV_TOKEN
 
-* Go to apropriate codecov resource, e.g. <https://codecov.io/gh/untillpro/airs-istorage>
+* Go to apropriate codecov resource, e.g. <https://codecov.io/gh/untillpro/ci-action>
 * Copy token from there
-* Use it for CODECOV_TOKEN secret, say <https://github.com/untillpro/airs-istorage/settings/secrets>
+* Use it for CODECOV_TOKEN secret, say <https://github.com/untillpro/ci-action/settings/secrets>
 
 ### Go project
 
