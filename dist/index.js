@@ -149,7 +149,7 @@ async function run() {
 		const organization = core.getInput('organization')
 		const token = core.getInput('token')
 		const codecovToken = core.getInput('codecov-token')
-		const codecovGoRace = core.getInput('codecov-go-race')
+		const codecovGoRace = core.getInput ('codecov-go-race') === 'true'
 		const publishAsset = core.getInput('publish-asset')
 		const publishToken = core.getInput('publish-token')
 		const publishKeep = core.getInput('publish-keep')
