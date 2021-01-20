@@ -18,4 +18,4 @@ jobs:
         publish-asset: ci-action.exe
       env:
         GOOS: windows
-        GOARCH: 386
+        GOARCH: amd64
