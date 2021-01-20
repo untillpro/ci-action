@@ -15,7 +15,8 @@ jobs:
       with:
         ignore: dist
         codecov-token: ${{ secrets.CODECOV_TOKEN }}
+        codecov-go-race: false
         publish-asset: ci-action.exe
       env:
         GOOS: windows
-        GOARCH: amd64
+        GOARCH: 386

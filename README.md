@@ -31,6 +31,9 @@ Continious Integration action for go- and node- projects
     # Codecov token
     codecov-token: ''
 
+    # Codecov: use Go Race Detector
+    codecov-go-race: true
+
     # File / dir name to publish
     publish-asset: ''
 
