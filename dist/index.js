@@ -149,6 +149,7 @@ async function run() {
 		const organization = core.getInput('organization')
 		const token = core.getInput('token')
 		const codecovToken = core.getInput('codecov-token')
+		const codecovGoRace = core.getInput('codecov-go-race')
 		const publishAsset = core.getInput('publish-asset')
 		const publishToken = core.getInput('publish-token')
 		const publishKeep = core.getInput('publish-keep')
@@ -211,7 +212,10 @@ async function run() {
 
 				// run Codecov / test
 				if (codecovToken) {
-					await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...')
+					if (codecovGoRace)
+						await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...')
+					else
+						await execute('go test ./... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...')
 					core.endGroup()
 					core.startGroup('Codecov')
 					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecovToken}"`)
