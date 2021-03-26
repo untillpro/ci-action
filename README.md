@@ -82,10 +82,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Set up Go 1.13
+    - name: Set up Go
       uses: actions/setup-go@v1
       with:
-        go-version: 1.13
+        go-version: 1.15
     - name: Checkout
       uses: actions/checkout@v2
     - name: Cache Go - Modules
