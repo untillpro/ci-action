@@ -40,11 +40,11 @@ async function run() {
 		if (branchName && branchName.indexOf('refs/heads/') > -1)
 			branchName = branchName.slice('refs/heads/'.length)
 
-		// Print githubJson
-		core.startGroup("githubJson")
-		const githubJson = JSON.stringify(github, undefined, 2)
-		core.info(githubJson)
-		core.endGroup()
+		// // Print githubJson
+		// core.startGroup("githubJson")
+		// const githubJson = JSON.stringify(github, undefined, 2)
+		// core.info(githubJson)
+		// core.endGroup()
 
 		// Print data from webhook context
 		core.startGroup("Context")
