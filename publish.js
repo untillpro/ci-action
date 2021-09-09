@@ -58,10 +58,10 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 
 	const version = genVersion()
 	const zipFile = prepareZip(asset)
-	const octokit = new github.GitHub(token);
+	const octokit = github.getOctokit(token)
 
 	// Create release (+tag)
-	const createReleaseResponse = await octokit.repos.createRelease({
+	const createReleaseResponse = await octokit.rest.repos.createRelease({
 		owner: repositoryOwner,
 		repo: repositoryName,
 		tag_name: version,
@@ -82,7 +82,7 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 		'content-type': 'application/zip',
 		'content-length': fs.statSync(zipFile).size,
 	};
-	const uploadAssetResponse = await octokit.repos.uploadReleaseAsset({
+	const uploadAssetResponse = await octokit.rest.repos.uploadReleaseAsset({
 		url: createReleaseResponse.data.upload_url,
 		headers: zipFileHeaders,
 		name: `${repositoryName}.zip`,
@@ -101,7 +101,7 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 		'content-type': 'text/plain',
 		'content-length': deployTxt.length,
 	};
-	await octokit.repos.uploadReleaseAsset({
+	await octokit.rest.repos.uploadReleaseAsset({
 		url: createReleaseResponse.data.upload_url,
 		headers: deployTxtHeaders,
 		name: 'deploy.txt',
@@ -112,7 +112,7 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 		fs.unlinkSync(zipFile)
 
 	// get repo list
-	const releases = await octokit.repos.listReleases({
+	const releases = await octokit.rest.repos.listReleases({
 		owner: repositoryOwner,
 		repo: repositoryName,
 	})
@@ -126,12 +126,12 @@ const publishAsRelease = async function (asset, token, keep, repositoryOwner, re
 			.slice(keep)
 			.forEach(release => {
 				console.log(`Delete release ${release.name}`)
-				octokit.repos.deleteRelease({
+				octokit.rest.repos.deleteRelease({
 					owner: repositoryOwner,
 					repo: repositoryName,
 					release_id: release.id,
 				})
-				octokit.git.deleteRef({
+				octokit.rest.git.deleteRef({
 					owner: repositoryOwner,
 					repo: repositoryName,
 					ref: `tags/${release.tag_name}`,
