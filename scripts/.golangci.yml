@@ -5,7 +5,7 @@ linters:
     - megacheck
     - govet
     - revive
-    - cyclop
+#    - cyclop
     - gosec
   fast: true
 linters-settings:
