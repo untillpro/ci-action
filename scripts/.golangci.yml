@@ -31,7 +31,7 @@ issues:
    - underscore
    - underscores
   exclude-rules:
-   - path: _test\.go
+   - path: _test.go
      linters:
        - gocyclo
        - revive
