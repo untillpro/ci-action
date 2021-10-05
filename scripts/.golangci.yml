@@ -10,7 +10,7 @@ linters:
   fast: true
 linters-settings:
   cyclop:
-    max-complexity: 18
+    max-complexity: 15
   revive:
   # see https://github.com/mgechev/revive#available-rules for details.
     ignore-generated-header: true
