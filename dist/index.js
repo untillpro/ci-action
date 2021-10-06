@@ -13762,6 +13762,7 @@ async function run() {
 		const publishToken = core.getInput('publish-token')
 		const publishKeep = core.getInput('publish-keep')
 		const repository = core.getInput('repository')
+		const runModTidy = core.getInput('run-mod-tidy') === 'true'
 
 		const repositoryOwner = repository.split('/')[0] ||
 			github.context.payload && github.context.payload.repository && github.context.payload.repository.owner && github.context.payload.repository.owner.login
@@ -13817,6 +13818,10 @@ async function run() {
 					await execute(`git config --global url."https://${token}:x-oauth-basic@github.com/${organization}".insteadOf "https://github.com/${organization}"`)
 				}
 				await execute('go build ./...')
+
+				if (runModTidy) {
+					await execute('go mod tidy')
+				}
 
 				// run Codecov / test
 				if (codecovToken) {
