@@ -53,9 +53,9 @@ const checkFirstCommentInSources = function (ignore) {
 		if (firstComment !== null && /\bDO NOT EDIT\b/.test(firstComment))
 			return // continue
 		if (firstComment === null || !/\bCopyright\b/.test(firstComment))
-			throw { name: 'warning', message: `Missing Copyright in first comment in file: "${file}"` }
+			throw new Error(`Missing Copyright in first comment in file: "${file}"`)
 		if (rejectSourcesWhichHaveLicenseWord && /\bLICENSE\b/.test(firstComment))
-			throw { name: 'warning', message: `LICENSE file does not exist but first comment has LICENSE word in file: "${file}"` }
+			throw new Error(`LICENSE file does not exist but first comment has LICENSE word in file: "${file}"`)
 	})
 }
 
@@ -65,7 +65,7 @@ const checkGoMod = function () {
 	let matches = goMod.matchAll(/^\s*replace\s+(.*?)\s*=>\s*(.*?)\s*$/gm);
 	for (const match of matches) {
 		if (match[2].startsWith('.') || match[2].startsWith('/') || match[2].startsWith('\\'))
-			throw { name: 'warning', message: `The file go.mod contains a local replace: ${match[0].trim()}` }
+			throw new Error(`The file go.mod contains a local replace: ${match[0].trim()}`)
 	}
 }
 

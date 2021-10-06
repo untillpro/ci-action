@@ -59,9 +59,9 @@ const checkFirstCommentInSources = function (ignore) {
 		if (firstComment !== null && /\bDO NOT EDIT\b/.test(firstComment))
 			return // continue
 		if (firstComment === null || !/\bCopyright\b/.test(firstComment))
-			throw { name: 'warning', message: `Missing Copyright in first comment in file: "${file}"` }
+			throw new Error(`Missing Copyright in first comment in file: "${file}"`)
 		if (rejectSourcesWhichHaveLicenseWord && /\bLICENSE\b/.test(firstComment))
-			throw { name: 'warning', message: `LICENSE file does not exist but first comment has LICENSE word in file: "${file}"` }
+			throw new Error(`LICENSE file does not exist but first comment has LICENSE word in file: "${file}"`)
 	})
 }
 
@@ -71,7 +71,7 @@ const checkGoMod = function () {
 	let matches = goMod.matchAll(/^\s*replace\s+(.*?)\s*=>\s*(.*?)\s*$/gm);
 	for (const match of matches) {
 		if (match[2].startsWith('.') || match[2].startsWith('/') || match[2].startsWith('\\'))
-			throw { name: 'warning', message: `The file go.mod contains a local replace: ${match[0].trim()}` }
+			throw new Error(`The file go.mod contains a local replace: ${match[0].trim()}`)
 	}
 }
 
@@ -100,9 +100,15 @@ const exec = util.promisify(__nccwpck_require__(3129).exec)
 
 const execute = async function (command) {
 	console.log(`[command]${command}`)
-	const { stdout, stderr } = await exec(command)
-	if (stdout) console.log(stdout)
-	if (stderr) console.log(stderr)
+	try {
+		const { stdout, stderr } = await exec(command)
+		if (stdout) console.log(stdout)
+		if (stderr) console.log(stderr)
+	} catch (error) {
+		if (error.stdout) console.log(error.stdout)
+		if (error.stderr) console.log(error.stderr)
+		throw new Error(`${error.message} (${error.code})`)
+	}
 }
 
 module.exports = {
@@ -13403,7 +13409,7 @@ function prepareZip(source) {
 
 const publishAsMavenArtifact = async function (artifact, token, repositoryOwner, repositoryName) {
 	if (!fs.existsSync(artifact))
-		throw { name: 'warning', message: `Artifact "${artifact}" is not found` }
+		throw new Error(`Artifact "${artifact}" is not found`)
 
 	const zipFile = prepareZip(artifact)
 
@@ -13420,10 +13426,10 @@ const publishAsMavenArtifact = async function (artifact, token, repositoryOwner,
 
 const publishAsRelease = async function (asset, token, keep, repositoryOwner, repositoryName, targetCommitish) {
 	if (!fs.existsSync(asset))
-		throw { name: 'warning', message: `Asset "${asset}" is not found` }
+		throw new Error(`Asset "${asset}" is not found`)
 
 	if (!fs.existsSync('deployer.url'))
-		throw { name: 'warning', message: `File "deployer.url" missing` }
+		throw new Error(`File "deployer.url" missing`)
 
 	const version = genVersion()
 	const zipFile = prepareZip(asset)
@@ -13539,7 +13545,7 @@ let rejectHiddenFolders = function (ignore) {
 	getSubFolders(".").forEach(folder => {
 		if (folder.charAt(0) == '.' && folder != ".git" && folder != ".github") {
 			if (!ignore.includes(folder))
-				throw { name: 'warning', message: `Unexpected hidden folder: "${folder}"` }
+				throw new Error(`Unexpected hidden folder: "${folder}"`)
 		}
 	})
 }
@@ -13868,9 +13874,6 @@ async function run() {
 				core.setOutput(name, `${publishResult[name] || ''}`)
 
 	} catch (error) {
-		if (error.name !== 'warning') {
-			console.error(error)
-		}
 		core.setFailed(error.message)
 	}
 }

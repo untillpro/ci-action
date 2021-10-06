@@ -140,9 +140,6 @@ async function run() {
 				core.setOutput(name, `${publishResult[name] || ''}`)
 
 	} catch (error) {
-		if (error.name !== 'warning') {
-			console.error(error)
-		}
 		core.setFailed(error.message)
 	}
 }
