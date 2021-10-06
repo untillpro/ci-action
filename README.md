@@ -45,6 +45,9 @@ Continious Integration action for go- and node- projects
 
     # Repository name with owner. For example, untillpro/ci-action
     repository: ${{ github.repository }}
+
+    # Only for go-projects: execute `go mod tidy`
+    run-mod-tidy: true
 ```
 
 ## Outputs

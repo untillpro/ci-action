@@ -25,6 +25,9 @@ inputs:
   repository:
     description: 'Repository name with owner. For example, untillpro/ci-action'
     default: ${{ github.repository }}
+  run-mod-tidy:
+    description: 'Only for go-projects: execute `go mod tidy`'
+    default: true
 outputs:
   release_id:
     description: 'The ID of the created Release'
