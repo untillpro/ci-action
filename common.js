@@ -10,9 +10,15 @@ const exec = util.promisify(require('child_process').exec)
 
 const execute = async function (command) {
 	console.log(`[command]${command}`)
-	const { stdout, stderr } = await exec(command)
-	if (stdout) console.log(stdout)
-	if (stderr) console.log(stderr)
+	try {
+		const { stdout, stderr } = await exec(command)
+		if (stdout) console.log(stdout)
+		if (stderr) console.log(stderr)
+	} catch (error) {
+		if (error.stdout) console.log(error.stdout)
+		if (error.stderr) console.log(error.stderr)
+		throw new Error(`${error.message} (${error.code})`)
+	}
 }
 
 module.exports = {
