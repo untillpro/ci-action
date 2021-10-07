@@ -14,13 +14,13 @@ const publish = require('./publish')
 
 const getInputAsArray = function (name) {
 	let input = core.getInput(name)
-	return !input ? [] : input.split(',')
+	return !input ? [] : input.split(',').map(it => it.trim())
 }
 
 async function run() {
 	try {
 		const ignore = getInputAsArray('ignore')
-		const organization = core.getInput('organization')
+		const organization = getInputAsArray('organization')
 		const token = core.getInput('token')
 		const codecovToken = core.getInput('codecov-token')
 		const codecovGoRace = core.getInput ('codecov-go-race') === 'true'
@@ -79,10 +79,13 @@ async function run() {
 			// Build
 			core.startGroup('Build')
 			try {
-				process.env.GOPRIVATE = (process.env.GOPRIVATE ? process.env.GOPRIVATE + ',' : '') + `github.com/${organization}/*`
-				if (token) {
-					await execute(`git config --global url."https://${token}:x-oauth-basic@github.com/${organization}".insteadOf "https://github.com/${organization}"`)
+				for (const i in organization) {
+					process.env.GOPRIVATE = (process.env.GOPRIVATE ? process.env.GOPRIVATE + ',' : '') + `github.com/${organization[i]}/*`
+					if (token) {
+						await execute(`git config --global url."https://${token}:x-oauth-basic@github.com/${organization[i]}".insteadOf "https://github.com/${organization[i]}"`)
+					}
 				}
+
 				await execute('go build ./...')
 
 				if (runModTidy) {
