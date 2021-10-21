@@ -7,10 +7,12 @@ linters:
     - revive
     - cyclop
     - gosec
+    - nakedret
+    - stylecheck
   fast: true
 linters-settings:
   cyclop:
-    max-complexity: 15
+    max-complexity: 12
   revive:
   # see https://github.com/mgechev/revive#available-rules for details.
     ignore-generated-header: true
