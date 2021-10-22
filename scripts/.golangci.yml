@@ -12,7 +12,7 @@ linters:
   fast: true
 linters-settings:
   stylecheck:
-    checks: [ "all", "-ST1003" ]    
+    checks: [ "all", "-ST1003", "-ST1023" ]    
   cyclop:
     max-complexity: 12
   revive:
