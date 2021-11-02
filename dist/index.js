@@ -14113,6 +14113,7 @@ async function run() {
 		const publishKeep = core.getInput('publish-keep')
 		const repository = core.getInput('repository')
 		const runModTidy = core.getInput('run-mod-tidy') === 'true'
+		const mainBranch = core.getInput('main-branch')
 
 		const repositoryOwner = repository.split('/')[0] ||
 			github.context.payload && github.context.payload.repository && github.context.payload.repository.owner && github.context.payload.repository.owner.login
@@ -14218,7 +14219,7 @@ async function run() {
 		let publishResult = null
 
 		// Publish asset
-		if (branchName === 'master' && publishAsset) {
+		if (branchName === mainBranch && publishAsset) {
 			core.startGroup("Publish")
 			try {
 				publishResult = await publish.publishAsRelease(publishAsset, publishToken, publishKeep, repositoryOwner, repositoryName, github.context.sha)

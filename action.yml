@@ -28,6 +28,9 @@ inputs:
   run-mod-tidy:
     description: 'Only for go-projects: execute `go mod tidy`'
     default: true
+  main-branch:
+    description: Main branch name
+    default: main
 outputs:
   release_id:
     description: 'The ID of the created Release'
