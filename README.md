@@ -48,6 +48,9 @@ Continious Integration action for go- and node- projects
 
     # Only for go-projects: execute `go mod tidy`
     run-mod-tidy: true
+
+    # Main branch name
+    main-branch: 'main'
 ```
 
 ## Outputs
