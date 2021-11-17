@@ -10,6 +10,7 @@ linters:
     - nakedret
     - stylecheck
     - misspell
+    - errcheck
   fast: true
 linters-settings:
   stylecheck:
