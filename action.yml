@@ -31,6 +31,9 @@ inputs:
   main-branch:
     description: Main branch name
     default: main
+  ignore-copyright:
+    description: 'Do not check the copyright in first comments of source code'
+    default: false
 outputs:
   release_id:
     description: 'The ID of the created Release'
