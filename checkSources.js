@@ -45,14 +45,14 @@ const getFirstComment = function (file) {
 	return m !== null && m.length > 0 ? m[0] : null
 }
 
-const checkFirstCommentInSources = function (ignore) {
+const checkFirstCommentInSources = function (ignore, ignoreCopyright) {
 	let rejectSourcesWhichHaveLicenseWord = !fs.existsSync('LICENSE')
 	let sourceFiles = getSourceFiles('.', ignore)
 	sourceFiles.forEach(file => {
 		let firstComment = getFirstComment(file)
 		if (firstComment !== null && /\bDO NOT EDIT\b/.test(firstComment))
 			return // continue
-		if (firstComment === null || !/\bCopyright\b/.test(firstComment))
+		if (!ignoreCopyright && (firstComment === null || !/\bCopyright\b/.test(firstComment)))
 			throw new Error(`Missing Copyright in first comment in file: "${file}"`)
 		if (rejectSourcesWhichHaveLicenseWord && /\bLICENSE\b/.test(firstComment))
 			throw new Error(`LICENSE file does not exist but first comment has LICENSE word in file: "${file}"`)

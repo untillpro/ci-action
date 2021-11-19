@@ -51,6 +51,9 @@ Continious Integration action for go- and node- projects
 
     # Main branch name
     main-branch: 'main'
+
+    # Do not check the copyright in first comments of source code
+    ignore-copyright: false
 ```
 
 ## Outputs

@@ -30,6 +30,7 @@ async function run() {
 		const repository = core.getInput('repository')
 		const runModTidy = core.getInput('run-mod-tidy') === 'true'
 		const mainBranch = core.getInput('main-branch')
+		const ignoreCopyright = core.getInput('ignore-copyright') === 'true'
 
 		const repositoryOwner = repository.split('/')[0] ||
 			github.context.payload && github.context.payload.repository && github.context.payload.repository.owner && github.context.payload.repository.owner.login
@@ -68,7 +69,7 @@ async function run() {
 
 		// Reject sources which do not have "Copyright" word in first comment
 		// Reject sources which have LICENSE word in first comment but LICENSE file does not exist
-		checkSources.checkFirstCommentInSources(ignore)
+		checkSources.checkFirstCommentInSources(ignore, ignoreCopyright)
 
 		let language = checkSources.detectLanguage()
 		if (language === "go") {
