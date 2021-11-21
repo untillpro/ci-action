@@ -18,5 +18,5 @@ echo "Install cyclop"
 go install github.com/heeus/cyclop/cmd/cyclop@v1.2.101
 
 echo "Run cyclop"
-$(go env GOPATH)/bin/cyclop -skipSwitch=true -maxComplexity 8 .
+$(go env GOPATH)/bin/cyclop -skipSwitch=false -maxComplexity 8 .
 
