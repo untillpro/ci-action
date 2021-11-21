@@ -5,7 +5,6 @@ linters:
     - megacheck
     - govet
     - revive
-    - cyclop
     - gosec
     - nakedret
     - stylecheck
@@ -15,8 +14,6 @@ linters:
 linters-settings:
   stylecheck:
     checks: [ "all", "-ST1003", "-ST1023" ]    
-  cyclop:
-    max-complexity: 12
   revive:
   # see https://github.com/mgechev/revive#available-rules for details.
     ignore-generated-header: true
@@ -39,7 +36,6 @@ issues:
   exclude-rules:
    - path: _test.go
      linters:
-       - gocyclo
        - revive
        - gosec
        - errcheck

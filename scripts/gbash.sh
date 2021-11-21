@@ -12,7 +12,11 @@ echo "Download golangci config"
 curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/.golangci.yml > /home/runner/work/.golangci.yml
 
 echo "Run linter jobs"
-$1/bin/golangci-lint run        
+$1/bin/golangci-lint run     
 
+echo "Install cyclop"
+go install github.com/heeus/cyclop/cmd/cyclop@v1.2.101
 
+echo "Run cyclop"
+$(go env GOPATH)/bin/cyclop -skipSwitch=true -maxComplexity 12 .
 
