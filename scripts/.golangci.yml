@@ -14,6 +14,9 @@ linters:
 linters-settings:
   stylecheck:
     checks: [ "all", "-ST1003", "-ST1023" ]    
+  misspell:
+    ignore-words:
+      - untill
   revive:
   # see https://github.com/mgechev/revive#available-rules for details.
     ignore-generated-header: true
