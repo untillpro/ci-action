@@ -14,9 +14,14 @@ curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/.go
 echo "Run linter jobs"
 $1/bin/golangci-lint run     
 
-echo "Install cyclop"
-go install github.com/untillpro/cyclop/cmd/cyclop@v1.2.101
+status="$?"
 
-echo "Run cyclop"
-$(go env GOPATH)/bin/cyclop -skipSwitch=true -maxComplexity 12 .
+if [ ${status} -eq 0 ]; then 
+  echo "Install cyclop"
+  go install github.com/untillpro/cyclop/cmd/cyclop@v1.2.101
 
+  echo "Run cyclop"
+  $(go env GOPATH)/bin/cyclop -skipSwitch=true -maxComplexity 12 .
+else
+	exit 1
+fi
