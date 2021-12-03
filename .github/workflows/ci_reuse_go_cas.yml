@@ -1,0 +1,51 @@
+name: CI - golang
+on:
+  workflow_call:
+    secrets:
+      reporeading_token:
+        required: true
+      codecov_token:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      scylladb:
+        image: scylladb/scylla:latest
+        ports:
+          - 9042:9042
+        options: --health-cmd "cqlsh --debug"
+
+    steps:
+
+    - name: Set up Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.17
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Cache Go - Modules
+      uses: actions/cache@v1
+      with:
+        path: ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
+    - name: CI
+      uses: untillpro/ci-action@master
+      with:
+        organization: 'untillpro, heeus'
+        token: ${{ secrets.reporeading_token }}
+        codecov-token: ${{ secrets.codecov_token }}
+
+    - name: Check copyright
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
+
+    - name: Linters
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
+
