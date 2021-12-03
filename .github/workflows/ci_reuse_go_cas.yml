@@ -10,8 +10,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      CASSANDRA_TESTS_ENABLED: true
 
     services:
       scylladb:
@@ -44,6 +42,11 @@ jobs:
         organization: 'untillpro, heeus'
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
+
+    - name: Test 
+      run: go test -v ./...
+      env:
+        CASSANDRA_TESTS_ENABLED: true
 
     - name: Check copyright
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
