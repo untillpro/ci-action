@@ -2,7 +2,7 @@
 
 branch=$(git symbolic-ref --short HEAD)
 
-stack="alpha"
+stack="alpha2"
 if [[ $branch =~ "release" ]]; then
   stack="release"
 fi
