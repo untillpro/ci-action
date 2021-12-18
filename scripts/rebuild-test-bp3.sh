@@ -1,11 +1,14 @@
 #!/bin/bash
 
+
 # get current repo name
 fullname=$(git config --local remote.origin.url)
+echo "fullname:$fullname"
 pname="${fullname##*/}"
+echo "pname:$pname"
 
 # get airs-bp3 to bp3 folder                                   
-git clone https://ivvheeus:${repotoken}@github.com/untillpro/airs-bp3 bp3
+git clone https://ivvheeus:${du}@github.com/untillpro/airs-bp3 bp3
 
 # go to airs-bp3 repo folder
 cd bp3
@@ -19,8 +22,4 @@ else
   # run tests
   go test -race ./...
 fi
-
-
-
-
 
