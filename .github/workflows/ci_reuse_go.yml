@@ -41,3 +41,6 @@ jobs:
     - name: Linters
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
 
+    - name: Rebuild airs-bp3
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rebuild-test-bp3.sh | bash
+
