@@ -18,8 +18,6 @@ git clone https://github.com/untillpro/airs-bp3
 # go to airs-bp3 repo folder
 cd airs-bp3
 
-go get $reponame
-
 # check if airs-bp23 depends on current repo
 f=$(grep ${pname} go.mod)
 if [ -z "$f" ]; then
