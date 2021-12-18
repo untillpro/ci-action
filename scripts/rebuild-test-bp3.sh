@@ -14,7 +14,7 @@ pname="${fullname##*/}"
 echo "pname:$pname"
 
 # get airs-bp3 to bp3 folder                                   
-git clone https://ivvheeus:${du}@github.com/untillpro/airs-bp3
+git clone https://github.com/untillpro/airs-bp3
 # go to airs-bp3 repo folder
 cd airs-bp3
 
