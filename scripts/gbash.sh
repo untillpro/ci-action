@@ -25,3 +25,7 @@ if [ ${status} -eq 0 ]; then
 else
 	exit 1
 fi
+
+
+# Rebuild BP3 if needed
+sh rebuild-test-bp3.sh
