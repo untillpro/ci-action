@@ -19,7 +19,7 @@ git clone https://github.com/untillpro/airs-bp3
 cd airs-bp3
 
 go env -w GOSUMDB=off
-go get github.com/heeus/$pname
+go get $reponame
 
 # check if airs-bp23 depends on current repo
 f=$(grep ${pname} go.mod)
