@@ -43,14 +43,16 @@ jobs:
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
 
-    - name: Test 
-      run: go test -v ./...
-      env:
-        CASSANDRA_TESTS_ENABLED: true
-
     - name: Check copyright
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
 
     - name: Linters
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
+
+    - name: Test 
+      run: go test -v ./...
+      env:
+        CASSANDRA_TESTS_ENABLED: true
+        
+
 
