@@ -14,7 +14,7 @@ echo "pname:$pname"
 
 # check if the repo is not Interface
 needbp3=1
-if [ -z "interface.go" ]; then
+if [ -f "interface.go" ]; then
   needbp3=0
 fi
 
