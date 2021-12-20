@@ -18,7 +18,7 @@ if [ -f interface.go ]; then
   needbp3=0
 fi
 
-if $needbp3 eq 1; then 
+if [ $needbp3 eq 1 ]; then 
   echo "The repo is Implementation - it's possible airs-pb3 needed"
   cd ..
   # get airs-bp3 to bp3 folder                                   
