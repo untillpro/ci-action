@@ -14,7 +14,7 @@ echo "pname:$pname"
 
 # check if the repo is not Interface
 needbp3=1
-if [ -f "interface.go" ]; then
+if [ -f interface.go ]; then
   needbp3=0
 fi
 
@@ -41,6 +41,6 @@ if $needbp3 eq 1; then
     go test -race ./...
   fi
 else
-  echo "The repo is Interface - no airs-pb3"
+  echo "The repo is the Interface - no airs-pb3"
 fi
 
