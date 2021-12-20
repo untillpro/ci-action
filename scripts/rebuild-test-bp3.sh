@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # get current repo name
 fullname=$(git config --local remote.origin.url)
 echo "fullname:$fullname"
@@ -13,13 +12,17 @@ echo "reponame:$reponame"
 pname="${fullname##*/}"
 echo "pname:$pname"
 
+cd ..
 # get airs-bp3 to bp3 folder                                   
 git clone https://github.com/untillpro/airs-bp3
 # go to airs-bp3 repo folder
 cd airs-bp3
 
 go env -w GOSUMDB=off
-go get $reponame
+
+echo "replace go.mod"
+strreplace="replace $reponame => ../$pname"
+echo  $strreplace >> go.mod
 
 # check if airs-bp23 depends on current repo
 f=$(grep ${pname} go.mod)
