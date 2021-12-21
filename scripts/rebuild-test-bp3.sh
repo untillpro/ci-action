@@ -31,6 +31,8 @@ if [ $needbp3 -eq 1 ]; then
   strreplace="replace $reponame => ../$pname"
   echo  $strreplace >> go.mod
 
+  go mod tidy
+ 	
   # check if airs-bp23 depends on current repo
   f=$(grep ${pname} go.mod)
   if [ -z "$f" ]; then
