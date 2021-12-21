@@ -7,7 +7,7 @@ if [[ $branch =~ "release" ]]; then
   stack="release"
 fi
 if [[ $branch =~ "rc" ]]; then
-  stack="rc"
+  stack="rc2"
 fi
 
 stackfile="./airs-config-sync/stacks/$stack/stack.yml"
