@@ -13,12 +13,6 @@ pname="${fullname##*/}"
 echo "pname:$pname"
 
 # check if the repo is not Interface
-needbp3=1
-if [ -f interface.go ]; then
-  needbp3=0
-fi
-
-if [ $needbp3 -eq 1 ]; then 
   echo "The repo is Implementation - it's possible airs-pb3 needed"
   cd ..
   # get airs-bp3 to bp3 folder                                   
@@ -31,8 +25,6 @@ if [ $needbp3 -eq 1 ]; then
   strreplace="replace $reponame => ../$pname"
   echo  $strreplace >> go.mod
 
-  go mod tidy
- 	
   # check if airs-bp23 depends on current repo
   f=$(grep ${pname} go.mod)
   if [ -z "$f" ]; then
@@ -42,7 +34,4 @@ if [ $needbp3 -eq 1 ]; then
     # run tests
     go test -race ./...
   fi
-else
-  echo "The repo is the Interface - no airs-pb3"
-fi
 
