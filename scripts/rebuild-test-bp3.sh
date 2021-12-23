@@ -21,7 +21,7 @@ echo "pname:$pname"
   cd airs-bp3
 
   go env -w GOSUMDB=off
-  echo "replace go.mod"
+  echo "replace $reponame => ../$pname"
   strreplace="replace $reponame => ../$pname"
   echo  $strreplace >> go.mod
 
