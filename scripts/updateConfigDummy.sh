@@ -34,7 +34,7 @@ while read -r line; do
     fi 
   else
      if [[ $line =~ "$updtag:" ]]; then
-       sed -i "${i}s/.*$updtag.*/      $reptag: $tagvalue/" ${stackfile}
+       sed -i "${i}s/.*$updtag.*/        $reptag: $tagvalue/" ${stackfile}
        break
      fi
   fi
