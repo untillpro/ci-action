@@ -53,7 +53,7 @@ jobs:
       if: github.event_name == 'push'
       uses: actions-js/push@master
       with:
-        directory: ../../core-istructsmem/airs-bp3
+        directory: ../../${{ github.event.repository.name }}/airs-bp3
         repository: untillpro/airs-bp3
         message: "Update repo airs-bp3"
         branch: "main"
