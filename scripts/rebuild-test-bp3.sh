@@ -20,15 +20,16 @@ git clone https://github.com/untillpro/airs-bp3
 # go to airs-bp3 repo folder
 cd airs-bp3
 
+go env -w GOSUMDB=off
 echo "gh_event: $gh_event"
 if [[ "$gh_event" == "push" ]];then 
-  go env -w GOSUMDB=off
   echo "go get $reponame"
   go get $reponame
 else
   echo "replace $reponame => ../$pname"
   strreplace="replace $reponame => ../$pname"
   echo  $strreplace >> go.mod
+  go mod tidy
 fi
 
 # check if airs-bp23 depends on current repo
