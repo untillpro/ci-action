@@ -39,5 +39,15 @@ else
   echo "airs-pb3 will be tested now..."
   # run tests
   go test -race ./...
+  if [[ "$gh_event" == "push" ]];then 
+    echo "Push new version of $reponame to git"
+  fi
+fi
+
+# Need to commit bp3 with new repo
+if [[ "$gh_event" == "push" ]];then 
+  go add .
+  go commit -m "$reponame is updated"
+  go push
 fi
 
