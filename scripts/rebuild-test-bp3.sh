@@ -46,6 +46,8 @@ fi
 
 # Need to commit bp3 with new repo
 if [[ "$gh_event" == "push" ]];then 
+  git config --global user.email "ivvist@gmail.com"
+  git config --global user.name "ivvist"
   git add .
   git commit -m "$reponame is updated"
   git push
