@@ -44,4 +44,5 @@ else
   fi
 fi
 cd ..
+ls
 
