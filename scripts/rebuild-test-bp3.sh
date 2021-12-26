@@ -43,6 +43,8 @@ else
     echo "Push new version of $reponame to git"
   fi
 fi
+
 cd ..
+echo "Dir:"
 ls
 
