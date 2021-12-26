@@ -46,8 +46,8 @@ fi
 
 # Need to commit bp3 with new repo
 if [[ "$gh_event" == "push" ]];then 
-  go add .
-  go commit -m "$reponame is updated"
-  go push
+  git add .
+  git commit -m "$reponame is updated"
+  git push
 fi
 
