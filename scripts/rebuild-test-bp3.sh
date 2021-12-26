@@ -48,7 +48,8 @@ fi
 if [[ "$gh_event" == "push" ]];then 
   git config --global user.email "ivvist@gmail.com"
   git config --global user.name "ivvist"
-  git remote set-url origin https://$github_token@github.com/untillpro/airs-bp3.git
+  git config --global url."https://${github_token}@github".insteadOf "https://github"
+#  git remote set-url origin https://${github_token}@github.com/untillpro/airs-bp3.git
   git add .
   git commit -m "$reponame is updated"
   git push
