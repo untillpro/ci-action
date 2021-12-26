@@ -44,13 +44,3 @@ else
   fi
 fi
 
-# Need to commit bp3 with new repo
-if [[ "$gh_event" == "push" ]];then 
-  git config --global user.email "ivvist@gmail.com"
-  git config --global user.name "ivvist"
-  git remote set-url origin https://${github_token}@github.com/untillpro/airs-bp3
-  git add .
-  git commit -m "$reponame is updated"
-  git push
-fi
-
