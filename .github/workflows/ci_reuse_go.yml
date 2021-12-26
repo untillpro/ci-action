@@ -45,4 +45,6 @@ jobs:
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rebuild-test-bp3.sh | bash
       env: 
         github_token: ${{ secrets.reporeading_token }}
+        gh_event: ${{ github.event_name }}
+
 
