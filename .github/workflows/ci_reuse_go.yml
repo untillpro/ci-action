@@ -50,7 +50,7 @@ jobs:
         gh_event: ${{ github.event_name }}
 
     - name: Push changes to pb3
-      if: github.event_name == 'push'
+      if: github.event_name == 'push' &&  (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
       uses: actions-js/push@master
       with:
         directory: ../../${{ github.event.repository.name }}/airs-bp3
