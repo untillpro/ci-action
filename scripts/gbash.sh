@@ -11,6 +11,9 @@ curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/instal
 echo "Download golangci config"
 curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/.golangci.yml > /home/runner/work/.golangci.yml
 
+echo ".golangci.yaml text: "
+ls /home/runner/work/.golangci.yml
+
 echo "Run linter jobs"
 $1/bin/golangci-lint run -v
 
