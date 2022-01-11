@@ -12,7 +12,7 @@ echo "Download golangci config"
 curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/.golangci.yml > /home/runner/work/.golangci.yaml
 
 echo "Run linter jobs"
-$1/bin/golangci-lint run -v
+$1/bin/golangci-lint run --config /home/runner/work/.golangci.yaml -v
 
 status="$?"
 
