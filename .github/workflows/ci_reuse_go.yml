@@ -50,13 +50,13 @@ jobs:
         gh_event: ${{ github.event_name }}
 
     - name: Display github.event.repository.name
-      run: echo ${github.event.repository.name}
+      run: echo ${{ github.event.repository.name }}
 
     - name: Display github.ref
-      run: echo ${github.ref}
+      run: echo ${{ github.ref }}
 
     - name: Display github.event_name
-      run: echo ${github.event_name}
+      run: echo ${{ github.event_name }}
 
     - name: Push changes to pb3
       if: (github.event.repository.name == 'heeus' || github.event.repository.name == 'untillpro') && github.event_name == 'push' &&  (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
