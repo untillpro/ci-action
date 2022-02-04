@@ -49,8 +49,8 @@ jobs:
         github_token: ${{ secrets.reporeading_token }}
         gh_event: ${{ github.event_name }}
 
-    - name: Display github.event.repository.name
-      run: echo ${{ github.event.repository.name }}
+    - name: Display github.repositoryUrl
+      run: echo ${{ github.repositoryUrl }}
 
     - name: Display github.ref
       run: echo ${{ github.ref }}
