@@ -59,7 +59,7 @@ jobs:
       run: echo ${{ github.event_name }}
 
     - name: Push changes to pb3
-      if: ${{ contains(github.repositoryUrl, 'heeus' ) || contains(github.repositoryUrl, 'untillpro' ) &&
+      if: ${{ (contains(github.repositoryUrl, 'heeus' ) || contains(github.repositoryUrl, 'untillpro' )) &&
         github.event_name == 'push' &&  (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') }}
       uses: actions-js/push@master
       with:
