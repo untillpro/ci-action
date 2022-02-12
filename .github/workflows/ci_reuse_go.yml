@@ -44,7 +44,7 @@ jobs:
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
 
     - name: Rebuild airs-bp3
-      if: ${{ (github.ref != 'refs/heads/rc' && github.ref != 'refs/heads/release') }}
+      if: ${{ (github.ref != 'refs/heads/rc' && github.ref != 'refs/heads/release' && github.ref != 'refs/heads/rcfix') }}
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rebuild-test-bp3.sh | bash
       env: 
         github_token: ${{ secrets.reporeading_token }}
