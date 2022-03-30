@@ -4,7 +4,7 @@ branch=$(git symbolic-ref --short HEAD)
 
 stack="alpha2"
 if [[ $branch =~ "release" ]]; then
-  stack="release"
+  stack="euro"
 fi
 if [[ $branch =~ "rc" ]]; then
   stack="rc2"
