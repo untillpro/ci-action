@@ -41,8 +41,8 @@ jobs:
         organization: 'untillpro, heeus'
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
-        CHARGEBEE_PUBLISHABLE_KEY: ${{ CHARGEBEE_PUBLISHABLE_KEY }}
-        CHARGEBEE_SITE_NAME: ${{ CHARGEBEE_SITE_NAME }}
+        CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.CHARGEBEE_PUBLISHABLE_KEY }}
+        CHARGEBEE_SITE_NAME: ${{ secrets.CHARGEBEE_SITE_NAME }}
 
     - name: Check copyright
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
