@@ -42,6 +42,9 @@ jobs:
         organization: 'untillpro, heeus'
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
+      env:
+        CHARGEBEE_PUBLISHABLE_KEY: test_YUEO6XBUPdyaV1EG5SNYtOWAHXFp9PFi 
+        CHARGEBEE_SITE_NAME: untillair-test
 
     - name: Check copyright
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
@@ -53,7 +56,5 @@ jobs:
       run: go test -v ./...
       env:
         CASSANDRA_TESTS_ENABLED: true
-        CHARGEBEE_PUBLISHABLE_KEY: test_YUEO6XBUPdyaV1EG5SNYtOWAHXFp9PFi 
-        CHARGEBEE_SITE_NAME: untillair-test
 
 
