@@ -41,6 +41,7 @@ jobs:
         organization: 'untillpro, heeus'
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
+      env:	
         CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.CHARGEBEE_PUBLISHABLE_KEY }}
         CHARGEBEE_SITE_NAME: ${{ secrets.CHARGEBEE_SITE_NAME }}
 
