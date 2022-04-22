@@ -53,6 +53,7 @@ jobs:
       run: go test -v ./...
       env:
         CASSANDRA_TESTS_ENABLED: true
-        
+        CHARGEBEE_PUBLISHABLE_KEY: test_YUEO6XBUPdyaV1EG5SNYtOWAHXFp9PFi 
+        CHARGEBEE_SITE_NAME: untillair-test
 
 
