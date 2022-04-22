@@ -42,7 +42,6 @@ jobs:
         organization: 'untillpro, heeus'
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
-      env:
         CHARGEBEE_PUBLISHABLE_KEY: test_YUEO6XBUPdyaV1EG5SNYtOWAHXFp9PFi 
         CHARGEBEE_SITE_NAME: untillair-test
 
