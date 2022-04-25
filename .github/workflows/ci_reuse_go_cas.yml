@@ -52,5 +52,8 @@ jobs:
       run: go test -v ./...
       env:
         CASSANDRA_TESTS_ENABLED: true
+        CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
+        CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
+
 
 
