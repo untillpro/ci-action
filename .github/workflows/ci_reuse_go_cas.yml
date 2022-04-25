@@ -6,6 +6,10 @@ on:
         required: true
       codecov_token:
         required: true
+      chargebee_token:
+        required: true
+      chargebee_sitename:
+        required: true
 
 jobs:
   build:
