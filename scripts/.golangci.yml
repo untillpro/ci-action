@@ -16,6 +16,8 @@ linters:
     - unparam
   fast: true
 linters-settings:
+  unparam:
+    check-exported: true
   stylecheck:
     checks: [ "all", "-ST1003", "-ST1023" ]    
   misspell:
