@@ -97,7 +97,7 @@ async function run() {
 				// run Codecov / test
 				if (codecovToken) {
 					if (codecovGoRace)
-						await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...')
+						await execute('go test ./... -v -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...')
 					else
 						await execute('go test ./... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...')
 					core.endGroup()
