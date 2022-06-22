@@ -40,7 +40,7 @@ jobs:
       env:
         CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
         CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
-        HEEUS_SKIP_SLOW_TEST: 0
+        HEEUS_SKIP_SLOW_TESTS: 0
 
     - name: Check copyright
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
