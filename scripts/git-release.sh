@@ -92,6 +92,7 @@ fi
 
 echo "Making new app build..."
 # Execute build.sh
+shver=${shver:1}
 bash build.sh ${shver} ${shrel}
 
 builddir=".build"
