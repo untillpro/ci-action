@@ -58,18 +58,10 @@ generate_post_data()
 EOF
 }
 
-release_id=$(curl -H "Accept: application/json" \
-   -H "Authorization: token ${token}" \
-   -d "$(generate_post_data)" \
-   https://api.github.com/repos/$repo_full_name/releases | jq -r '.id')
-
-if [ -z ${release_id} ] || [[ ${release_id} == null ]]; then
-  echo "release_id is empty"
-  exit 1
-fi
-
 echo "Making new app build..."
 # Execute build.sh
+git config --global url."https://${token}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+
 shver=${shver:1}
 bash build.sh ${shver} ${shrel}
 
@@ -80,10 +72,33 @@ if [[ ! -d ${builddir} ]]; then
   exit 1
 fi
 
+execDone=false
+if [ -d "$builddir" ]
+then
+  if [ "$(ls -A $builddir)" ]; then
+    execDone=true
+  fi
+fi
+	
+if [ ${execDone} = false ];then 
+  echo "Folder .build is empty - nothing was built."
+  exit 1
+fi
+
+release_id=$(curl -H "Accept: application/json" \
+   -H "Authorization: token ${token}" \
+   -d "$(generate_post_data)" \
+   https://api.github.com/repos/$repo_full_name/releases | jq -r '.id')
+
+if [ -z ${release_id} ] || [[ ${release_id} == null ]]; then
+  echo "release_id is empty"
+  exit 1
+fi
+
 cd $builddir
 for fname in *
 do
-   if [[ ${fname} != "." ]];then
+   if [[ ${fname} != "*" ]];then
      echo "File $fname is uploading..."
      url="https://uploads.github.com/repos/$repo_full_name/releases/${release_id}/assets?name=$(basename $fname)"
      echo "url: $url"
