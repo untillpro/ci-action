@@ -18,6 +18,8 @@ linters:
 linters-settings:
   stylecheck:
     checks: [ "all", "-ST1003", "-ST1023" ]    
+  staticcheck:
+    checks: [ "all", "-SA1019"]    
   misspell:
     ignore-words:
       - untill
