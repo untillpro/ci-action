@@ -43,3 +43,21 @@ jobs:
     - name: Linters
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
 
+    - name: Rebuild airs-bp3
+      if: ${{ (github.event_name == 'push') && (github.ref != 'refs/heads/rc' && github.ref != 'refs/heads/release' && github.ref != 'refs/heads/rcfix') }}
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rebuild-test-bp3.sh | bash
+      env: 
+        github_token: ${{ secrets.reporeading_token }}
+        gh_event: ${{ github.event_name }}
+
+    - name: Push changes to pb3
+      if: ${{ (contains(github.repositoryUrl, 'heeus' ) || contains(github.repositoryUrl, 'untillpro' )) &&
+        github.event_name == 'push' &&  (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') }}
+      uses: actions-js/push@master
+      with:
+        directory: ../../${{ github.event.repository.name }}/airs-bp3
+        repository: untillpro/airs-bp3
+        message: "Update repo airs-bp3"
+        branch: "main"
+        github_token: ${{ secrets.personal_token }}
+
