@@ -45,7 +45,7 @@ jobs:
 
     - name: Rebuild airs-bp3
       if: ${{ (github.event_name == 'push') && (github.ref != 'refs/heads/rc' && github.ref != 'refs/heads/release' && github.ref != 'refs/heads/rcfix') }}
-`      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rebuild-test-bp3.sh | bash
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rebuild-test-bp3.sh | bash
       env: 
         github_token: ${{ secrets.reporeading_token }}
         gh_event: ${{ github.event_name }}
