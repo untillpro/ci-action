@@ -6,8 +6,6 @@ on:
         required: true
       codecov_token:
         required: true
-      personal_token:	
-        required: true
 
 jobs:
   build:
