@@ -4,10 +4,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Set up Go 1.18
+    - name: Set up Go 1.17
       uses: actions/setup-go@v3
       with:
-        go-version: 1.18
+        go-version: 1.17
     - name: Checkout
       uses: actions/checkout@v3
     - name: CI
