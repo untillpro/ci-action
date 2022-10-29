@@ -33,6 +33,7 @@ jobs:
     - name: CI
       uses: untillpro/ci-action@master
       with:
+        ignore: ${{ inputs.ignore_copyright }}
         organization: 'untillpro, heeus'
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
