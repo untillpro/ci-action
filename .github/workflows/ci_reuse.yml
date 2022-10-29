@@ -1,6 +1,10 @@
 name: CI - node
 on:
   workflow_call:
+    inputs:
+      ignore_copyright:
+        required: false
+        type: string
 
 jobs:
   build:
@@ -34,5 +38,6 @@ jobs:
     - name: CI
       uses: untillpro/ci-action@master
       with:
+        ignore: ${{ inputs.ignore_copyright }}
         organization: 'untillpro'
 
