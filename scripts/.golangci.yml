@@ -11,9 +11,6 @@ linters:
     - misspell
     - errcheck
     - unparam
-    - deadcode
-    - structcheck
-    - unparam
   fast: true
 linters-settings:
   stylecheck:
