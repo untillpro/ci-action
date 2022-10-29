@@ -5,16 +5,15 @@ on:
       ignore_copyright:
         required: false
         type: string
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Set up Node.js 12.x
+    - name: Set up Node.js 
       uses: actions/setup-node@v3
       with:
-        node-version: '12.x'
+        node-version: '16.x'
 
     - name: Checkout
       uses: actions/checkout@v3
