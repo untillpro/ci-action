@@ -2,6 +2,8 @@
 
 fc=$1
 fs=$2
+echo "$1"
+echo "$2"
 
 if [ $fc -gt 2 ]
 then
