@@ -28,7 +28,7 @@ jobs:
 
     - name: Check pull request file size
       if: github.event_name == 'pull_request'
-      run: curl -s https://raw.githubusercontent.com/untillproci-action/master/scripts/checkPR.sh | bash
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/checkPR.sh | bash
       env: 
         GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
         pr_number: ${{ github.event.number }}
