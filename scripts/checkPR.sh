@@ -10,10 +10,12 @@ doCheckPR ()  {
   singlelimit=100000
   cntlimit=200  
 
-  header="Accept: application/vnd.github.v3+json"
+  # Set git token
+  header="Accept: application/vnd.github+json"
   repo_full_name=$(git config --get remote.origin.url | sed 's/.*:\/\/github.com\///;s/.git$//')
-  files="api.github.com/repos/$repo_full_name/pulls/$pr_number/files"
-  body=$(curl -sSL -H "Authorization: $GITHUB_TOKEN" -H "$header" "$files")
+  files="https://api.github.com/repos/$repo_full_name/pulls/$pr_number/files"
+
+  body=$(curl -s -u "${token}:x-oauth-basic" -H "$header" "$files")
 
   ln=0
   maxln=0
@@ -33,8 +35,10 @@ doCheckPR ()  {
     ((fcnt=fcnt+1))
   done
 
+  echo "Number of files in Pull request: $fcnt"
+
   if [ $ln -gt $overalsize ];then
-	echo "::error::Total size $ln of changed files exceeds limt $overalsize bytes"
+	echo "::error::Total size $ln of changed files exceeds limit $overalsize bytes"
 	exit 1
   fi
   if [ $maxln -gt $singlelimit ];then
