@@ -5,6 +5,9 @@ on:
       ignore_copyright:
         required: false
         type: string
+    secrets:
+      reporeading_token:
+        required: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,6 +20,9 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@v3
+      with: 
+        token: ${{ secrets.reporeading_token }}
+        submodules: true
 
     - name: Check pull request file size
       if: github.event_name == 'pull_request'
