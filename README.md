@@ -124,10 +124,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Set up Node.js 12.x
+    - name: Set up Node.js 16.x
       uses: actions/setup-node@v1
       with:
-        node-version: '12.x'
+        node-version: '16.x'
     - name: Checkout
       uses: actions/checkout@v2
     - name: Cache Node - npm
