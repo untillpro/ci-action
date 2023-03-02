@@ -30,7 +30,7 @@ else
   strreplace="replace $reponame => ../$pname"
   echo  $strreplace >> go.mod
 fi
-go mod tidy
+#go mod tidy
 
 # check if airs-bp23 depends on current repo
 f=$(grep ${pname} go.mod)
