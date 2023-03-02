@@ -73,4 +73,3 @@ jobs:
         message: "Update repo airs-bp3"
         branch: "main"
         github_token: ${{ secrets.personal_token }}
-

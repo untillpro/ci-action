@@ -59,4 +59,3 @@ jobs:
 
     - name: Linters
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
-
