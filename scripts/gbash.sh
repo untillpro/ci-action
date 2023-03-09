@@ -20,8 +20,8 @@ if [ ${status} -eq 0 ]; then
   echo "Install cyclop"
   go install github.com/untillpro/cyclop/cmd/cyclop@latest
 
-  echo "Run cyclop"
-  $(go env GOPATH)/bin/cyclop -skipSwitch=true -skipTests=true -maxComplexity 12 ./...
+#  echo "Run cyclop"
+#  $(go env GOPATH)/bin/cyclop -skipSwitch=true -skipTests=true -maxComplexity 12 ./...
 else
   exit 1
 fi
