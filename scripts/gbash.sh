@@ -17,8 +17,8 @@ $1/bin/golangci-lint run --config /home/runner/work/.golangci.yaml -v
 status="$?"
 
 if [ ${status} -eq 0 ]; then 
-  echo "Install cyclop"
-  go install github.com/untillpro/cyclop/cmd/cyclop@latest
+#  echo "Install cyclop"
+#  go get github.com/untillpro/cyclop/cmd/cyclop@latest
 
 #  echo "Run cyclop"
 #  $(go env GOPATH)/bin/cyclop -skipSwitch=true -skipTests=true -maxComplexity 12 ./...
