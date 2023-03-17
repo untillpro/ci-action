@@ -2,12 +2,12 @@
 
 branch=$(git symbolic-ref --short HEAD)
 
-stack="alpha2"
+stack="dev"
 if [[ $branch =~ "release" ]]; then
   stack="euro"
 fi
 if [[ $branch =~ "rc" ]]; then
-  stack="rc2"
+  stack="rc"
 fi
 
 stackfile="./airs-config-sync/stacks/$stack/stack.yml"
