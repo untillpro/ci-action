@@ -97,11 +97,15 @@ async function run() {
 				// run Codecov / test
 				if (codecovToken) {
 					core.startGroup('Codecov')
-					await execute('go install github.com/heeus/gocov@latest')
+//					await execute('go install github.com/heeus/gocov@latest')
+//					if (codecovGoRace)
+//						await execute('gocov -t="-race -covermode=atomic" ./... -v')
+//					else
+//						await execute('gocov -t="-covermode=atomic" ./... -v')
 					if (codecovGoRace)
-						await execute('gocov -t="-race -covermode=atomic" ./... -v')
+						await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...')
 					else
-						await execute('gocov -t="-covermode=atomic" ./... -v')
+						await execute('go test ./... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...')
 					core.endGroup()
 					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecovToken}"`)
 				} else {
