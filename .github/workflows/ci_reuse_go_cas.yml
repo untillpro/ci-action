@@ -50,7 +50,7 @@ jobs:
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
         run-mod-tidy: false
-     env:
+      env:
         CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
         CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
         HEEUS_SKIP_SLOW_TESTS: 0
