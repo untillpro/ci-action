@@ -17401,9 +17401,9 @@ async function run() {
 					core.startGroup('Codecov')
 					await execute('go install github.com/heeus/gocov@latest')
 					if (codecovGoRace)
-						await execute('gocov -t="-race -covermode=atomic" ./... ')
+						await execute('gocov -t="-race -covermode=atomic" ./... -v')
 					else
-						await execute('gocov -t="-covermode=atomic" ./... ')
+						await execute('gocov -t="-covermode=atomic" ./... -v')
 					core.endGroup()
 					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecovToken}"`)
 				} else {
