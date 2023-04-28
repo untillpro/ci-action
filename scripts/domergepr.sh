@@ -4,10 +4,6 @@ jqbase64 () {
   echo "$team" | base64 -d | jq -r "$1"
 }
 
-# Get list of open Pull requests
-prlist=$(gh pr list --state open --json number -R ${repo} | jq -r '.[].number')
-for pr_number in ${prlist}
-do
   # Check if author is Developer
   # Get author of the pull request
   auth_login=$(gh pr view $pr_number --json author -R ${repo}| jq -r '.[].login')
@@ -41,5 +37,4 @@ do
 
   # Merge pull request with squash
   gh pr merge https://github.com/${repo}/pull/$pr_number --squash --admin
-done
 
