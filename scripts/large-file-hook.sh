@@ -9,9 +9,9 @@ for row in "${arr2[@]}";do
 done
 if (( $totalsize > 100000 )); then 
   echo " Attempt to commit too large files: Files size = $totalsize"
-	 exit 94585767
+	 exit 1
 fi
 if (( $totalcnt > 200 )); then 
   echo " Attempt to commit too much files: Files number = $totalcnt"
-	 exit 94585767
+	 exit 1
 fi
