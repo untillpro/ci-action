@@ -5,6 +5,9 @@ on:
       ignore_copyright:
         required: false
         type: string
+      test_folder:
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
@@ -45,6 +48,7 @@ jobs:
       uses: untillpro/ci-action@master
       with:
         ignore: ${{ inputs.ignore_copyright }}
+        test_folder: ${{ inputs.test_folder }}
         organization: 'untillpro,heeus'
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
