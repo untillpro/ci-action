@@ -33,7 +33,10 @@ inputs:
     default: main
   ignore-copyright:
     description: 'Do not check the copyright in first comments of source code'
-    default: false
+    default: ''
+  test-folder:
+    description: 'Test only in passed folder'
+    default: ''
 outputs:
   release_id:
     description: 'The ID of the created Release'

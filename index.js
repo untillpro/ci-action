@@ -31,7 +31,7 @@ async function run() {
 		const runModTidy = core.getInput('run-mod-tidy') === 'true'
 		const mainBranch = core.getInput('main-branch')
 		const ignoreCopyright = core.getInput('ignore-copyright') === 'true'
-		const testfolder = core.getInput('test_folder')
+		const testfolder = core.getInput('test-folder')
 
 		const repositoryOwner = repository.split('/')[0] ||
 			github.context.payload && github.context.payload.repository && github.context.payload.repository.owner && github.context.payload.repository.owner.login
