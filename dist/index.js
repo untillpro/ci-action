@@ -17392,6 +17392,9 @@ async function run() {
 					}
 				}
 
+				if (Boolean(testfolder)) {
+					await execute('cd ${testfolder}')  
+				}
 				await execute('go build ./...')
 
 				if (runModTidy) {
@@ -17402,9 +17405,6 @@ async function run() {
 				if (codecovToken) {
 					core.startGroup('Codecov')
 					await execute('go install github.com/heeus/gocov@latest')
-					if (Boolean(testfolder)) {
-						await execute('cd ${testfolder}')  
-					}
 					if (codecovGoRace)
 						await execute('gocov -t="-race -covermode=atomic" ./... -v')
 					else
