@@ -53,7 +53,7 @@ Continious Integration action for go- and node- projects
     main-branch: 'main'
 
     # Do not check the copyright in first comments of source code
-    ignore-copyright: ''
+    ignore-copyright: false
 
     # Test only in folder
     test-folder: ''

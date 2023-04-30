@@ -33,7 +33,7 @@ inputs:
     default: main
   ignore-copyright:
     description: 'Do not check the copyright in first comments of source code'
-    default: ''
+    default: false
   test-folder:
     description: 'Test only in passed folder'
     default: ''
