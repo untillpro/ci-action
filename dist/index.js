@@ -17333,6 +17333,8 @@ async function run() {
 		const runModTidy = core.getInput('run-mod-tidy') === 'true'
 		const mainBranch = core.getInput('main-branch')
 		const ignoreCopyright = core.getInput('ignore-copyright') === 'true'
+		const testfolder = core.getInput('test_folder')
+
 
 		const repositoryOwner = repository.split('/')[0] ||
 			github.context.payload && github.context.payload.repository && github.context.payload.repository.owner && github.context.payload.repository.owner.login
@@ -17400,6 +17402,9 @@ async function run() {
 				if (codecovToken) {
 					core.startGroup('Codecov')
 					await execute('go install github.com/heeus/gocov@latest')
+					if (Boolean(testfolder)) {
+						await execute('cd ${testfolder}')  
+					}
 					if (codecovGoRace)
 						await execute('gocov -t="-race -covermode=atomic" ./... -v')
 					else
