@@ -89,10 +89,7 @@ async function run() {
 					}
 				}
 
-				if (Boolean(testfolder)) {
-					await execute('cd ${testfolder}')  
-				}
-				await execute('go build ./...')
+				await execute('go build ./' + testfolder + '...')
 
 				if (runModTidy) {
 					await execute('go mod tidy')
@@ -102,6 +99,10 @@ async function run() {
 				if (codecovToken) {
 					core.startGroup('Codecov')
 					await execute('go install github.com/heeus/gocov@latest')
+
+					if (testfolder.length > 0) {
+						await execute('cd ' + testfolder)  
+					}
 					if (codecovGoRace)
 						await execute('gocov -t="-race -covermode=atomic" ./... -v')
 					else
@@ -115,7 +116,7 @@ async function run() {
 					core.endGroup()
 					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecovToken}"`)
 				} else {
-					await execute('go test ./...')
+					await execute('go test ./' + testfolder + '...')
 				}
 			} finally {
 				core.endGroup()
