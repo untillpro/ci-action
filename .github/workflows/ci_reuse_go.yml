@@ -60,7 +60,7 @@ jobs:
     - name: Linters
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
       env: 
-        test-folder: ${{ inputs.test_folder }}
+        testfolder: ${{ inputs.test_folder }}
 
     - name: Rebuild airs-bp3
       if: ${{ (contains(github.repositoryUrl, 'heeus' ) || contains(github.repositoryUrl, 'untillpro' )) && 
