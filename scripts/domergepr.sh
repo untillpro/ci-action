@@ -1,9 +1,5 @@
 #!/bin/bash                    
 
-jqbase64 () {
-  echo "$team" | base64 -d | jq -r "$1"
-}
-
   # Check if author is Developer
   # Get author of the pull request
   auth_login=$(gh pr view $pr_number --json author -R ${repo}| jq -r '.[].login')
@@ -15,8 +11,7 @@ jqbase64 () {
 
   # Get teams, included in project 
   teams=$(curl -s -u "${token}:x-oauth-basic" -H "$header" "$urlteams")
-  for team in $(echo "$teams" | jq -r '.[] | @base64'); do
-    slug=$(jqbase64 '.slug') 
+  for slug in $(echo "$teams" | jq -r '.[].slug'); do
     echo "Team: $slug"
     if [[ slug=="devs" ]] || [[ slug=="developers" ]]; then
       url=$(jqbase64 '.url') 
