@@ -17,10 +17,12 @@ jqbase64 () {
   teams=$(curl -s -u "${token}:x-oauth-basic" -H "$header" "$urlteams")
   for team in $(echo "$teams" | jq -r '.[] | @base64'); do
     slug=$(jqbase64 '.slug') 
+    echo "Team: $slug"
     if [[ slug=="devs" ]] || [[ slug=="developers" ]]; then
       url=$(jqbase64 '.url') 
       users=$(curl -s -u "${token}:x-oauth-basic" -H "$header" "$url/members")
       for user in $(echo "$users" | jq -r '.[].login'); do
+        echo "user: $user"
         # Check if author belongs to a team
         if [[ $auth_login == $user ]]; then   
 	 userfound=1	
