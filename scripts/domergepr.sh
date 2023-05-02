@@ -1,5 +1,9 @@
 #!/bin/bash                    
 
+jqbase64 () {
+  echo "$team" | base64 -d | jq -r "$1"
+}
+
   # Check if author is Developer
   # Get author of the pull request
   auth_login=$(gh pr view $pr_number --json author -R ${repo}| jq -r '.[].login')
@@ -11,7 +15,8 @@
 
   # Get teams, included in project 
   teams=$(curl -s -u "${token}:x-oauth-basic" -H "$header" "$urlteams")
-  for slug in $(echo "$teams" | jq -r '.[].slug'); do
+  for team in $(echo "$teams" | jq -r '.[] | @base64'); do
+    slug=$(jqbase64 '.slug') 
     echo "Team: $slug"
     if [[ slug=="devs" ]] || [[ slug=="developers" ]]; then
       url=$(jqbase64 '.url') 
@@ -34,4 +39,3 @@
 
   # Merge pull request with squash
   gh pr merge https://github.com/${repo}/pull/$pr_number --squash --admin
-
