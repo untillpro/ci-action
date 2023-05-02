@@ -66,7 +66,7 @@ jobs:
         testfolder: ${{ inputs.test_folder }}
 
     - name: Rebuild airs-bp3
-      if: ${{ inputs.ignore_bp3 != 'true' }} && ${{ (contains(github.repositoryUrl, 'voedger' ) || contains(github.repositoryUrl, 'untillpro' )) && 
+      if: ${{ (contains(github.repositoryUrl, 'voedger' ) || contains(github.repositoryUrl, 'untillpro' )) && (inputs.ignore_bp3 != 'true')
         (github.event_name == 'push') && (github.ref != 'refs/heads/rc' && github.ref != 'refs/heads/release' && github.ref != 'refs/heads/rcfix') }}
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rebuild-test-bp3.sh | bash
       env: 
@@ -74,7 +74,7 @@ jobs:
         gh_event: ${{ github.event_name }}
 
     - name: Push changes to pb3
-      if: ${{ inputs.ignore_bp3 != 'true' }} && ${{ (contains(github.repositoryUrl, 'voedger' ) || contains(github.repositoryUrl, 'untillpro' )) &&
+      if: ${{ (contains(github.repositoryUrl, 'voedger' ) || contains(github.repositoryUrl, 'untillpro' )) && (inputs.ignore_bp3 != 'true')
         github.event_name == 'push' &&  (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') }}
       uses: actions-js/push@master
       with:
