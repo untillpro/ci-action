@@ -34,6 +34,9 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+        fetch-depth: 0      
 
     - name: Check pull request file size
       if: github.event_name == 'pull_request'
@@ -53,8 +56,6 @@ jobs:
     - name: CI
       uses: untillpro/ci-action@master
       with:
-        ref: ${{ github.event.pull_request.head.ref }}
-        fetch-depth: 0      
         ignore: ${{ inputs.ignore_copyright }}
         test-folder: ${{ inputs.test_folder }}
         organization: 'untillpro,heeus'
