@@ -37,6 +37,9 @@ inputs:
   test-folder:
     description: 'Test only in passed folder'
     default: ''
+  short-test:
+    description: 'Test onlywith flag -short'
+    default: ''
 outputs:
   release_id:
     description: 'The ID of the created Release'
