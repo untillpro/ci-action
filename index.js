@@ -107,9 +107,9 @@ async function run() {
 					
 					let tststr=''
 					if (codecovGoRace)
-						tststr='gocov -t="-race -covermode=atomic" ./...'
+						tststr='gocov -t="-race -covermode=atomic" -v'
 					else
-						tststr='gocov -t="-covermode=atomic" ./...'
+						tststr='gocov -t="-covermode=atomic" -v'
 					if (shorttest){
 						tststr=tststr + ' -short'
 					}
@@ -123,7 +123,11 @@ async function run() {
 					core.endGroup()
 					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecovToken}"`)
 				} else {
-					await execute('go test ./' + testfolder + '...')
+					let tststr='go test ./' + testfolder + '...'
+					if (shorttest){
+						tststr=tststr + ' -short'
+					}
+					await execute(tststr)
 				}
 			} finally {
 				core.endGroup()
