@@ -107,9 +107,9 @@ async function run() {
 					
 					let tststr=''
 					if (codecovGoRace)
-						tststr='gocov -t="-race -covermode=atomic" ./... -v'
+						tststr='gocov -t="-race -covermode=atomic" ./...'
 					else
-						tststr='gocov -t="-covermode=atomic" ./... -v'
+						tststr='gocov -t="-covermode=atomic" ./...'
 					if (shorttest){
 						tststr=tststr + ' -short'
 					}
