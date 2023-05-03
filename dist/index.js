@@ -17402,11 +17402,11 @@ async function run() {
 				if (codecovToken) {
 					core.startGroup('Codecov')
 					await execute('go install github.com/heeus/gocov@latest')
-
+/*
 					if (testfolder.length > 0) {
 						await execute('cd ' + testfolder)  
 					}
-					
+*/					
 					let tststr=''
 /*					
 					if (codecovGoRace)
@@ -17416,9 +17416,9 @@ async function run() {
 */						
 						
 					if (codecovGoRace)
-						tststr = 'go test ./... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...'
+						tststr = 'go test ./' + testfolder + '... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./' + testfolder + '...'
 					else
-						tststr ='go test ./... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...'
+						tststr ='go test ./' + testfolder + '... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./' + testfolder + '...'
 						
 					if (shorttest){
 						tststr=tststr + ' -short'
