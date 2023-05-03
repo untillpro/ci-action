@@ -106,20 +106,22 @@ async function run() {
 					}
 					
 					let tststr=''
+/*					
 					if (codecovGoRace)
 						tststr='gocov -t="-race -covermode=atomic" -v'
 					else
 						tststr='gocov -t="-covermode=atomic" -v'
+*/						
+						
+					if (codecovGoRace)
+						tststr = 'go test ./... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...'
+					else
+						tststr ='go test ./... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...'
+						
 					if (shorttest){
 						tststr=tststr + ' -short'
 					}
 					await execute(tststr)
-/*						
-					if (codecovGoRace)
-						await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...')
-					else
-						await execute('go test ./... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...')
-*/						
 					core.endGroup()
 					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecovToken}"`)
 				} else {
