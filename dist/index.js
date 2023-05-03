@@ -17334,7 +17334,7 @@ async function run() {
 		const mainBranch = core.getInput('main-branch')
 		const ignoreCopyright = core.getInput('ignore-copyright') === 'true'
 		const testfolder = core.getInput('test-folder')
-		const shorttest = core.getInput ('short-test')
+		const shorttest = core.getInput ('short-test') === 'true'
 
 		const repositoryOwner = repository.split('/')[0] ||
 			github.context.payload && github.context.payload.repository && github.context.payload.repository.owner && github.context.payload.repository.owner.login
