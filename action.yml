@@ -39,7 +39,7 @@ inputs:
     default: ''
   short-test:
     description: 'Test onlywith flag -short'
-    default: ''
+    default: false
 outputs:
   release_id:
     description: 'The ID of the created Release'

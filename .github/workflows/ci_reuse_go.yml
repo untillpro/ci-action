@@ -58,7 +58,7 @@ jobs:
         organization: 'untillpro,heeus'
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
-        short-test: ${{ inputs.short_test }}
+        short-test: ${{ inputs.short_test == 'true' }}
         run-mod-tidy: false
 
     - name: Check copyright

@@ -57,6 +57,9 @@ Continious Integration action for go- and node- projects
 
     # Test only in folder
     test-folder: ''
+
+    # Short tests 
+    short-test: false
 ```
 
 ## Outputs
