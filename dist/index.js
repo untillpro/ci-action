@@ -17334,7 +17334,7 @@ async function run() {
 		const mainBranch = core.getInput('main-branch')
 		const ignoreCopyright = core.getInput('ignore-copyright') === 'true'
 		const testfolder = core.getInput('test-folder')
-
+		const shorttest = core.getInput ('short-test') === 'true'
 
 		const repositoryOwner = repository.split('/')[0] ||
 			github.context.payload && github.context.payload.repository && github.context.payload.repository.owner && github.context.payload.repository.owner.login
@@ -17406,11 +17406,16 @@ async function run() {
 					if (testfolder.length > 0) {
 						await execute('cd ' + testfolder)  
 					}
+					
+					let tststr=''
 					if (codecovGoRace)
-
-						await execute('gocov -t="-race -covermode=atomic" ./... -v')
+						tststr='gocov -t="-race -covermode=atomic" ./... -v'
 					else
-						await execute('gocov -t="-covermode=atomic" ./... -v')
+						tststr='gocov -t="-covermode=atomic" ./... -v'
+					if (shorttest){
+						tststr=tststr + ' -short'
+					}
+					await execute(tststr)
 /*						
 					if (codecovGoRace)
 						await execute('go test ./... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...')
