@@ -38,4 +38,4 @@ jqbase64 () {
   fi
 
   # Merge pull request with squash
-  gh pr merge https://github.com/${repo}/pull/$pr_number --squash --admin
+  gh pr merge https://github.com/${repo}/pull/$pr_number --squash --admin --delete-branch
