@@ -40,5 +40,5 @@ jqbase64 () {
   # Merge pull request with squash
   gh pr merge https://github.com/${repo}/pull/$pr_number --squash --delete-branch
   
-  # Deleet remote branch
-  git push origin :$br_name
+  # Delete remote branch
+  # git push origin :$br_name
