@@ -22,9 +22,10 @@ cd airs-bp3
 
 go env -w GOSUMDB=off
 echo "gh_event: $gh_event"
-if [[ "$gh_event" == "push" ]];then 
+if [[ "$gh_event" == "push" ]]; then 
+  commit_hash=$GIT_COMMIT
   echo "go get $reponame"
-  go get $reponame
+  go get $reponame@$commit_hash
 else
   echo "replace $reponame => ../$pname"
   strreplace="replace $reponame => ../$pname"
