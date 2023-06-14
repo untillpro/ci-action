@@ -3,6 +3,8 @@
 # get current repo name
 fullname=$(git config --local remote.origin.url)
 echo "fullname:$fullname"
+sha=$(git rev-parse --short HEAD)
+echo "sha:$sha"
 
 oldstr="https:\/\/"
 newstr=""
@@ -24,7 +26,7 @@ go env -w GOSUMDB=off
 echo "gh_event: $gh_event"
 if [[ "$gh_event" == "push" ]]; then 
   echo "go get $reponame"
-  go get $reponame@latest
+  go get $reponame@$sha
 else
   echo "replace $reponame => ../$pname"
   strreplace="replace $reponame => ../$pname"
