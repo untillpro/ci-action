@@ -123,7 +123,7 @@ async function run() {
 					}
 					await execute(tststr)
 					core.endGroup()
-					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecovToken}"`)
+//					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecovToken}"`)
 				} else {
 					let tststr='go test ./' + testfolder + '...'
 					if (shorttest){
