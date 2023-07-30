@@ -10,12 +10,16 @@ jqbase64 () {
   echo "Pull request author: $auth_login"
 
   # Get pull request body
+  needbody=0
   body=$(gh pr view $pr_number --json body -R ${repo}| jq -r '.body')
-  prnum="(#$pr_number)"
-  body=$body$prnum
   repl="Resolves #"
-  newrepl="Resolves issue #"
-  body=${body/$repl/$newrepl}
+  if [[ "$body" == *"$repl"* ]]; then
+    prnum="(#$pr_number)"
+    body=$body$prnum
+    newrepl="Resolves issue #"
+    body=${body/$repl/$newrepl}
+    needbody=1
+  fi 
 
   userfound=0
   header="Accept: application/vnd.github+json"
@@ -46,7 +50,11 @@ jqbase64 () {
   fi
 
   # Merge pull request with squash
-  gh pr merge https://github.com/${repo}/pull/$pr_number -b " " -t "$body" --squash --delete-branch 
+  if [[ $needbody -eq 0 ]]; then 
+    gh pr merge https://github.com/${repo}/pull/$pr_number --squash --delete-branch 
+  else 
+    gh pr merge https://github.com/${repo}/pull/$pr_number -b " " -t "$body" --squash --delete-branch 
+  fi
   
   # Delete remote branch
   # git push origin :$br_name
