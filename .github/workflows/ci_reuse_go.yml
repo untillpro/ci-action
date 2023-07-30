@@ -84,6 +84,6 @@ jobs:
       with:
         directory: ../../${{ github.event.repository.name }}/airs-bp3
         repository: untillpro/airs-bp3
-        message: "Update repo airs-bp3"
+        message: "update voedger dependency"
         branch: "main"
         github_token: ${{ secrets.personal_token }}
