@@ -16,7 +16,7 @@ jqbase64 () {
   if [[ "$body" == *"$repl"* ]]; then
     prnum="(#$pr_number)"
     body=$body$prnum
-    newrepl="Resolves issue #"
+    newrepl="#"
     body=${body/$repl/$newrepl}
     needbody=1
   fi 
