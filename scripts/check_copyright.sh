@@ -3,7 +3,7 @@
 err="0"
 errstr=" "
 printbad() {
-  for filename in $1/*.go
+  for filename in "$1"/*.{go,sql}
   do
     if [ -f $filename ]
     then
