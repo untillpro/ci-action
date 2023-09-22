@@ -1,25 +1,28 @@
-#!/bin/bash                    
+#!/bin/bash
 
-  isNext( ) {
-    # Convert the input date string to a Unix timestamp
-    date_string="${1//./-}"
-    input_date=$(date -d "$date_string" +"%s")
-    # Get the current date in Unix timestamp format
-    current_date=$(date +"%s")    
-    res=0 
-    if [ $input_date -gt $current_date ]; then
-      res=1
-    fi
-    echo $res
-  }                
+# Get milestone list
+rawmilestones=$(gh api repos/${repo}/milestones --jq '.[] | .title')
+# Make arrays from milestones string
+readarray -t milestones <<< "$rawmilestones"
+l=${#milestones[@]}
+# Link to milestone is possible if only 1 Milestone exists
+if [ $l -eq 1 ]; then
+  rawml=${milestones[0]}
+  ml="${rawml// /}"
+  if [ -z "$ml" ]; then
+    gh issue reopen ${issue} --repo ${repo}
+    echo "::error::No open milestones found"
+    exit 1	
+  fi
+  gh issue edit ${issue} --milestone ${ml} --repo ${repo}
+else 
+  gh issue reopen ${issue} --repo ${repo}
+  if [ $l -eq 0 ]; then
+     echo "::error::No open milestones found"
+  fi 
+  if [ $l -gt 1 ]; then
+     echo "::error::More than one open milestone found."
+  fi
+  exit 1
+fi 
 
-  # Get milestone list
-  milestones=$(gh api repos/${repo}/milestones --jq '.[] | .title')
-  for milestone in $milestones; do
-    ml=$milestone    
-    hasfound=$(isNext "$ml")
-    if [ "$hasfound" -eq 1 ]; then
-	gh issue edit ${issue} --milestone ${milestone} --repo ${repo}
- 	exit 0
-    fi	
-  done
