@@ -14,6 +14,9 @@ on:
       short_test:
         required: false
         type: string
+      commit_name:
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
@@ -84,6 +87,6 @@ jobs:
       with:
         directory: ../../${{ github.event.repository.name }}/airs-bp3
         repository: untillpro/airs-bp3
-        message: "update voedger dependency"
+        message: "update voedger dependency '${{ inputs.commit_name }}'"
         branch: "main"
         github_token: ${{ secrets.personal_token }}
