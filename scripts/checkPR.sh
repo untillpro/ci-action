@@ -6,7 +6,7 @@ jqbase64 () {
 
 doCheckPR ()  {
 
-  overalsize=100000
+  overalsize=2000000
   singlelimit=100000
   cntlimit=200  
 
