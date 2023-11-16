@@ -26,6 +26,17 @@ jobs:
         token: ${{ secrets.reporeading_token }}
         pr_number: ${{ github.event.number }}
 
+    - name: CI
+      uses: untillpro/ci-action@master
+      with:
+        ignore: ${{ inputs.ignore_copyright }}
+        test-folder: ${{ inputs.test_folder }}
+        organization: 'untillpro,heeus'
+        token: ${{ secrets.reporeading_token }}
+        codecov-token: ${{ secrets.codecov_token }}
+        short-test: ${{ inputs.short_test == 'true' }}
+        run-mod-tidy: false
+
     - name: Rebuild airs-bp3
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rebuild-test-bp3.sh | bash
       env: 
