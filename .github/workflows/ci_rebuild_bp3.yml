@@ -1,0 +1,42 @@
+name: CI - golang
+on:
+  workflow_call:
+    inputs:
+      commit_name:
+        required: true
+        type: string
+    secrets:
+      reporeading_token:
+        required: true
+      personal_token:	
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Check pull request file size
+      if: github.event_name == 'pull_request'
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/checkPR.sh | bash 
+      env: 
+        token: ${{ secrets.reporeading_token }}
+        pr_number: ${{ github.event.number }}
+
+    - name: Rebuild airs-bp3
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rebuild-test-bp3.sh | bash
+      env: 
+        github_token: ${{ secrets.reporeading_token }}
+        gh_event: ${{ github.event_name }}
+
+    - name: Push changes to pb3
+      uses: actions-js/push@master
+      with:
+        directory: ../../${{ github.event.repository.name }}/airs-bp3
+        repository: untillpro/airs-bp3
+        message: "update voedger dependency ${{ inputs.commit_name }}"
+        branch: "main"
+        github_token: ${{ secrets.personal_token }}
