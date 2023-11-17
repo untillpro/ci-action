@@ -15,6 +15,10 @@ printbad() {
       then
         strfound=0
       fi
+      if grep -Eq "Copyright \(c\) 202[0-9]-present unTill Software Development Group B. V." $filename
+      then
+        strfound=0
+      fi      
       if grep -Eq "Copyright \(c\) 202[0-9]-present (unTill Pro|Sigma-Soft|Heeus), Ltd., (unTill Pro|Sigma-Soft|Heeus), Ltd." $filename
       then
         strfound=0	
