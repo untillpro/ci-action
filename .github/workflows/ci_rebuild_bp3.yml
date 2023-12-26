@@ -33,6 +33,7 @@ jobs:
         gh_event: ${{ github.event_name }}
 
     - name: Push changes to pb3
+      if: success()	      
       uses: actions-js/push@master
       with:
         directory: ../../${{ github.event.repository.name }}/airs-bp3

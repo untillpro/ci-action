@@ -81,8 +81,8 @@ jobs:
         gh_event: ${{ github.event_name }}
 
     - name: Push changes to pb3
-      if: ${{ (contains(github.repositoryUrl, 'voedger' ) || contains(github.repositoryUrl, 'untillpro' )) && (inputs.ignore_bp3 != 'true') &&
-        github.event_name == 'push' &&  (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') }}
+      if: success() && ( ${{ (contains(github.repositoryUrl, 'voedger' ) || contains(github.repositoryUrl, 'untillpro' )) && (inputs.ignore_bp3 != 'true') &&
+        github.event_name == 'push' &&  (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') }} )
       uses: actions-js/push@master
       with:
         directory: ../../${{ github.event.repository.name }}/airs-bp3
