@@ -80,8 +80,23 @@ jobs:
         github_token: ${{ secrets.reporeading_token }}
         gh_event: ${{ github.event_name }}
 
-    - name: Push changes to pb3
+    - name: Push changes to pb3 - First attempt
+      id: pushBP1
+      continue-on-error: true	
       if: ${{ (contains(github.repositoryUrl, 'voedger' ) || contains(github.repositoryUrl, 'untillpro' )) && (inputs.ignore_bp3 != 'true') &&
+        github.event_name == 'push' &&  (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') }} 
+      uses: actions-js/push@master
+      with:
+        directory: ../../${{ github.event.repository.name }}/airs-bp3
+        repository: untillpro/airs-bp3
+        message: "update voedger dependency ${{ inputs.commit_name }}"
+        branch: "main"
+        github_token: ${{ secrets.personal_token }}
+
+    - name: Push changes to pb3 - Second attempt
+      id: pushBP2
+      continue-on-error: true	
+      if: (steps.pushBP1.outcome == 'failure') && ${{ (contains(github.repositoryUrl, 'voedger' ) || contains(github.repositoryUrl, 'untillpro' )) && (inputs.ignore_bp3 != 'true') &&
         github.event_name == 'push' &&  (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') }} 
       uses: actions-js/push@master
       with:
