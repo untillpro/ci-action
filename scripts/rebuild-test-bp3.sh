@@ -43,6 +43,10 @@ else
   echo "airs-pb3 will be tested now..."
   # run tests
   go test -race ./...
+  status=$? 
+  if [ $status -ne 0 ]; then
+    exit 1
+  fi
   if [[ "$gh_event" == "push" ]];then 
     echo "Push new version of $reponame to git"
   fi
