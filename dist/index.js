@@ -34,7 +34,6 @@ const getSourceFiles = function (dir, ignore, files_) {
 }
 
 const detectLanguage = function (ignore) {
-/*
     if (fs.existsSync('go.mod')) return "go"
     let sourceFiles = getSourceFiles('.', ignore)
     for (const file of sourceFiles) {
@@ -42,7 +41,7 @@ const detectLanguage = function (ignore) {
         if (/\.[jt]sx?/.test(path.extname(file))) return "node_js"
     }
     return "unknown"
-*/
+/*
 	let sourceFiles = getSourceFiles('.', ignore)
 	if (fs.existsSync('go.mod')) return "go"
 	sourceFiles.forEach(file => {
@@ -52,6 +51,7 @@ const detectLanguage = function (ignore) {
 		if (path.extname(file) === ".js") return "node_js"
 	})
 	return "unknown"
+*/
 }
 
 
