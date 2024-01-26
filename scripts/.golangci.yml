@@ -10,6 +10,8 @@ linters:
     - misspell
     - errcheck
     - unparam
+    - deadcode
+    - structcheck
   fast: true
 linters-settings:
   gosec:
@@ -21,6 +23,8 @@ linters-settings:
     checks: [ "all", "-ST1003", "-ST1023", "-ST1022" ]    
   staticcheck:
     checks: [ "all", "-SA1019"]    
+  unparam:
+    check-exported: true
   misspell:
     ignore-words:
       - untill
