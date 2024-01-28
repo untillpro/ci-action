@@ -38,7 +38,7 @@ packfound=0
 while read -r line; do
   i=$((i+1))
   if [ $packfound -eq 0 ]; then 
-    if [[ $line =~ $pack ]]; then
+    if [[ $line =~ "pack: $pack" ]]; then
 	packfound=1	
     fi 
   else
