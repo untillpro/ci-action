@@ -54,4 +54,5 @@ issues:
        - revive
        - gosec
        - errcheck
+       - forcetypeassert
 
