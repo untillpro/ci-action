@@ -9,6 +9,10 @@ linters:
     - stylecheck
     - misspell
     - errcheck
+    - asciicheck      # Checks that all code identifiers does not have non-ASCII symbols in the name
+    - durationcheck   # Check for two durations multiplied together
+    - gochecknoinits  # Checks that no init functions are present in Go code.
+    - gomnd
 #    - unparam
   fast: true
 linters-settings:
