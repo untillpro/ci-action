@@ -33,7 +33,7 @@ linters:
 #    - prealloc
 #    - perfsprint
 #    - nonamedreturns
-#   - noctx 
+#    - noctx 
 #    - nilnil 
 #?    - nestif 
 #    - musttag
