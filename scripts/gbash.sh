@@ -16,7 +16,7 @@ mydir=""
 if test -n "$testfolder"; then
   mydir="${testfolder}/..."
 fi
-$1/bin/golangci-lint run ${mydir} 
+$1/bin/golangci-lint run ${mydir} -config /home/runner/work/.golangci.yaml -v
 
 status="$?"
 
