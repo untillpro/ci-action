@@ -11,14 +11,14 @@ curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/insta
 golangci-lint --version
 
 echo "Download golangci config"
-curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/.golangci.yml 
+curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/.golangci.yml > "~/.golangci.yaml"
 
 echo "Run linter jobs"
 mydir=""
 if test -n "$testfolder"; then
   mydir="${testfolder}/..."
 fi
-$1/bin/golangci-lint run ${mydir} -config 
+$1/bin/golangci-lint run ${mydir} --config "~/.golangci.yaml" -v
 
 status="$?"
 
