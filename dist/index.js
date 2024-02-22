@@ -34,6 +34,7 @@ const getSourceFiles = function (dir, ignore, files_) {
 }
 
 const detectLanguage = function (ignore) {
+
     if (fs.existsSync('go.mod')) return "go"
     let sourceFiles = getSourceFiles('.', ignore)
     for (const file of sourceFiles) {

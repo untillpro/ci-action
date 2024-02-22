@@ -23,12 +23,12 @@ jobs:
 
     steps:
     - name: Set up Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@v5
       with:
         go-version: 'stable'
 
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Check pull request file size
       if: github.event_name == 'pull_request'
@@ -38,7 +38,7 @@ jobs:
         pr_number: ${{ github.event.number }}
 
     - name: Cache Go - Modules
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/go/pkg/mod
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
