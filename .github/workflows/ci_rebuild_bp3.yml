@@ -38,6 +38,6 @@ jobs:
       with:
         directory: ../../${{ github.event.repository.name }}/airs-bp3
         repository: untillpro/airs-bp3
-        message: "update voedger dependency ${{ inputs.commit_name }}"
+        message: "voedger: ${{ inputs.commit_name }}"
         branch: "main"
         github_token: ${{ secrets.personal_token }}
