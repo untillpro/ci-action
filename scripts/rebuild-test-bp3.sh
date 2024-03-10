@@ -27,7 +27,7 @@ if [[ "$schemas" == "rebuild" ]]; then
   ./airs-bp baseline_schemas airsbp3/baseline_schemas
   git add .
   git commit -m "baseline schemas update"
-  git push
+  
   exit 0
 fi
 
