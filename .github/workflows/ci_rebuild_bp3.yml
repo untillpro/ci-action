@@ -20,6 +20,7 @@ jobs:
       uses: actions/setup-go@v5
       with:
         go-version: 'stable'
+        cache: false
 
     - name: Checkout
       uses: actions/checkout@v4
@@ -31,13 +32,15 @@ jobs:
       env: 
         github_token: ${{ secrets.reporeading_token }}
         gh_event: ${{ github.event_name }}
+        message: "voedger: ${{ inputs.commit_name }}"
+        commit_user: "upload-robot"
+        commit_email: "v.istratenko@dev.untill.com"
 
     - name: Push changes to pb3
       if: success()	      
-      uses: actions-js/push@master
+      uses: ad-m/github-push-action@master
       with:
         directory: ../../${{ github.event.repository.name }}/airs-bp3
         repository: untillpro/airs-bp3
-        message: "voedger: ${{ inputs.commit_name }}"
         branch: "main"
         github_token: ${{ secrets.personal_token }}
