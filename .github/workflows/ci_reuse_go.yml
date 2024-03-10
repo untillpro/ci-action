@@ -30,13 +30,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    - name: Checkout
+      uses: actions/checkout@v4
+
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
         go-version: 'stable'
-
-    - name: Checkout
-      uses: actions/checkout@v4
+        cache: false
 
     - name: Check pull request file size
       if: github.event_name == 'pull_request'
@@ -79,17 +80,19 @@ jobs:
       env: 
         github_token: ${{ secrets.reporeading_token }}
         gh_event: ${{ github.event_name }}
+        message: "voedger: ${{ inputs.commit_name }}"
+        commit_user: "upload-robot"
+        commit_email: "v.istratenko@dev.untill.com"
 
     - name: Push changes to pb3 - First attempt
       id: pushBP1
       continue-on-error: true	
       if: ${{ (contains(github.repositoryUrl, 'voedger' ) || contains(github.repositoryUrl, 'untillpro' )) && (inputs.ignore_bp3 != 'true') &&
         github.event_name == 'push' &&  (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') }} 
-      uses: actions-js/push@master
+      uses: ad-m/github-push-action@master
       with:
         directory: ../../${{ github.event.repository.name }}/airs-bp3
         repository: untillpro/airs-bp3
-        message: "voedger: ${{ inputs.commit_name }}"
         branch: "main"
         github_token: ${{ secrets.personal_token }}
 
@@ -98,10 +101,9 @@ jobs:
       continue-on-error: true	
       if: (steps.pushBP1.outcome == 'failure') && ${{ (contains(github.repositoryUrl, 'voedger' ) || contains(github.repositoryUrl, 'untillpro' )) && (inputs.ignore_bp3 != 'true') &&
         github.event_name == 'push' &&  (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') }} 
-      uses: actions-js/push@master
+      uses: ad-m/github-push-action@master
       with:
         directory: ../../${{ github.event.repository.name }}/airs-bp3
         repository: untillpro/airs-bp3
-        message: "voedger: ${{ inputs.commit_name }}"
         branch: "main"
         github_token: ${{ secrets.personal_token }}

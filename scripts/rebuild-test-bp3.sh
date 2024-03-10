@@ -57,6 +57,10 @@ else
     exit 1
   fi
   if [[ "$gh_event" == "push" ]];then 
+    git config --local user.email $commit_email
+    git config --local user.name $commit_user
+    git add .
+    git commit -a -m "$message"
     echo "Push new version of $reponame to git"
   fi
 fi
