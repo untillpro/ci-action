@@ -29,7 +29,7 @@ if [[ "$schemas" == "rebuild" ]]; then
   git config --local user.name $commit_user
   git add .
   git commit -m "baseline schemas update"
-  
+  git push	  
   exit 0
 fi
 
