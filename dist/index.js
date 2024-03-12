@@ -17404,8 +17404,12 @@ async function run() {
 					}
 				}
 
+				if (testfolder.length != 0) {
+					await execute('cd testfolder')
+				}
+				
 				if (!ignoreRunBuild) {
-					await execute('go build ./' + testfolder + '...')
+					await execute('go build ./...')
 				}
 
 				if (runModTidy) {
@@ -17416,11 +17420,6 @@ async function run() {
 				if (codecovToken) {
 					core.startGroup('Codecov')
 					await execute('go install github.com/heeus/gocov@latest')
-/*
-					if (testfolder.length > 0) {
-						await execute('cd ' + testfolder)  
-					}
-*/					
 					let tststr=''
 /*					
 					if (codecovGoRace)
@@ -17430,19 +17429,18 @@ async function run() {
 */						
 						
 					if (codecovGoRace)
-						tststr = 'go test ./' + testfolder + '... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./' + testfolder + '...'
+						tststr = 'go test ./... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...'
 					else
-						tststr ='go test ./' + testfolder + '... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./' + testfolder + '...'
+						tststr ='go test ./... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...'
 						
 					if (shorttest){
 						tststr=tststr + ' -short'
 					}
 					await execute(tststr)
 					core.endGroup()
-//					await execute(`bash -c "bash <(curl -s https://codecov.io/bash) -t ${codecovToken}"`)
 					await execute(`bash -c "bash <(curl -Os https://uploader.codecov.io/latest/linux/codecov) -t ${codecovToken}"`)
 				} else {
-					let tststr='go test ./' + testfolder + '...'
+					let tststr='go test ./...'
 					if (shorttest){
 						tststr=tststr + ' -short'
 					}
