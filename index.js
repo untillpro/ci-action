@@ -133,6 +133,9 @@ async function run() {
 					}
 					await execute(tststr)
 				}
+				if (testfolder.length != 0) {
+					await execute('cd .')
+				}
 			} finally {
 				core.endGroup()
 			}
