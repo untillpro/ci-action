@@ -13,7 +13,10 @@ inputs:
     description: Codecov token
   codecov-go-race:
     description: 'Codecov: use Go Race Detector'
-    default: true
+    default: 'true'
+  ignore-build:
+    description: 'Ignores go build'
+    default: 'false'
   publish-asset:
     description: File / dir name to publish
   publish-token:
@@ -27,19 +30,19 @@ inputs:
     default: ${{ github.repository }}
   run-mod-tidy:
     description: 'Only for go-projects: execute `go mod tidy`'
-    default: true
+    default: 'true'
   main-branch:
     description: Main branch name
     default: main
   ignore-copyright:
     description: 'Do not check the copyright in first comments of source code'
-    default: false
+    default: 'false'
   test-folder:
     description: 'Test only in passed folder'
     default: ''
   short-test:
     description: 'Test onlywith flag -short'
-    default: false
+    default: 'false'
 outputs:
   release_id:
     description: 'The ID of the created Release'
