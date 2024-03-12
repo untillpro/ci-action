@@ -92,9 +92,9 @@ async function run() {
 				}
 
 				if (testfolder.length != 0) {
-					await execute('cd testfolder')
+					await execute('cd ' + testfolder)
 				}
-				
+
 				if (!ignoreRunBuild) {
 					await execute('go build ./...')
 				}
