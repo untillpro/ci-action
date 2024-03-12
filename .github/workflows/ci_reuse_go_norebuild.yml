@@ -8,6 +8,9 @@ on:
       test_folder:
         required: false
         type: string
+      ignore_build:   
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
@@ -52,7 +55,8 @@ jobs:
     - name: CI
       uses: untillpro/ci-action@master
       with:
-        ignore: ${{ inputs.ignore_copyright }}
+        ignore-build: ${{ inputs.ignore_build }}
+        ignore: ${{ inputs.ignsore_copyright }}
         organization: 'untillpro,heeus'
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
