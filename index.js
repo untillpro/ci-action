@@ -31,6 +31,7 @@ async function run() {
 		const runModTidy = core.getInput('run-mod-tidy') === 'true'
 		const mainBranch = core.getInput('main-branch')
 		const ignoreCopyright = core.getInput('ignore-copyright') === 'true'
+		const ignoreRunBuild = core.getInput('ignore-build') === 'true'
 		const testfolder = core.getInput('test-folder')
 		const shorttest = core.getInput ('short-test') === 'true'
 
@@ -90,7 +91,9 @@ async function run() {
 					}
 				}
 
-				await execute('go build ./' + testfolder + '...')
+				if (!ignoreRunBuild) {
+					await execute('go build ./' + testfolder + '...')
+				}
 
 				if (runModTidy) {
 					await execute('go mod tidy')
