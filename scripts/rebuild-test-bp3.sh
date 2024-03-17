@@ -22,17 +22,6 @@ git clone https://github.com/untillpro/airs-bp3
 # go to airs-bp3 repo folder
 cd airs-bp3
 
-if [[ "$schemas" == "rebuild" ]]; then 
-  go build -o airs-bp airsbp3/cli/*.go
-  ./airs-bp baseline_schemas airsbp3/baseline_schemas
-  git config --local user.email $commit_email
-  git config --local user.name $commit_user
-  git add .
-  git commit -m "baseline schemas update"
-  git push	  
-  exit 0
-fi
-
 go env -w GOSUMDB=off
 echo "gh_event: $gh_event"
 if [[ "$gh_event" == "push" ]]; then 
