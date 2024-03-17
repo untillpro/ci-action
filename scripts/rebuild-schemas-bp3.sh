@@ -7,6 +7,7 @@ echo "rebuild baseline schemas"
   git config --local user.email $commit_email
   git config --local user.name $commit_user
 echo "commit and push new baskine schemas"
+  rm airs-bp
   git add .
   git commit -m "baseline schemas update"
   git push	  
