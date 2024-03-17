@@ -1,6 +1,5 @@
 #!/bin/bash
 
-  cd airs-bp3
 echo "making build airs-bp3"
   go build -o airs-bp airsbp3/cli/*.go
 echo "rebuild baseline schemas"
