@@ -17435,6 +17435,7 @@ async function run() {
 						
 					if (shorttest){
 						tststr=tststr + ' -short'
+						tststr ='go test ./... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...'
 					}
 					await execute(tststr)
 					core.endGroup()
