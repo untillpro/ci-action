@@ -3,7 +3,7 @@
 go env -w GOSUMDB=off
 echo "gh_event: $gh_event"
 
-if [[ "$gh_event" == "workflow_dispatch" ]]; then 
+if [[ "$gh_event" == "workflow_dispatch" || "$gh_event" == "schedule" ]]; then 
 
   header="Accept: application/vnd.github+json"
   repo_full_name="https://api.github.com/repos/voedger/voedger/commits/main"
