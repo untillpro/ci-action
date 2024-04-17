@@ -13,9 +13,4 @@ if [[ "$gh_event" == "workflow_dispatch" || "$gh_event" == "schedule" ]]; then
   go get github.com/voedger/voedger
   go mod tidy
 
-  git config --local user.email $commit_email
-  git config --local user.name $commit_user
-  git add .
-  git commit -m "voedger: $last_commit"
-  git push	  
 fi
