@@ -1,10 +1,5 @@
 #!/bin/bash
 
-if [ "$#" -ne 3 ]; then
-    echo "Cancel workflow script was not running. Arguments: $#"
-    exit 0
-fi
-
 rp=${repo}
 br=${branch{
 wf=${running-workflow}
