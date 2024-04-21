@@ -2,7 +2,7 @@
 
 rp=${repo}
 br=${branch}
-wf=${running-workflow}
+wf=${runningworkflow}
 echo "repo: ${rp}"
 echo "branch: ${br}"
 echo "workflow: ${wf}"
