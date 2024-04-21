@@ -5,9 +5,12 @@ if [ "$#" -ne 3 ]; then
     exit 0
 fi
 
-repo=$1
-br=$2
-wf=$3
+rp=${repo}
+br=${branch{
+wf=${running-workflow}
+echo "repo: ${rp}"
+echo "branch: ${br}"
+echo "workflow: ${wf}"
 
 # Declare an array to hold the workflow details
 declare -a workflows=()
@@ -35,7 +38,7 @@ while IFS= read -r line; do
         i=0
         temp=()
     fi
-done < <(gh run list -b "${br}" --workflow "${wf}" --limit 3 -e pull_request_target  -s in_progress --json 'databaseId' --jq '.[] | .databaseId' -R "${repo}")
+done < <(gh run list -b "${br}" --workflow "${wf}" --limit 3 -e pull_request_target  -s in_progress --json 'databaseId' --jq '.[] | .databaseId' -R "${rp}")
 
 # Output the results
 for workflow in "${workflows[@]}"; do
