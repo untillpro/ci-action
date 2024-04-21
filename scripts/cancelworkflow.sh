@@ -1,7 +1,7 @@
 #!/bin/bash
 
 rp=${repo}
-br=${branch{
+br=${branch}
 wf=${running-workflow}
 echo "repo: ${rp}"
 echo "branch: ${br}"
