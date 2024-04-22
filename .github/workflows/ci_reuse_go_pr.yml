@@ -48,14 +48,6 @@ jobs:
         token: ${{ secrets.reporeading_token }}
         pr_number: ${{ github.event.number }}
 
-    - name: Check if another workflow running and cancel it
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/cancelworkflow.sh | bash 
-      env: 
-        GH_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
-        repo: ${{ GITHUB.REPOSITORY }}
-        branch: ${{ github.event.pull_request.head.ref }}
-        runningworkflow: ${{ inputs.running_workflow }}
-
     - name: Cache Go - Modules
       uses: actions/cache@v4
       with:
