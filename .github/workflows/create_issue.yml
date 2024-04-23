@@ -1,0 +1,41 @@
+name: Show Current Time
+
+# This specifies when the workflow should run. In this case, it runs on every push to the main branch.
+on:
+  workflow_call:
+    secrets:
+      personaltoken:
+        required: true
+    inputs:
+      repo: 
+        required: false
+        type: string
+      assignee:
+        required: false
+        type: string
+      name:
+        required: false
+        type: string
+      body:
+        required: false
+        type: string
+
+# This is the job that will be executed. Jobs run in parallel by default.
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: create issue
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/createissue.sh | bash 
+        env: 
+          GH_TOKEN: ${{ secrets.personaltoken }}
+          repo: ${{ inputs.repo }}
+          assignee: ${{ inputs.assignee }}
+          name: ${{ inputs.name }}
+          body: ${{ inputs.body }}
+
+
