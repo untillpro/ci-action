@@ -39,6 +39,12 @@ jobs:
         go-version: 'stable'
         cache: false
 
+    # Install TinyGo 
+    - name: Install TinyGo
+      run: |
+        wget https://github.com/tinygo-org/tinygo/releases/download/v0.31.2/tinygo_0.31.2_amd64.deb
+        sudo dpkg -i tinygo_0.31.2_amd64.deb
+
     - name: Check pull request file size
       if: github.event_name == 'pull_request'
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/checkPR.sh | bash 
