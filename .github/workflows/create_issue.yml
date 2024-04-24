@@ -19,6 +19,9 @@ on:
       body:
         required: false
         type: string
+      label:
+        required: false
+        type: string
 
 # This is the job that will be executed. Jobs run in parallel by default.
 jobs:
@@ -37,5 +40,6 @@ jobs:
           assignee: ${{ inputs.assignee }}
           name: ${{ inputs.name }}
           body: ${{ inputs.body }}
+          label: ${{ inputs.label }}
 
 
