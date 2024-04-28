@@ -35,8 +35,11 @@ while IFS= read -r line; do
     fi
 done < <(gh run list -b "${br}" --workflow "${wf}" --limit 3 -e pull_request_target  -s in_progress --json 'databaseId' --jq '.[] | .databaseId' -R "${rp}")
 
+if [ "${#workflows[@]}" -le 2 ]; then 
+	exit 0
+fi
 # Output the results
-for workflow in "${workflows[@]}"; do
+for workflow in "${workflows[@]:1}"; do
     echo "Running workflow: $workflow. Trying to cancel..."
     gh run cancel $workflow || true 	    	     
 done
