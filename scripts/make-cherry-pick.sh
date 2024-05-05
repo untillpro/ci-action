@@ -2,7 +2,7 @@
 
 # The input is a comma-separated list of commit hashes
 echo "Starting checrry-pick..."
-if [ -z "$rc" ];  then
+if [ -z "$branch" ];  then
   echo "Branch is not defined"
   exit 1
 fi
