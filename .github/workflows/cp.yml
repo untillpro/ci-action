@@ -15,6 +15,9 @@ on:
       user:
         required: true
         type: string
+      issue:
+        required: true 
+        type: string
       issue-title:
         required: true
         type: string
@@ -35,6 +38,16 @@ jobs:
         with:
           ref: main  # Checkout the main branch
           fetch-depth: 0  # Fetch all history for cherry-picking
+
+      - name: Add comment to issue
+        env: 
+          GH_TOKEN: ${{ secrets.git_token }}
+          org: ${{ inputs.org }}
+          repo: ${{ inputs.repo }}
+          issue: ${{ inputs.issue }}
+          body: ${{ inputs.issue-body }}
+        run: |
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/add-issue-commit.sh | bash 
 
       - name: Check Issue
         run: | 
@@ -133,3 +146,11 @@ jobs:
           git config --local user.name "upload-robot"
           git config --global url.https://${{ secrets.git_token }}@github.com/.insteadOf https://github.com/
           curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/cp.sh | bash 
+
+      - name: Close issue 
+        env: 
+          GH_TOKEN: ${{ secrets.git_token }}
+          org: ${{ inputs.org }}
+          repo: ${{ inputs.repo }}
+          issue: ${{ inputs.issue }}
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/close-issue.sh | bash 
