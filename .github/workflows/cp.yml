@@ -132,4 +132,4 @@ jobs:
           git config --local user.email "v.istratenko@dev.untill.com"
           git config --local user.name "upload-robot"
           git config --global url.https://${{ secrets.git_token }}@github.com/.insteadOf https://github.com/
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/make-cherry-pick.sh | bash 
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/cp.sh | bash 
