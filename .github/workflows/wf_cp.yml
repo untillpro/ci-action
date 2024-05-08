@@ -1,0 +1,135 @@
+name: Cherry Pick Commits on Issue Creation
+
+on:
+  workflow_call:
+    inputs:
+      org:
+        required: true
+        type: string
+      repo:
+        required: true
+        type: string
+      team:
+        required: true
+        type: string
+      user:
+        required: true
+        type: string
+      issue-title:
+        required: true
+        type: string
+      issue-body:
+        required: true
+        type: string
+    secrets:
+      git_token:	
+        required: true
+
+jobs:
+  cherry_pick:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main  # Checkout the main branch
+          fetch-depth: 0  # Fetch all history for cherry-picking
+
+      - name: Check Issue
+        run: | 
+          echo "org: ${{ inputs.org }}"
+          echo "team: ${{ inputs.team }}"
+          echo "user: ${{ inputs.user }}"
+          echo "title: ${{ inputs.issue-title }}"
+          echo "body: ${{ inputs.issue-body }}"
+
+          ORG_NAME=${{ inputs.org }}
+          TEAM_NAME=${{ inputs.team }}
+          USER_NAME=${{ inputs.user }}
+      
+          echo "org1: $ORG_NAME"
+          echo "team1: $TEAM_NAME"
+          echo "user1: $USER_NAME"
+          # Check organization membership
+          ORG_MEMBERSHIP=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.git_token }}" "https://api.github.com/orgs/$ORG_NAME/members/$USER_NAME")
+      
+          if [[ $ORG_MEMBERSHIP -ne 404 ]]; then
+            echo "The user $USER_NAME is a member of the organization $ORG_NAME."
+          else
+            echo "The user $USER_NAME is not a member of the organization $ORG_NAME."
+            exit 1
+          fi
+
+          # Check team membership
+          TEAM_MEMBERSHIP=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.git_token }}" "https://api.github.com/orgs/$ORG_NAME/teams/$TEAM_NAME/memberships/$USER_NAME")
+          echo "$TEAM_MEMBERSHIP" 		       
+          if [[ $TEAM_MEMBERSHIP -eq 200 ]]; then
+            echo "The user $USER_NAME is a member of the team $TEAM_NAME within the organization $ORG_NAME."
+          else
+            echo "The user $USER_NAME is not a member of the team $TEAM_NAME within the organization $ORG_NAME."
+          fi
+
+      - name: Determine target branch
+        id: set_branch
+        run: |
+          title="${{ inputs.issue-title }}"
+          
+          if [[ $title = cprc* ]]; then
+            branch="rc"
+          elif [[ $title =~ cprelease* ]]; then
+            branch="release"
+          else
+            echo "Unknown issue title. Aborting."
+            exit 1
+          fi
+          echo "::set-output name=branch::${branch}"
+        shell: bash
+
+      - name: Verify if '$branch' branch exists
+        id: verify_branch
+        run: |
+          branch=${{ steps.set_branch.outputs.branch }}
+          if git branch -r | grep -qE "origin/$branch"; then
+            echo "Branch '$branch' exists."
+          else
+            echo "Branch '$branch' does not exist."
+            exit 1
+          fi
+        shell: bash
+
+      - name: Install jq for JSON processing
+        run: sudo apt-get install jq -y
+
+      - name: Parse issue description for commit SHAs
+        id: parse_commits             
+        run: |
+          # Extract all SHA hashes from the issue description
+          body='${{ inputs.issue-body }}'
+          if [ -z "$body" ]; then
+            echo "Issue body is empty"
+          fi
+
+          commit_list=""
+          while IFS= read -r line; do
+          cleaned_line=$(echo "$line" | tr '.,' ' ' | tr -s ' ')
+            cleaned_line=$(echo "$cleaned_line" | sed 's/[[:space:]]*$//')           
+            commit_list+=" $cleaned_line"
+          done <<< "$body"
+
+          commit_list=$(echo "$commit_list" | sed 's/[[:space:]]*$//')           
+          echo "::set-output name=commits::${commit_list}"
+        shell: bash
+
+      - name: Cherry pick commits to branch
+        env: 
+          github_token: ${{ secrets.git_token }}
+          commit_list: ${{ steps.parse_commits.outputs.commits }}
+          branch: ${{ steps.set_branch.outputs.branch }}
+          org: ${{ inputs.org }}
+          repo: ${{ inputs.repo }}
+        run: |
+          git config --local user.email "v.istratenko@dev.untill.com"
+          git config --local user.name "upload-robot"
+          git config --global url.https://${{ secrets.git_token }}@github.com/.insteadOf https://github.com/
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/make-cherry-pick.sh | bash 
