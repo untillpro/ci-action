@@ -33,14 +33,14 @@ jobs:
           ref: main  # Checkout the main branch
 
       - name: Add comment to issue
-        env: 
+        env:
           GH_TOKEN: ${{ secrets.git_token }}
           org: ${{ inputs.org }}
           repo: ${{ inputs.repo }}
           issue: ${{ inputs.issue }}
           body: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/add-issue-commit.sh | bash 
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/add-issue-commit.sh | bash
 
      - name: Check user
         run: | 
