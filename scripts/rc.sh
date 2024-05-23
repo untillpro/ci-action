@@ -30,7 +30,7 @@ git checkout $source_branch
 git pull origin $source_branch
 git checkout -b $new_branch
 git switch $new_branch
-git commit -am "Release candidate auto-create"
+git commit -am "Release candidate auto-create" --allow-empty 
 git push origin rc
 cd ..
 
