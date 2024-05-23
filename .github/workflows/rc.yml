@@ -23,7 +23,7 @@ on:
         required: true
 
 jobs:
-  cherry_pick:
+  Make RC:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,7 +31,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main  # Checkout the main branch
-          fetch-depth: 0  # Fetch all history for cherry-picking
 
       - name: Add comment to issue
         env: 
@@ -43,7 +42,7 @@ jobs:
         run: |
           curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/add-issue-commit.sh | bash 
 
-      - name: Check Issue
+     - name: Check user
         run: | 
           echo "org: ${{ inputs.org }}"
           echo "team: ${{ inputs.team }}"
@@ -87,7 +86,8 @@ jobs:
           git config --local user.email "v.istratenko@dev.untill.com"
           git config --local user.name "upload-robot"
           git config --global url.https://${{ secrets.git_token }}@github.com/.insteadOf https://github.com/
-          bash curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rc.sh | bash  
+          chmod +x https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rc.sh
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rc.sh | bash  
 
       - name: Close issue 
         env: 
