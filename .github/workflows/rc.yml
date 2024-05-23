@@ -87,8 +87,7 @@ jobs:
           git config --local user.email "v.istratenko@dev.untill.com"
           git config --local user.name "upload-robot"
           git config --global url.https://${{ secrets.git_token }}@github.com/.insteadOf https://github.com/
-          chmod +x https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rc.sh
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rc.sh | bash  
+          bash ./scripts/rc.sh 
 
       - name: Close issue 
         env: 
