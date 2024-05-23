@@ -31,18 +31,19 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main  # Checkout the main branch
+          fetch-depth: 0  # Fetch all history for cherry-picking
 
       - name: Add comment to issue
-        env:
+        env: 
           GH_TOKEN: ${{ secrets.git_token }}
           org: ${{ inputs.org }}
           repo: ${{ inputs.repo }}
           issue: ${{ inputs.issue }}
           body: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/add-issue-commit.sh | bash
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/add-issue-commit.sh | bash 
 
-     - name: Check user
+      - name: Check Issue
         run: | 
           echo "org: ${{ inputs.org }}"
           echo "team: ${{ inputs.team }}"
@@ -86,8 +87,7 @@ jobs:
           git config --local user.email "v.istratenko@dev.untill.com"
           git config --local user.name "upload-robot"
           git config --global url.https://${{ secrets.git_token }}@github.com/.insteadOf https://github.com/
-          chmod +x https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rc.sh
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rc.sh | bash  
+          bash curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rc.sh | bash  
 
       - name: Close issue 
         env: 
@@ -96,4 +96,3 @@ jobs:
           repo: ${{ inputs.repo }}
           issue: ${{ inputs.issue }}
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/close-issue.sh | bash 
-
