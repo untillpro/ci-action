@@ -31,7 +31,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main  # Checkout the main branch
-          fetch-depth: 0  # Fetch all history for cherry-picking
 
       - name: Add comment to issue
         env: 
@@ -87,7 +86,7 @@ jobs:
           git config --local user.email "v.istratenko@dev.untill.com"
           git config --local user.name "upload-robot"
           git config --global url.https://${{ secrets.git_token }}@github.com/.insteadOf https://github.com/
-          bash ./scripts/rc.sh 
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rc.sh | bash 
 
       - name: Close issue 
         env: 
