@@ -23,7 +23,7 @@ on:
         required: true
 
 jobs:
-  Make RC:
+  make_rc:
     runs-on: ubuntu-latest
 
     steps:
