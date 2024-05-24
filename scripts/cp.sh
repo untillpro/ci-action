@@ -89,6 +89,7 @@ for commit_hash in $sorted_commits; do
     }
 done
 git config --global url.https://$github_token@github.com/.insteadOf https://github.com/
+git commit -am "Cherry-pick auto-create" --allow-empty 
 git push origin $rc
 
 echo "Cherry-pick completed successfully."
