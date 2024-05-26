@@ -155,3 +155,20 @@ jobs:
           repo: ${{ inputs.repo }}
           issue: ${{ inputs.issue }}
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/close-issue.sh | bash 
+
+  handle-failure:
+    needs: cherry_pick
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - name: Add comment to issue
+        env: 
+          GH_TOKEN: ${{ secrets.git_token }}
+          org: ${{ inputs.org }}
+          repo: ${{ inputs.repo }}
+          team: ${{ inputs.team }}
+          user: ${{ inputs.user }}
+          issue: ${{ inputs.issue }}
+          body: "Error occured"
+        run: |
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/add-issue-commit.sh | bash 
