@@ -8,7 +8,6 @@ if [ -z "$branch" ];  then
 fi
 echo "https://github.com/$org/$repo"
 
-if [ -z "$branch" ];  then
 commit_hashes_arr="$commit_list"
 for word in $commit_hashes_arr; do
   # Append word to the list
@@ -77,6 +76,7 @@ if [ $lengthsha -eq 0 ]; then # Means pb3 wans to update voedger version
     go get github.com/voedger/voedger@rc
   else
     go get github.com/voedger/voedger@release
+  fi
   go mod tidy
   git commit -am "Cherry-pick auto-create" --allow-empty 
   git push origin $rc
@@ -113,6 +113,7 @@ if [[ "$branch" == "rc" ]]; then
   go get github.com/voedger/voedger@rc
 else
   go get github.com/voedger/voedger@release
+fi
 go mod tidy
 git commit -am "Cherry-pick auto-create" --allow-empty 
 git push origin $rc
