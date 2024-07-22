@@ -72,11 +72,13 @@ if [ $lengthsha -eq 0 ]; then # Means pb3 wans to update voedger version
   git config --local user.email "v.istratenko@dev.untill.com"
   git config --local user.name "upload-robot"
   git config --global url.https://$github_token@github.com/.insteadOf https://github.com/
-  if [[ "$branch" == "rc" ]]; then
-    go get github.com/voedger/voedger@rc
-  else
-    go get github.com/voedger/voedger@release
-  fi
+
+#  if [[ "$branch" == "rc" ]]; then
+#    go get github.com/voedger/voedger@rc
+#  else
+#    go get github.com/voedger/voedger@release
+#  fi
+
   go mod tidy
   git commit -am "Cherry-pick auto-create" --allow-empty 
   git push origin $rc
