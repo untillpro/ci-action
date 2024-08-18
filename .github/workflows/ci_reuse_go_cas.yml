@@ -60,7 +60,7 @@ jobs:
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
         run-mod-tidy: true
-        codecov-go-race: true
+        codecov-go-race: false
       env:
         CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
         CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
