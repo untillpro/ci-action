@@ -43,7 +43,7 @@ jobs:
     - name: Install TinyGo
       run: |
         wget https://github.com/tinygo-org/tinygo/releases/download/v0.32.0/tinygo_0.32.0_amd64.deb
-        sudo dpkg -i tinygo_0.31.2_amd64.deb
+        sudo dpkg -i tinygo_0.32.0_amd64.deb
 
     - name: Check pull request file size
       if: github.event_name == 'pull_request'
