@@ -8,7 +8,6 @@ echo "rebuild baseline schemas"
   git config --local user.email "v.istratenko@dev.untill.com"
   git config --local user.name "upload-robot"
 echo "commit and push new backine schemas"
-  rm airs-bp
   git add .
   git commit -m "baseline schemas update"
   git push	  
