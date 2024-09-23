@@ -105,7 +105,7 @@ for commit_hash in $sorted_commits; do
     echo $(git show -s --format=%ci $commit_hash) $commit_hash	
     commit_hash=$(echo $commit_hash | tr -d ' ')
     echo "commiting sha: $commit_hash"
-    git cherry-pick "$commit_hash" || {
+    git cherry-pick "$commit_hash" -m "Commiting cherry-pick" || {
         echo "Error cherry-picking commit $commit_hash. Aborting."
         exit 1
     }
