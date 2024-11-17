@@ -76,7 +76,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: go-mod-cache
-        path: ~/go/pkg/mod
+        path: | 
+          ~/go/pkg/mod
+          ~/.cache/go-build
   
 #    - name: Check copyright
 #      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
