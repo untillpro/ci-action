@@ -34,7 +34,6 @@ async function run() {
 		const ignoreRunBuild = core.getInput('ignore-build') 
 		const testfolder = core.getInput('test-folder')
 		const shorttest = core.getInput ('short-test') 
-		const stoptest = core.getInput ('stop-test')
 
 		const repositoryOwner = repository.split('/')[0] ||
 			github.context.payload && github.context.payload.repository && github.context.payload.repository.owner && github.context.payload.repository.owner.login
@@ -132,11 +131,7 @@ async function run() {
 					if (shorttest === "true"){
 						tststr=tststr + ' -short'
 					}
-					if (!stoptest){
-						await execute(tststr)
-					}  else {
-						await execute('go mod tidy')
-					}
+					await execute(tststr)
 				}
 				if (testfolder.length != 0) {
 					await execute('cd .')

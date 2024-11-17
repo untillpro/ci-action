@@ -40,12 +40,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
         
-#    - name: Check pull request file size
-#      if: github.event_name == 'pull_request'
-#      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/checkPR.sh | bash 
-#      env: 
-#        token: ${{ secrets.reporeading_token }}
-#        pr_number: ${{ github.event.number }}
+    - name: Check pull request file size
+      if: github.event_name == 'pull_request'
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/checkPR.sh | bash 
+      env: 
+        token: ${{ secrets.reporeading_token }}
+        pr_number: ${{ github.event.number }}
 
     - name: CI
       uses: untillpro/ci-action@master
@@ -58,7 +58,6 @@ jobs:
         short-test:  ${{ inputs.short_test }}
         ignore-build:  ${{ inputs.ignore_build }}
         run-mod-tidy: false
-        stop-test: true
       env:
         CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
         CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
@@ -86,8 +85,8 @@ jobs:
         path: | 
           ~/.cache/go-build           
               
-#    - name: Check copyright
-#      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
+    - name: Check copyright
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
 
-#    - name: Linters
-#      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
+    - name: Linters
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
