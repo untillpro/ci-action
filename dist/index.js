@@ -17344,7 +17344,7 @@ async function run() {
 		const runModTidy = core.getInput('run-mod-tidy') === 'false'
 		const mainBranch = core.getInput('main-branch')
 		const ignoreCopyright = core.getInput('ignore-copyright') === 'true'
-		const ignoreRunBuild = core.getInput('ignore-build') === 'true'
+		const ignoreRunBuild = core.getInput('ignore-build') 
 		const testfolder = core.getInput('test-folder')
 		const shorttest = core.getInput ('short-test') === 'true'
 
@@ -17408,11 +17408,11 @@ async function run() {
 					await execute('cd ' + testfolder)
 				}
 
-				if (!ignoreRunBuild) {
+				if (ignoreRunBuild !== "true") {
 					await execute('go build ./...')
 				}
 
-				if (runModTidy == "true") {
+				if (runModTidy === "true") {
 					await execute('go mod tidy')
 				}
 
@@ -17433,7 +17433,7 @@ async function run() {
 					else
 						tststr ='go test ./... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...'
 						
-					if (shorttest == "true"){
+					if (shorttest === "true"){
 						tststr=tststr + ' -short'
 					}
 					await execute(tststr)
@@ -17441,7 +17441,7 @@ async function run() {
 					await execute(`bash -c "bash <(curl -Os https://uploader.codecov.io/latest/linux/codecov) -t ${codecovToken}"`)
 				} else {
 					let tststr='go test ./...'
-					if (shorttest == "true"){
+					if (shorttest === "true"){
 						tststr=tststr + ' -short'
 					}
 					await execute(tststr)
