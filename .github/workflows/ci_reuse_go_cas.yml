@@ -8,6 +8,12 @@ on:
       test_folder:
         required: false
         type: string
+      short_test:
+          required: false
+          type: string
+      go_race:    
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
@@ -56,11 +62,12 @@ jobs:
       uses: untillpro/ci-action@master
       with:
         ignore: ${{ inputs.ignore_copyright }}
+        codecov-go-race: ${{ inputs.go_race }}
         organization: 'untillpro,heeus'
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
-        run-mod-tidy: true
-        codecov-go-race: true
+        short-test:  ${{ secrets.short_test }}
+        run-mod-tidy: false
       env:
         CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
         CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
