@@ -45,6 +45,12 @@ jobs:
       with:
         name: project-files
         path: .
+
+    - name: Archive Go modules cache        
+      uses: actions/upload-artifact@v4
+      with:
+        name: go-mod-cache
+        path: ~/go/pkg/mod
         
     - name: Cache Go - Modules
       uses: actions/cache@v4
