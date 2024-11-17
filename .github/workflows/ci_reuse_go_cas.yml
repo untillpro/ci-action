@@ -71,19 +71,19 @@ jobs:
         name: project-files
         path: .
 
-    - name: Archive Go modules cache        
-      uses: actions/upload-artifact@v4
-      with:
-        name: go-mod-cache
-        path: | 
-           ~/go/pkg/mod
+#    - name: Archive Go modules cache        
+#      uses: actions/upload-artifact@v4
+#      with:
+#        name: go-mod-cache
+#        path: | 
+#           ~/go/pkg/mod
 
-    - name: Archive Go modules cache        
-      uses: actions/upload-artifact@v4
-      with:
-        name: go-cache
-        path: | 
-          ~/.cache/go-build           
+#    - name: Archive Go modules cache        
+#      uses: actions/upload-artifact@v4
+#      with:
+#        name: go-cache
+#        path: | 
+#          ~/.cache/go-build           
               
     - name: Check copyright
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
