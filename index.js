@@ -28,7 +28,7 @@ async function run() {
 		const publishToken = core.getInput('publish-token')
 		const publishKeep = core.getInput('publish-keep')
 		const repository = core.getInput('repository')
-		const runModTidy = core.getInput('run-mod-tidy') === 'true'
+		const runModTidy = core.getInput('run-mod-tidy') === 'false'
 		const mainBranch = core.getInput('main-branch')
 		const ignoreCopyright = core.getInput('ignore-copyright') === 'true'
 		const ignoreRunBuild = core.getInput('ignore-build') === 'true'
@@ -95,11 +95,11 @@ async function run() {
 					await execute('cd ' + testfolder)
 				}
 
-				if (!ignoreRunBuild) {
+				if (ignoreRunBuild !== "true") {
 					await execute('go build ./...')
 				}
 
-				if (runModTidy) {
+				if (runModTidy == "true") {
 					await execute('go mod tidy')
 				}
 

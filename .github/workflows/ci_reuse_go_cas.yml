@@ -70,7 +70,7 @@ jobs:
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
         short-test:  ${{ secrets.short_test }}
-        ignore-build:  ${{ secrets.ignore_build }}
+        ignore-build:  ${{ inputs.ignore_build }}
         run-mod-tidy: false
       env:
         CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
