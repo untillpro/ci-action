@@ -69,7 +69,7 @@ jobs:
         organization: 'untillpro,heeus'
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
-        short-test:  ${{ secrets.short_test }}
+        short-test:  ${{ inputs.short_test }}
         ignore-build:  ${{ inputs.ignore_build }}
         run-mod-tidy: false
       env:
