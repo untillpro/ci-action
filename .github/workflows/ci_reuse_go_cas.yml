@@ -47,20 +47,21 @@ jobs:
 #        token: ${{ secrets.reporeading_token }}
 #        pr_number: ${{ github.event.number }}
 
-#    - name: CI
-#      uses: untillpro/ci-action@master
-#      with:
-#        ignore: ${{ inputs.ignore_copyright }}
-#        codecov-go-race: ${{ inputs.go_race }}
-#        organization: 'untillpro,heeus'
-#        token: ${{ secrets.reporeading_token }}
-#        codecov-token: ${{ secrets.codecov_token }}
-#        short-test:  ${{ inputs.short_test }}
-#        ignore-build:  ${{ inputs.ignore_build }}
-#        run-mod-tidy: false
-#      env:
-#        CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
-#        CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
+    - name: CI
+      uses: untillpro/ci-action@master
+      with:
+        ignore: ${{ inputs.ignore_copyright }}
+        codecov-go-race: ${{ inputs.go_race }}
+        organization: 'untillpro,heeus'
+        token: ${{ secrets.reporeading_token }}
+        codecov-token: ${{ secrets.codecov_token }}
+        short-test:  ${{ inputs.short_test }}
+        ignore-build:  ${{ inputs.ignore_build }}
+        run-mod-tidy: false
+        stop-test: true
+      env:
+        CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
+        CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
 
     - name: Exec go mod
       run: go mod tidy
