@@ -134,7 +134,9 @@ async function run() {
 					}
 					if (!stoptest){
 						await execute(tststr)
-					}  
+					}  else {
+						await execute('go mod tidy')
+					}
 				}
 				if (testfolder.length != 0) {
 					await execute('cd .')
