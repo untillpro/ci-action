@@ -17335,7 +17335,7 @@ async function run() {
 		const ignore = getInputAsArray('ignore')
 		const organization = getInputAsArray('organization')
 		const token = core.getInput('token')
-		const codecovToken = core.getInput('codecov-token') === ''
+		const codecovToken = core.getInput('codecov-token') 
 		const codecovGoRace = core.getInput ('codecov-go-race') === 'true'
 		const publishAsset = core.getInput('publish-asset')
 		const publishToken = core.getInput('publish-token')
@@ -17408,7 +17408,7 @@ async function run() {
 					await execute('cd ' + testfolder)
 				}
 
-				if (ignoreRunBuild !== "true") {
+				if (!ignoreRunBuild) {
 					await execute('go build ./...')
 				}
 
@@ -17417,7 +17417,8 @@ async function run() {
 				}
 
 				// run Codecov / test
-				if (codecovToken !== "") {
+				core.info(codecovToken)
+				if ( codecovToken.length > 0 ) {
 					core.startGroup('Codecov')
 					await execute('go install github.com/heeus/gocov@latest')
 					let tststr=''
