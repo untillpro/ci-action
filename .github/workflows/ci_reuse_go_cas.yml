@@ -37,13 +37,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Check pull request file size
-      if: github.event_name == 'pull_request'
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/checkPR.sh | bash 
-      env: 
-        token: ${{ secrets.reporeading_token }}
-        pr_number: ${{ github.event.number }}
-
+    - name: Upload project
+      uses: actions/upload-artifact@v4
+      with:
+        name: project-files
+        path: .
+        
     - name: Cache Go - Modules
       uses: actions/cache@v4
       with:
@@ -51,6 +50,13 @@ jobs:
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-go-
+
+    - name: Check pull request file size
+      if: github.event_name == 'pull_request'
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/checkPR.sh | bash 
+      env: 
+        token: ${{ secrets.reporeading_token }}
+        pr_number: ${{ github.event.number }}
 
     - name: CI
       uses: untillpro/ci-action@master
