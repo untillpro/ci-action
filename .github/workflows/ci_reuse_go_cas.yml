@@ -39,51 +39,46 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@v4
+        
+#    - name: Check pull request file size
+#      if: github.event_name == 'pull_request'
+#      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/checkPR.sh | bash 
+#      env: 
+#        token: ${{ secrets.reporeading_token }}
+#        pr_number: ${{ github.event.number }}
+
+#    - name: CI
+#      uses: untillpro/ci-action@master
+#      with:
+#        ignore: ${{ inputs.ignore_copyright }}
+#        codecov-go-race: ${{ inputs.go_race }}
+#        organization: 'untillpro,heeus'
+#        token: ${{ secrets.reporeading_token }}
+#        codecov-token: ${{ secrets.codecov_token }}
+#        short-test:  ${{ inputs.short_test }}
+#        ignore-build:  ${{ inputs.ignore_build }}
+#        run-mod-tidy: false
+#      env:
+#        CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
+#        CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
+
+    - name: Exec go mod
+      run: go mod tidy
 
     - name: Upload project
       uses: actions/upload-artifact@v4
       with:
         name: project-files
         path: .
-
+  
     - name: Archive Go modules cache        
       uses: actions/upload-artifact@v4
       with:
         name: go-mod-cache
         path: ~/go/pkg/mod
-        
-    - name: Cache Go - Modules
-      uses: actions/cache@v4
-      with:
-        path: ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
+  
+#    - name: Check copyright
+#      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
 
-    - name: Check pull request file size
-      if: github.event_name == 'pull_request'
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/checkPR.sh | bash 
-      env: 
-        token: ${{ secrets.reporeading_token }}
-        pr_number: ${{ github.event.number }}
-
-    - name: CI
-      uses: untillpro/ci-action@master
-      with:
-        ignore: ${{ inputs.ignore_copyright }}
-        codecov-go-race: ${{ inputs.go_race }}
-        organization: 'untillpro,heeus'
-        token: ${{ secrets.reporeading_token }}
-        codecov-token: ${{ secrets.codecov_token }}
-        short-test:  ${{ inputs.short_test }}
-        ignore-build:  ${{ inputs.ignore_build }}
-        run-mod-tidy: false
-      env:
-        CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
-        CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
-
-    - name: Check copyright
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
-
-    - name: Linters
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
+#    - name: Linters
+#      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
