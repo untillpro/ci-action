@@ -60,6 +60,9 @@ Continious Integration action for go- and node- projects
 
     # Short tests 
     short-test: false
+
+    # Stop tests 
+    stop-test: false    
 ```
 
 ## Outputs

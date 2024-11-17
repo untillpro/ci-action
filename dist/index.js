@@ -17446,7 +17446,7 @@ async function run() {
 						tststr=tststr + ' -short'
 					}
 					if (!stoptest){
-					  await execute(tststr)
+						await execute(tststr)
 					}  
 				}
 				if (testfolder.length != 0) {

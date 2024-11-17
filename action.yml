@@ -43,6 +43,9 @@ inputs:
   short-test:
     description: 'Test onlywith flag -short'
     default: 'false'
+  stop-test:
+    description: 'Does not make test'
+    default: 'false'    
 outputs:
   release_id:
     description: 'The ID of the created Release'
