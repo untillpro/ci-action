@@ -11,6 +11,9 @@ on:
       short_test:
         required: false
         type: string
+      ignore_build: 
+        required: false
+        type: string
       go_race:    
         required: false
         type: string
@@ -67,6 +70,7 @@ jobs:
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
         short-test:  ${{ secrets.short_test }}
+        ignore-build:  ${{ secrets.ignore_build }}
         run-mod-tidy: false
       env:
         CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}

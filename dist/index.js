@@ -17335,7 +17335,7 @@ async function run() {
 		const ignore = getInputAsArray('ignore')
 		const organization = getInputAsArray('organization')
 		const token = core.getInput('token')
-		const codecovToken = core.getInput('codecov-token')
+		const codecovToken = core.getInput('codecov-token') === ''
 		const codecovGoRace = core.getInput ('codecov-go-race') === 'true'
 		const publishAsset = core.getInput('publish-asset')
 		const publishToken = core.getInput('publish-token')
@@ -17417,7 +17417,7 @@ async function run() {
 				}
 
 				// run Codecov / test
-				if (codecovToken) {
+				if (codecovToken !== "") {
 					core.startGroup('Codecov')
 					await execute('go install github.com/heeus/gocov@latest')
 					let tststr=''
@@ -17433,16 +17433,15 @@ async function run() {
 					else
 						tststr ='go test ./... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...'
 						
-					if (shorttest){
+					if (shorttest == "true"){
 						tststr=tststr + ' -short'
-						tststr ='go test ./... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...'
 					}
 					await execute(tststr)
 					core.endGroup()
 					await execute(`bash -c "bash <(curl -Os https://uploader.codecov.io/latest/linux/codecov) -t ${codecovToken}"`)
 				} else {
 					let tststr='go test ./...'
-					if (shorttest){
+					if (shorttest == "true"){
 						tststr=tststr + ' -short'
 					}
 					await execute(tststr)
