@@ -62,9 +62,6 @@ jobs:
         CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
         CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
 
-    - name: Exec go mod
-      run: go mod tidy
-
     - name: Upload project
       uses: actions/upload-artifact@v4
       with:
