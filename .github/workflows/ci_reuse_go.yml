@@ -77,7 +77,6 @@ jobs:
         short-test:  ${{ inputs.short_test }}
         ignore-build:  ${{ inputs.ignore_build }}
         codecov-go-race: ${{ inputs.go_race }} 
-        ignore-build:  ${{ inputs.ignore_build }}
         run-mod-tidy: false
 
     - name: Check copyright
