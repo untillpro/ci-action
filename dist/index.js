@@ -17417,9 +17417,6 @@ async function run() {
 					await execute('go build ./...')
 				}
 
-				if (buildcmd !== '') {
-					await execute(buildcmd)
-				}		
 				// run Codecov / test
 				
 				if ( codecovToken.length > 0 ) {
@@ -17453,6 +17450,9 @@ async function run() {
 				if (testfolder.length != 0) {
 					await execute('cd .')
 				}
+				if (buildcmd !== '') {
+					await execute(buildcmd)
+				}						
 			} finally {
 				core.endGroup()
 			}
