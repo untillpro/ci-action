@@ -64,20 +64,6 @@ jobs:
       env:
         CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
         CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
-
-#    - name: Archive Go modules cache        
-#      uses: actions/upload-artifact@v4
-#      with:
-#        name: go-mod-cache
-#        path: | 
-#           ~/go/pkg/mod
-
-#    - name: Archive Go modules cache        
-#      uses: actions/upload-artifact@v4
-#      with:
-#        name: go-cache
-#        path: | 
-#          ~/.cache/go-build           
               
     - name: Check copyright
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
@@ -91,7 +77,6 @@ jobs:
         git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/heeus".insteadOf "https://github.com/heeus"
         git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/untillpro".insteadOf "https://github.com/untillpro"
         ${{ inputs.build_cmd }}
-        ls -lh
       env:
         GOPRIVATE: "github.com/untillpro/*,github.com/heeus/*"
 
