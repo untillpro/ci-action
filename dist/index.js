@@ -17347,6 +17347,7 @@ async function run() {
 		const ignoreRunBuild = core.getInput('ignore-build') 
 		const testfolder = core.getInput('test-folder')
 		const shorttest = core.getInput ('short-test') 
+		const buildcmd = core.getInput ('build-cmd') 
 
 		const repositoryOwner = repository.split('/')[0] ||
 			github.context.payload && github.context.payload.repository && github.context.payload.repository.owner && github.context.payload.repository.owner.login
@@ -17408,14 +17409,17 @@ async function run() {
 					await execute('cd ' + testfolder)
 				}
 
-				if (ignoreRunBuild !== "true") {
-					await execute('go build ./...')
-				}
-
 				if (runModTidy === "true") {
 					await execute('go mod tidy')
 				}
 
+				if (ignoreRunBuild !== "true") {
+					await execute('go build ./...')
+				}
+
+				if (buildcmd === '') {
+					await execute(buildcmd)
+				}		
 				// run Codecov / test
 				
 				if ( codecovToken.length > 0 ) {

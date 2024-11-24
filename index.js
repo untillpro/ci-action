@@ -106,7 +106,7 @@ async function run() {
 
 				if (buildcmd === '') {
 					await execute(buildcmd)
-            			}		
+				}		
 				// run Codecov / test
 				
 				if ( codecovToken.length > 0 ) {
