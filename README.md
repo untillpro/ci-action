@@ -63,6 +63,9 @@ Continious Integration action for go- and node- projects
 
     # Stop tests 
     stop-test: false    
+
+    #Command to build project
+    build-cmd: ''	
 ```
 
 ## Outputs
