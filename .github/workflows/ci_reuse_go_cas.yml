@@ -65,21 +65,6 @@ jobs:
         CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
         CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
 
-    - name: Build executable
-      if: inputs.build_cmd != ''
-      run: |
-        git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/heeus".insteadOf "https://github.com/heeus"
-        git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/untillpro".insteadOf "https://github.com/untillpro"
-        ${{ inputs.build_cmd }}
-      env:
-        GOPRIVATE: "github.com/untillpro/*,github.com/heeus/*"
-
-    - name: Upload project
-      uses: actions/upload-artifact@v4
-      with:
-        name: project-files
-        path: .
-
 #    - name: Archive Go modules cache        
 #      uses: actions/upload-artifact@v4
 #      with:
@@ -99,3 +84,18 @@ jobs:
 
     - name: Linters
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
+
+    - name: Build executable
+      if: inputs.build_cmd != ''
+      run: |
+        git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/heeus".insteadOf "https://github.com/heeus"
+        git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/untillpro".insteadOf "https://github.com/untillpro"
+        ${{ inputs.build_cmd }}
+      env:
+        GOPRIVATE: "github.com/untillpro/*,github.com/heeus/*"
+
+    - name: Upload project
+      uses: actions/upload-artifact@v4
+      with:
+        name: project-files
+        path: .
