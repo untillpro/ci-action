@@ -60,11 +60,19 @@ jobs:
         codecov-token: ${{ secrets.codecov_token }}
         short-test:  ${{ inputs.short_test }}
         ignore-build:  ${{ inputs.ignore_build }}
-        build-cmd:  ${{ inputs.build_cmd }}
         run-mod-tidy: false
       env:
         CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
         CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
+
+    - name: Build executable
+      if: inputs.build_cmd != ''
+      run: |
+        git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/heeus".insteadOf "https://github.com/heeus"
+        git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/untillpro".insteadOf "https://github.com/untillpro"
+        ${{ inputs.build_cmd }}
+      env:
+        GOPRIVATE: "github.com/untillpro/*,github.com/heeus/*"
 
     - name: Upload project
       uses: actions/upload-artifact@v4
