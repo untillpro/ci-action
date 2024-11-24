@@ -17396,7 +17396,7 @@ async function run() {
 			checkSources.checkGoMod()
 
 			// Build
-			core.startGroup('Build')
+			core.startGroup('Build & test')
 			try {
 				for (const i in organization) {
 					process.env.GOPRIVATE = (process.env.GOPRIVATE ? process.env.GOPRIVATE + ',' : '') + `github.com/${organization[i]}/*`
@@ -17417,7 +17417,7 @@ async function run() {
 					await execute('go build ./...')
 				}
 
-				if (buildcmd === '') {
+				if (buildcmd !== '') {
 					await execute(buildcmd)
 				}		
 				// run Codecov / test
