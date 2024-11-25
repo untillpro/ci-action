@@ -17,6 +17,12 @@ on:
       running_workflow:
         required: false
         type: string
+      ignore_build: 
+        required: false
+        type: string
+      go_race:    
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
@@ -79,6 +85,7 @@ jobs:
         token: ${{ secrets.reporeading_token }}
         codecov-token: ${{ secrets.codecov_token }}
         short-test: ${{ inputs.short_test == 'true' }}
+        ignore-build:  ${{ inputs.ignore_build }}
         run-mod-tidy: false
 
     - name: Check copyright
