@@ -23,6 +23,9 @@ on:
       ignore_build: 
         required: false
         type: string
+      test_subfolders: 
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
@@ -72,6 +75,12 @@ jobs:
         ignore-build:  ${{ inputs.ignore_build }}
         codecov-go-race: ${{ inputs.go_race }} 
         run-mod-tidy: false
+
+    - name: Test subfolders
+      if: ${{ inputs.test_subfolders == 'true' }} 
+      run: |
+        git config --global url."https://${{ secrets.reporeading_token }}:x-oauth-basic@github.com".insteadOf "https://github.com"
+        curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/test_subfolders.sh | bash
 
     - name: Check copyright
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
