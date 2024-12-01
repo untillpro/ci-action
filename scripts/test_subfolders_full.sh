@@ -9,7 +9,7 @@ for dir in $(find . -name "go.mod" -not -path "./go.mod" -exec dirname {} \;); d
     echo "Running tests in $dir..."
     
     # Run tests normally in all other directories
-    (cd "$dir" && go test ./... ) || any_test_failed=1
+    (cd "$dir" && go test ./... -race) || any_test_failed=1
 done
 
 # Check if any test failed and exit with a non-zero status
