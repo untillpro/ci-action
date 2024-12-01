@@ -79,8 +79,7 @@ jobs:
     - name: Test subfolders
       if: ${{ inputs.test_subfolders == 'true' }} 
       run: |
-        git config --global url."https://${{ secrets.reporeading_token }}:x-oauth-basic@github.com".insteadOf "https://github.com"
-        curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/test_subfolders.sh | bash
+        curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/test_subfolders.sh | bash -s "$(go env GOPATH)"
 
     - name: Check copyright
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
