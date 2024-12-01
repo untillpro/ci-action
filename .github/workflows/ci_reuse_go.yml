@@ -77,9 +77,13 @@ jobs:
         run-mod-tidy: false
 
     - name: Test subfolders
-      if: ${{ inputs.test_subfolders == 'true' }} 
+      if: ${{ inputs.test_subfolders == 'true' }}
       run: |
-        curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/test_subfolders.sh | bash -s "$(go env GOPATH)"
+        if [ "${{ inputs.short_test }}" == "true" ]; then
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/test_subfolders.sh | bash -s "$(go env GOPATH)" 
+        else
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/test_subfolders_full.sh | bash -s "$(go env GOPATH)"
+        fi        
 
     - name: Check copyright
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
