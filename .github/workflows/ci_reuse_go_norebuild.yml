@@ -28,12 +28,6 @@ jobs:
         go-version: 'stable'
         cache: false
 
-    # Install TinyGo 
-    - name: Install TinyGo
-      run: |
-        wget https://github.com/tinygo-org/tinygo/releases/download/v0.33.0/tinygo_0.33.0_amd64.deb
-        sudo dpkg -i tinygo_0.33.0_amd64.deb
-
     - name: Checkout
       uses: actions/checkout@v4
 
