@@ -23,6 +23,9 @@ on:
       go_race:    
         required: false
         type: string
+      test_subfolders: 
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
@@ -81,6 +84,11 @@ jobs:
         short-test: ${{ inputs.short_test }}
         ignore-build:  ${{ inputs.ignore_build }}
         run-mod-tidy: false
+
+    - name: Test subfolders
+      if: ${{ inputs.test_subfolders == 'true' }} 
+      run: |
+        curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/test_subfolders.sh | bash -s "$(go env GOPATH)"
 
     - name: Check copyright
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
