@@ -13,7 +13,7 @@ for dir in $(find . -name "go.mod" -not -path "./go.mod" -not -path "*/testdata/
 done
 
 # Check if any test failed and exit with a non-zero status
-if [ "$any_test_failed" -ne 0 ]; then
+if [[ "$any_test_failed" -ne 0 ]]; then
     echo "The tests did not pass. Please check the errors above."
     exit 1
 fi
