@@ -1,6 +1,7 @@
 #!/bin/bash
 
 branch=$(git symbolic-ref --short HEAD)
+echo "Branch: $branch"
 
 stack="dev"
 if [[ $branch =~ "release" ]]; then
@@ -9,6 +10,7 @@ fi
 if [[ $branch =~ "rc" ]]; then
   stack="rc"
 fi
+echo "Stack: $stack"
 
 stackfile="./airs-config-sync/stacks/$stack/stack.yml"
 if [ ! -f "$stackfile"  ]
@@ -38,11 +40,16 @@ packfound=0
 while read -r line; do
   i=$((i+1))
   if [ $packfound -eq 0 ]; then 
+    echo "Pack: $pack"
     if [[ $line =~ "pack: $pack" ]]; then
 	packfound=1	
     fi 
   else
+     echo "Line: $line"
+     echo "Updtag: $updtag"
      if [[ $line =~ "$updtag:" ]]; then
+       echo "Stack file: $stackfile"
+       echo "Tag: $$tagvalue"	
        sed -i "${i}s/.*$updtag.*/      $reptag: $tagvalue/" ${stackfile}
        break
      fi
