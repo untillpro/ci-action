@@ -1,13 +1,17 @@
 #!/bin/bash
 
-branch=$(git symbolic-ref --short HEAD)
-echo "Branch: $branch"
+br=$(git symbolic-ref --short HEAD)
+# Fallback to the environment variable 'branch' if 'br' is empty
+if [ -z "$br" ]; then
+  br="$branch"
+fi
+echo "Branch: $br"
 
 stack="dev"
-if [[ $branch =~ "release" ]]; then
+if [[ $br =~ "release" ]]; then
   stack="euro"
 fi
-if [[ $branch =~ "rc" ]]; then
+if [[ $br =~ "rc" ]]; then
   stack="rc"
 fi
 echo "Stack: $stack"
@@ -19,7 +23,7 @@ then
     exit 1
 fi
 
-if [[ $branch =~ "release" ]]; then
+if [[ $br =~ "release" ]]; then
   updtag="tag"
   reptag="  tag"
   tagvalue=$tag
@@ -40,16 +44,11 @@ packfound=0
 while read -r line; do
   i=$((i+1))
   if [ $packfound -eq 0 ]; then 
-    echo "Pack: $pack"
     if [[ $line =~ "pack: $pack" ]]; then
 	packfound=1	
     fi 
   else
-     echo "Line: $line"
-     echo "Updtag: $updtag"
      if [[ $line =~ "$updtag:" ]]; then
-       echo "Stack file: $stackfile"
-       echo "Tag: $$tagvalue"	
        sed -i "${i}s/.*$updtag.*/      $reptag: $tagvalue/" ${stackfile}
        break
      fi
