@@ -26,7 +26,7 @@ on:
 # This is the job that will be executed. Jobs run in parallel by default.
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
 
       - name: Checkout code

@@ -30,7 +30,7 @@ on:
 
 jobs:
   cherry_pick:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
@@ -158,7 +158,7 @@ jobs:
 
   handle-failure:
     needs: cherry_pick
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: failure()
     steps:
       - name: Add comment to issue
