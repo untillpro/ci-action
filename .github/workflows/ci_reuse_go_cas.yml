@@ -91,3 +91,4 @@ jobs:
       with:
         name: project-files
         path: .
+        retention-days: 1
