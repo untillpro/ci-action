@@ -129,6 +129,8 @@ async function run() {
 					await execute(`bash -c "bash <(curl -Os https://uploader.codecov.io/latest/linux/codecov) -t ${codecovToken}"`)
 				} else {
 					let tststr='go test ./...'
+					if (codecovGoRace)
+						tststr=tststr + ' -race'
 					if (shorttest === "true"){
 						tststr=tststr + ' -short'
 					}
