@@ -82,18 +82,19 @@ fi
 sorted_commits=""
 # Loop through the hashes, get their commit dates, and sort them
 # Capture the sorted hashes into a string variable
-# sorted_commits=$(for commit in $commit_hashes; do
-#     # Get the commit date using %ci, output with commit hash
-#     commit_info=$(git show -s --format=%ci $commit)
-#     echo "$commit_info $commit"
-# done | sort | awk '{print $4}')
-
 sorted_commits=$(for commit in $commit_hashes; do
+   # Get the commit date using %ci, output with commit hash
+   commit_info=$(git show -s --format=%ci $commit)
+   echo "$commit_info $commit"
+done | sort | awk '{print $4}')
+
+
+#sorted_commits=$(for commit in $commit_hashes; do
     # Get the commit date and position (line number in rev-list) for each commit
-    commit_date=$(git show -s --format=%ci $commit)
-    commit_position=$(git rev-list --reverse $SOURCE_BRANCH | grep -n "^$commit$" | cut -d: -f1)
-    echo "$commit_date $commit_position $commit"
-done | sort -k1,2 | awk '{print $3}')
+#    commit_date=$(git show -s --format=%ci $commit)
+#    commit_position=$(git rev-list --reverse $SOURCE_BRANCH | grep -n "^$commit$" | cut -d: -f1)
+#    echo "$commit_date $commit_position $commit"
+#done | sort -k1,2 | awk '{print $3}')
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 echo "The script directory is: $SCRIPT_DIR"
