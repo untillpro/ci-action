@@ -154,7 +154,11 @@ jobs:
           org: ${{ inputs.org }}
           repo: ${{ inputs.repo }}
           issue: ${{ inputs.issue }}
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/close-issue.sh | bash 
+        run: |
+          issue_title=$(gh issue view ${{ inputs.issue }} --repo ${{ inputs.org }}/{{ inputs.repo }} --json title -q '.title')
+          if [[ "$issue_title" != "cprelease" && "${{ inputs.repo }}" != "airs-bp3" ]]; then
+            curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/close-issue.sh | bash
+          fi	
 
   handle-failure:
     needs: cherry_pick
