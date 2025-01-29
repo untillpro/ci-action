@@ -13,6 +13,5 @@ if [ -z "$issue" ];  then
   echo "Issue number is not defined"
   exit 1
 fi
-
-echo "https://github.com/$org/$repo"
+echo "------- cmd:   gh issue close $issue -R https://github.com/$org/$repo"
 gh issue close $issue -R "https://github.com/$org/$repo"
