@@ -35,7 +35,7 @@ else
   git fetch --all
   for commit_hash in $commit_hashes; do
     # Check if commit exists in current branch
-    cmt=$(git branch -r --contains 58f5241 | sed 's/origin\///' | grep -v 'HEAD' | awk '{print $1}')
+    cmt=$(git branch -r --contains $commit_hash | sed 's/origin\///' | grep -v 'HEAD' | awk '{print $1}')
     echo "cmt2=$cmt"
     if [ -z "$cmt" ]; then
       echo "Commit $commit_hash does not exists"
