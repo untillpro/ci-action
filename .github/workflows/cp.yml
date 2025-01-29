@@ -150,10 +150,17 @@ jobs:
 
       - name: Close issue 
         run: |
-          issue_title=$(gh issue view ${{ inputs.issue }} --repo ${{ inputs.org }}/{{ inputs.repo }} --json title -q '.title')
-          if [[ "$issue_title" != "cprelease" || "${{ inputs.repo }}" != "airs-bp3" ]]; then
+          echo "DEBUG: inputs.issue=${{ inputs.issue }}"
+          echo "DEBUG: inputs.org=${{ inputs.org }}"
+          echo "DEBUG: inputs.repo=${{ inputs.repo }}"
+
+          issue_title=$(gh issue view "$issue" --repo "$org/$repo" --json title -q '.title')
+
+          echo "DEBUG: issue_title=$issue_title"
+
+          if [[ "$issue_title" != "cprelease" || "$repo" != "airs-bp3" ]]; then
             curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/close-issue.sh | bash
-          fi	
+          fi
         env: 
           GH_TOKEN: ${{ secrets.git_token }}
           org: ${{ inputs.org }}
