@@ -42,14 +42,14 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version: '1.24'
+        go-version: '1.23'
         cache: false
 
     # Install TinyGo 
     - name: Install TinyGo
       run: |
-        wget https://github.com/tinygo-org/tinygo/releases/download/v0.37.0/tinygo_0.37.0_amd64.deb
-        sudo dpkg -i tinygo_0.37.0_amd64.deb
+        wget https://github.com/tinygo-org/tinygo/releases/download/v0.34.0/tinygo_0.34.0_amd64.deb
+        sudo dpkg -i tinygo_0.34.0_amd64.deb
 
     - name: Checkout
       uses: actions/checkout@v4
