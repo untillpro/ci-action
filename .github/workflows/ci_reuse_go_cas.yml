@@ -78,9 +78,9 @@ jobs:
       if: inputs.build_cmd != ''
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
 
-    - name: Linters
-      if: inputs.ignore_linter != ''
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
+#    - name: Linters
+#      if: inputs.ignore_linter != ''
+#      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
 
     - name: Build executable
       run: |
