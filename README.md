@@ -190,6 +190,10 @@ jobs:
         codecov-token: ${{ secrets.CODECOV_TOKEN }}
 ```
 
+## Architecture
+
+- [architecture.md](architecture.md)
+
 ## Development
 
 Install the dependencies
