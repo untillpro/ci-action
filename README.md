@@ -1,6 +1,6 @@
 # ci-action
 
-Continious Integration action for go- and node- projects
+Continuous Integration action for go- and node- projects
 
 * Reject ".*" folders (except `ignore` folders)
 * For sources, except `ignore` and first comments which include `DO NOT EDIT`:
@@ -8,7 +8,9 @@ Continious Integration action for go- and node- projects
   * Reject sources which have LICENSE word in first comment but LICENSE file does not exist
 * Reject go.mod with local replaces
 * For Go projects
-  * Run `go build f./...` and `go test ./...`
+  * Run `go build ./...` and `go test ./...`
+  * Run linting with golangci-lint
+  * Run vulnerability checks with govulncheck
 * For Node.js projects
   * Run `npm install`, `npm run build --if-present` and `npm test`
 * Publish Release (only for "master" branch if `publish-asset` property is set)
@@ -33,6 +35,9 @@ Continious Integration action for go- and node- projects
 
     # Codecov: use Go Race Detector
     codecov-go-race: true
+
+    # Ignore go build step
+    ignore-build: false
 
     # File / dir name to publish
     publish-asset: ''
@@ -64,8 +69,8 @@ Continious Integration action for go- and node- projects
     # Stop tests 
     stop-test: false    
 
-    #Command to build project
-    build-cmd: ''	
+    # Command to build project
+    build-cmd: ''
 ```
 
 ## Outputs
@@ -80,9 +85,9 @@ In case of publish release:
 
 ## Scenarios
 
-### Creaing CODECOV_TOKEN
+### Creating CODECOV_TOKEN
 
-* Go to apropriate codecov resource, e.g. <https://codecov.io/gh/untillpro/ci-action>
+* Go to appropriate codecov resource, e.g. <https://codecov.io/gh/untillpro/ci-action>
 * Copy token from there
 * Use it for CODECOV_TOKEN secret, say <https://github.com/untillpro/ci-action/settings/secrets>
 
@@ -92,7 +97,7 @@ In case of publish release:
   * [Create personal access token](https://github.com/settings/tokens)
     * [See also](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token)
   * Create secret with the received token named "REPOREADING_TOKEN"
-* For automatic uploading reports to [Codecov] [Codecov](https://codecov.io/)
+* For automatic uploading reports to [Codecov](https://codecov.io/)
   * Create secret with Codecov token named "CODECOV_TOKEN"
 * Create action workflow "ci.yml" with the following contents:
 
@@ -101,16 +106,17 @@ name: CI-Go
 on: [push, pull_request_target]
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-    - name: Set up Go 1.17
-      uses: actions/setup-go@v1
+    - name: Set up Go
+      uses: actions/setup-go@v5
       with:
-        go-version: 1.17
+        go-version: '1.24'
+        cache: false
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Cache Go - Modules
-      uses: actions/cache@v1
+      uses: actions/cache@v4
       with:
         path: ~/go/pkg/mod
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
@@ -123,27 +129,56 @@ jobs:
         codecov-token: ${{ secrets.CODECOV_TOKEN }}
 ```
 
+### Go project with TinyGo
+
+For projects requiring TinyGo:
+
+```yaml
+name: CI-Go-TinyGo
+on: [push, pull_request_target]
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.24'
+        cache: false
+    - name: Install TinyGo
+      run: |
+        wget https://github.com/tinygo-org/tinygo/releases/download/v0.37.0/tinygo_0.37.0_amd64.deb
+        sudo dpkg -i tinygo_0.37.0_amd64.deb
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: CI
+      uses: untillpro/ci-action@master
+      with:
+        token: ${{ secrets.REPOREADING_TOKEN }}
+        codecov-token: ${{ secrets.CODECOV_TOKEN }}
+```
+
 ### Node.js project
 
-* For automatic uploading reports to [Codecov] [Codecov](https://codecov.io/)
+* For automatic uploading reports to [Codecov](https://codecov.io/)
   * Create secret with Codecov token named "CODECOV_TOKEN"
 * Create action workflow "ci.yml" with the following contents:
 
 ```yaml
 name: CI-Node.js
-on: [push,  pull_request_target]
+on: [push, pull_request_target]
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-    - name: Set up Node.js 20.x
-      uses: actions/setup-node@v1
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
       with:
         node-version: '20.x'
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Cache Node - npm
-      uses: actions/cache@v1
+      uses: actions/cache@v4
       with:
         path: ~/.npm
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
