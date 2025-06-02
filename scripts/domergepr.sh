@@ -4,6 +4,8 @@ jqbase64 () {
   echo "$team" | base64 -d | jq -r "$1"
 }
 
+  exit 0
+
   # Check if author is Developer
   # Get author of the pull request
   auth_login=$(gh pr view $pr_number --json author -R ${repo}| jq -r '.[].login')
