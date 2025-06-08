@@ -4,8 +4,6 @@ jqbase64 () {
   echo "$team" | base64 -d | jq -r "$1"
 }
 
-  exit 0
-
   # Check if author is Developer
   # Get author of the pull request
   auth_login=$(gh pr view $pr_number --json author -R ${repo}| jq -r '.[].login')
@@ -48,6 +46,19 @@ jqbase64 () {
   if [[ $userfound -eq 0 ]]; then 
     # User is not from pour team
     echo "Pull request $pr_number is not auto-merged, because it's author $auth_login not from developers team."
+    exit 0
+  fi
+
+  # Check line count
+  loc_stats=$(gh pr view $pr_number --json additions,deletions -R ${repo})
+  additions=$(echo "$loc_stats" | jq -r '.additions')
+  deletions=$(echo "$loc_stats" | jq -r '.deletions')
+  total=$((additions + deletions))
+
+  echo "Pull request has $additions additions and $deletions deletions. Total: $total lines."
+
+  if [[ $total -gt 200 ]]; then
+    echo "Pull request $pr_number is not auto-merged because it changes more than 200 lines."
     exit 0
   fi
 
