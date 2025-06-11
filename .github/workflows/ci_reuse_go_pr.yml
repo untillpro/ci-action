@@ -89,6 +89,7 @@ jobs:
         codecov-token: ${{ secrets.codecov_token }}
         short-test: ${{ inputs.short_test }}
         ignore-build:  ${{ inputs.ignore_build }}
+        codecov-go-race: ${{ inputs.go_race }} 
         run-mod-tidy: false
 
     - name: Test subfolders
