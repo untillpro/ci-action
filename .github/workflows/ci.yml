@@ -20,7 +20,7 @@ jobs:
         codecov-token: ${{ secrets.CODECOV_TOKEN }}
         codecov-go-race: false
         publish-asset: ci-action.exe
-        main-branch: master
+        main-branch: main
       env:
         GOOS: windows
         GOARCH: 386

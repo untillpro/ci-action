@@ -16,21 +16,21 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
 
-    - name: Set up Node.js 
+    - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20.x'
 
     - name: Checkout
       uses: actions/checkout@v4
-      with: 
+      with:
         token: ${{ secrets.reporeading_token }}
         submodules: true
 
     - name: Check pull request file size
       if: github.event_name == 'pull_request'
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/checkPR.sh | bash 
-      env: 
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/checkPR.sh | bash
+      env:
         token: ${{ secrets.reporeading_token }}
         pr_number: ${{ github.event.number }}
 
@@ -51,7 +51,7 @@ jobs:
           ${{ runner.os }}-node-
 
     - name: CI
-      uses: untillpro/ci-action@master
+      uses: untillpro/ci-action@main
       with:
         ignore: ${{ inputs.ignore_copyright }}
         organization: 'untillpro'

@@ -13,13 +13,13 @@ Continuous Integration action for go- and node- projects
   * Run vulnerability checks with govulncheck
 * For Node.js projects
   * Run `npm install`, `npm run build --if-present` and `npm test`
-* Publish Release (only for "master" branch if `publish-asset` property is set)
+* Publish Release (only for "main" branch if `publish-asset` property is set)
   * The `deployer.url` file must be present in the root of the repository
 
 ## Usage
 
 ```yaml
-- uses: untillpro/ci-action@master
+- uses: untillpro/ci-action@main
   with:
     # Folders and files that will be ignored when checking (comma separated)
     ignore: ''
@@ -63,11 +63,11 @@ Continuous Integration action for go- and node- projects
     # Test only in folder
     test-folder: ''
 
-    # Short tests 
+    # Short tests
     short-test: false
 
-    # Stop tests 
-    stop-test: false    
+    # Stop tests
+    stop-test: false
 
     # Command to build project
     build-cmd: ''
@@ -123,7 +123,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-go-
     - name: CI
-      uses: untillpro/ci-action@master
+      uses: untillpro/ci-action@main
       with:
         token: ${{ secrets.REPOREADING_TOKEN }}
         codecov-token: ${{ secrets.CODECOV_TOKEN }}
@@ -152,7 +152,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
     - name: CI
-      uses: untillpro/ci-action@master
+      uses: untillpro/ci-action@main
       with:
         token: ${{ secrets.REPOREADING_TOKEN }}
         codecov-token: ${{ secrets.CODECOV_TOKEN }}
@@ -185,7 +185,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
     - name: CI
-      uses: untillpro/ci-action@master
+      uses: untillpro/ci-action@main
       with:
         codecov-token: ${{ secrets.CODECOV_TOKEN }}
 ```
