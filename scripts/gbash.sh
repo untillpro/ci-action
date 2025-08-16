@@ -2,12 +2,12 @@ echo "argument: $1"
 
 if [ "$#" -ne 1 ]; then
     echo "Please add 1 argument: golangci install folder"
-    exit 1	
+    exit 1
 fi
 
 echo "Install golangci-lint in folder: $1/bin"
 #curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.0.2
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.4.0
 
 golangci-lint --version
 
@@ -19,11 +19,11 @@ mydir=""
 if test -n "$testfolder"; then
   mydir="${testfolder}/..."
 fi
-$1/bin/golangci-lint run ${mydir} 
+$1/bin/golangci-lint run ${mydir} --verbose
 
 status="$?"
 
-if [ ${status} -eq 0 ]; then 
+if [ ${status} -eq 0 ]; then
   echo "Skip cyclop"
 #  go install github.com/untillpro/cyclop/cmd/cyclop@v1.2.103
 
