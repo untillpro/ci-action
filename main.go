@@ -92,11 +92,11 @@ func main() {
 					// 	log.Print("\"develop\" branch already exist")
 					// } else {
 					// 	log.Print("Creating \"develop\" branch")
-					// 	masterRef, _, err := client.Git.GetRef(ctx, organization, repo, "refs/heads/master")
+					// 	mainRef, _, err := client.Git.GetRef(ctx, organization, repo, "refs/heads/main")
 					// 	if err != nil {
-					// 		log.Fatalf("Unable to get \"master\" branch: %s\n", err)
+					// 		log.Fatalf("Unable to get \"main\" branch: %s\n", err)
 					// 	}
-					// 	developRef := &github.Reference{Ref: github.String("refs/heads/develop"), Object: &github.GitObject{SHA: masterRef.Object.SHA}}
+					// 	developRef := &github.Reference{Ref: github.String("refs/heads/develop"), Object: &github.GitObject{SHA: mainRef.Object.SHA}}
 					// 	_, _, err = client.Git.CreateRef(ctx, organization, repo, developRef)
 					// 	if err != nil {
 					// 		log.Fatalf("Unable to create \"develop\" branch: %s\n", err)

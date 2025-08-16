@@ -16,7 +16,7 @@ on:
         required: true
         type: string
       issue:
-        required: true 
+        required: true
         type: string
       issue-title:
         required: true
@@ -25,7 +25,7 @@ on:
         required: true
         type: string
     secrets:
-      git_token:	
+      git_token:
         required: true
 
 jobs:
@@ -40,17 +40,17 @@ jobs:
           fetch-depth: 0  # Fetch all history for cherry-picking
 
       - name: Add comment to issue
-        env: 
+        env:
           GH_TOKEN: ${{ secrets.git_token }}
           org: ${{ inputs.org }}
           repo: ${{ inputs.repo }}
           issue: ${{ inputs.issue }}
           body: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/add-issue-commit.sh | bash 
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/add-issue-commit.sh | bash
 
       - name: Check Issue
-        run: | 
+        run: |
           echo "org: ${{ inputs.org }}"
           echo "team: ${{ inputs.team }}"
           echo "user: ${{ inputs.user }}"
@@ -60,13 +60,13 @@ jobs:
           ORG_NAME=${{ inputs.org }}
           TEAM_NAME=${{ inputs.team }}
           USER_NAME=${{ inputs.user }}
-      
+
           echo "org1: $ORG_NAME"
           echo "team1: $TEAM_NAME"
           echo "user1: $USER_NAME"
           # Check organization membership
           ORG_MEMBERSHIP=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.git_token }}" "https://api.github.com/orgs/$ORG_NAME/members/$USER_NAME")
-      
+
           if [[ $ORG_MEMBERSHIP -ne 404 ]]; then
             echo "The user $USER_NAME is a member of the organization $ORG_NAME."
           else
@@ -76,7 +76,7 @@ jobs:
 
           # Check team membership
           TEAM_MEMBERSHIP=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.git_token }}" "https://api.github.com/orgs/$ORG_NAME/teams/$TEAM_NAME/memberships/$USER_NAME")
-          echo "$TEAM_MEMBERSHIP" 		       
+          echo "$TEAM_MEMBERSHIP"
           if [[ $TEAM_MEMBERSHIP -eq 200 ]]; then
             echo "The user $USER_NAME is a member of the team $TEAM_NAME within the organization $ORG_NAME."
           else
@@ -88,7 +88,7 @@ jobs:
         id: set_branch
         run: |
           title="${{ inputs.issue-title }}"
-          
+
           if [[ $title = cprc* ]]; then
             branch="rc"
           elif [[ $title =~ cprelease* ]]; then
@@ -116,7 +116,7 @@ jobs:
         run: sudo apt-get install jq -y
 
       - name: Parse issue description for commit SHAs
-        id: parse_commits             
+        id: parse_commits
         run: |
           # Extract all SHA hashes from the issue description
           body='${{ inputs.issue-body }}'
@@ -127,16 +127,16 @@ jobs:
           commit_list=""
           while IFS= read -r line; do
           cleaned_line=$(echo "$line" | tr '.,' ' ' | tr -s ' ')
-            cleaned_line=$(echo "$cleaned_line" | sed 's/[[:space:]]*$//')           
+            cleaned_line=$(echo "$cleaned_line" | sed 's/[[:space:]]*$//')
             commit_list+=" $cleaned_line"
           done <<< "$body"
 
-          commit_list=$(echo "$commit_list" | sed 's/[[:space:]]*$//')           
+          commit_list=$(echo "$commit_list" | sed 's/[[:space:]]*$//')
           echo "::set-output name=commits::${commit_list}"
         shell: bash
 
       - name: Cherry pick commits to branch
-        env: 
+        env:
           github_token: ${{ secrets.git_token }}
           commit_list: ${{ steps.parse_commits.outputs.commits }}
           branch: ${{ steps.set_branch.outputs.branch }}
@@ -146,9 +146,9 @@ jobs:
           git config --local user.email "v.istratenko@dev.untill.com"
           git config --local user.name "upload-robot"
           git config --global url.https://${{ secrets.git_token }}@github.com/.insteadOf https://github.com/
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/cp.sh | bash 
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/cp.sh | bash
 
-      - name: Close issue 
+      - name: Close issue
         run: |
           echo "DEBUG: inputs.issue=${{ inputs.issue }}"
           echo "DEBUG: inputs.org=${{ inputs.org }}"
@@ -159,9 +159,9 @@ jobs:
           echo "DEBUG: issue_title=$issue_title"
 
           if [[ "$issue_title" != "cprelease" || "$repo" != "airs-bp3" ]]; then
-            curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/close-issue.sh | bash
+            curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/close-issue.sh | bash
           fi
-        env: 
+        env:
           GH_TOKEN: ${{ secrets.git_token }}
           org: ${{ inputs.org }}
           repo: ${{ inputs.repo }}
@@ -173,7 +173,7 @@ jobs:
     if: failure()
     steps:
       - name: Add comment to issue
-        env: 
+        env:
           GH_TOKEN: ${{ secrets.git_token }}
           org: ${{ inputs.org }}
           repo: ${{ inputs.repo }}
@@ -182,4 +182,4 @@ jobs:
           issue: ${{ inputs.issue }}
           body: "Error occured"
         run: |
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/add-issue-commit.sh | bash 
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/add-issue-commit.sh | bash

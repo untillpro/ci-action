@@ -8,7 +8,7 @@ on:
     secrets:
       reporeading_token:
         required: true
-      personal_token:	
+      personal_token:
         required: true
 
 jobs:
@@ -28,8 +28,8 @@ jobs:
     - name: Rebuild airs-bp3
       run: |
         git config --global url."https://${{ secrets.reporeading_token }}:x-oauth-basic@github.com".insteadOf "https://github.com"
-        curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rebuild-test-bp3.sh | bash
-      env: 
+        curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/rebuild-test-bp3.sh | bash
+      env:
         github_token: ${{ secrets.reporeading_token }}
         gh_event: ${{ github.event_name }}
         message: "voedger: ${{ inputs.commit_name }}"
@@ -37,8 +37,8 @@ jobs:
         commit_email: "v.istratenko@dev.untill.com"
 
     - name: Push changes to pb3
-      if: success()	      
-      uses: ad-m/github-push-action@master
+      if: success()
+      uses: ad-m/github-push-action@main
       with:
         directory: ../../${{ github.event.repository.name }}/airs-bp3
         repository: untillpro/airs-bp3

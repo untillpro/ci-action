@@ -16,10 +16,10 @@ on:
         required: true
         type: string
       issue:
-        required: true 
+        required: true
         type: string
     secrets:
-      git_token:	
+      git_token:
         required: true
 
 jobs:
@@ -33,17 +33,17 @@ jobs:
           ref: main  # Checkout the main branch
 
       - name: Add comment to issue
-        env: 
+        env:
           GH_TOKEN: ${{ secrets.git_token }}
           org: ${{ inputs.org }}
           repo: ${{ inputs.repo }}
           issue: ${{ inputs.issue }}
           body: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/add-issue-commit.sh | bash 
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/add-issue-commit.sh | bash
 
       - name: Check Issue
-        run: | 
+        run: |
           echo "org: ${{ inputs.org }}"
           echo "team: ${{ inputs.team }}"
           echo "user: ${{ inputs.user }}"
@@ -52,13 +52,13 @@ jobs:
           ORG_NAME=${{ inputs.org }}
           TEAM_NAME=${{ inputs.team }}
           USER_NAME=${{ inputs.user }}
-      
+
           echo "org1: $ORG_NAME"
           echo "team1: $TEAM_NAME"
           echo "user1: $USER_NAME"
           # Check organization membership
           ORG_MEMBERSHIP=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.git_token }}" "https://api.github.com/orgs/$ORG_NAME/members/$USER_NAME")
-      
+
           if [[ $ORG_MEMBERSHIP -ne 404 ]]; then
             echo "The user $USER_NAME is a member of the organization $ORG_NAME."
           else
@@ -68,18 +68,18 @@ jobs:
 
           # Check team membership
           TEAM_MEMBERSHIP=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.git_token }}" "https://api.github.com/orgs/$ORG_NAME/teams/$TEAM_NAME/memberships/$USER_NAME")
-          echo "$TEAM_MEMBERSHIP" 		       
+          echo "$TEAM_MEMBERSHIP"
           if [[ $TEAM_MEMBERSHIP -eq 200 ]]; then
             echo "The user $USER_NAME is a member of the team $TEAM_NAME within the organization $ORG_NAME."
           else
             echo "The user $USER_NAME is not a member of the team $TEAM_NAME within the organization $ORG_NAME."
-            exit 1		
+            exit 1
           fi
 
 #   Make RC for the repo here:
 
       - name: Re-create release branch
-        env: 
+        env:
           GH_TOKEN: ${{ secrets.git_token }}
           org: ${{ inputs.org }}
           repo: ${{ inputs.repo }}
@@ -87,15 +87,15 @@ jobs:
           git config --local user.email "v.istratenko@dev.untill.com"
           git config --local user.name "upload-robot"
           git config --global url.https://${{ secrets.git_token }}@github.com/.insteadOf https://github.com/
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/rc.sh | bash 
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/rc.sh | bash
 
-      - name: Close issue 
-        env: 
+      - name: Close issue
+        env:
           GH_TOKEN: ${{ secrets.git_token }}
           org: ${{ inputs.org }}
           repo: ${{ inputs.repo }}
           issue: ${{ inputs.issue }}
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/close-issue.sh | bash 
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/close-issue.sh | bash
 
   handle-failure:
     needs: make_rc
@@ -103,7 +103,7 @@ jobs:
     if: failure()
     steps:
       - name: Add comment to issue
-        env: 
+        env:
           GH_TOKEN: ${{ secrets.git_token }}
           org: ${{ inputs.org }}
           repo: ${{ inputs.repo }}
@@ -112,4 +112,4 @@ jobs:
           issue: ${{ inputs.issue }}
           body: "Error occured"
         run: |
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/add-issue-commit.sh | bash 
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/add-issue-commit.sh | bash

@@ -14,13 +14,13 @@ on:
       short_test:
         required: false
         type: string
-      ignore_build: 
+      ignore_build:
         required: false
         type: string
-      go_race:    
+      go_race:
         required: false
         type: string
-      build_cmd:	
+      build_cmd:
         required: false
         type: string
     secrets:
@@ -45,8 +45,8 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@v4
-        
-    # Install TinyGo 
+
+    # Install TinyGo
     - name: Install TinyGo
       run: |
         wget https://github.com/tinygo-org/tinygo/releases/download/v0.37.0/tinygo_0.37.0_amd64.deb
@@ -54,13 +54,13 @@ jobs:
 
     - name: Check pull request file size
       if: github.event_name == 'pull_request'
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/checkPR.sh | bash 
-      env: 
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/checkPR.sh | bash
+      env:
         token: ${{ secrets.reporeading_token }}
         pr_number: ${{ github.event.number }}
 
     - name: CI
-      uses: untillpro/ci-action@master
+      uses: untillpro/ci-action@main
       with:
         ignore: ${{ inputs.ignore_copyright }}
         codecov-go-race: ${{ inputs.go_race }}
@@ -73,14 +73,14 @@ jobs:
       env:
         CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
         CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
-              
+
     - name: Check copyright
       if: inputs.build_cmd != ''
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
 
 #    - name: Linters
 #      if: inputs.ignore_linter != ''
-#      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
+#      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/gbash.sh | bash -s "$(go env GOPATH)"
 
     - name: Build executable
       run: |

@@ -8,7 +8,7 @@ on:
       test_folder:
         required: false
         type: string
-      ignore_build:   
+      ignore_build:
         required: false
         type: string
     secrets:
@@ -35,12 +35,12 @@ jobs:
       run: |
        curl -Os https://uploader.codecov.io/latest/linux/codecov
        chmod +x codecov
-       ./codecov	
+       ./codecov
 
     - name: Check pull request file size
       if: github.event_name == 'pull_request'
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/checkPR.sh | bash 
-      env: 
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/checkPR.sh | bash
+      env:
         token: ${{ secrets.reporeading_token }}
         pr_number: ${{ github.event.number }}
 
@@ -53,7 +53,7 @@ jobs:
           ${{ runner.os }}-go-
 
     - name: CI
-      uses: untillpro/ci-action@master
+      uses: untillpro/ci-action@main
       with:
         ignore-build: ${{ inputs.ignore_build }}
         ignore: ${{ inputs.ignsore_copyright }}
@@ -63,7 +63,7 @@ jobs:
         run-mod-tidy: false
 
     - name: Check copyright
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
 
     - name: Linters
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/gbash.sh | bash -s "$(go env GOPATH)"

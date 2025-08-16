@@ -6,13 +6,13 @@ if [ "$#" -ne 1 ]; then
 fi
 
 echo "Install golangci-lint in folder: $1/bin"
-#curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
+#curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/main/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
 curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.4.0
 
 golangci-lint --version
 
 #echo "Download golangci config"
-# curl -o /home/runner/work/.golangci.yaml https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/.golangci.yml
+# curl -o /home/runner/work/.golangci.yaml https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/.golangci.yml
 
 echo "Run linter jobs"
 mydir=""

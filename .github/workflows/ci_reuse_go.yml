@@ -17,13 +17,13 @@ on:
       commit_name:
         required: false
         type: string
-      go_race:    
+      go_race:
         required: false
         type: string
-      ignore_build: 
+      ignore_build:
         required: false
         type: string
-      test_subfolders: 
+      test_subfolders:
         required: false
         type: string
     secrets:
@@ -31,7 +31,7 @@ on:
         required: true
       codecov_token:
         required: true
-      personal_token:	
+      personal_token:
         required: true
 
 jobs:
@@ -48,7 +48,7 @@ jobs:
         go-version: '1.24'
         cache: false
 
-    # Install TinyGo 
+    # Install TinyGo
     - name: Install TinyGo
       run: |
         wget https://github.com/tinygo-org/tinygo/releases/download/v0.37.0/tinygo_0.37.0_amd64.deb
@@ -56,8 +56,8 @@ jobs:
 
     - name: Check pull request file size
       if: github.event_name == 'pull_request'
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/checkPR.sh | bash 
-      env: 
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/checkPR.sh | bash
+      env:
         token: ${{ secrets.reporeading_token }}
         pr_number: ${{ github.event.number }}
 
@@ -70,7 +70,7 @@ jobs:
           ${{ runner.os }}-go-
 
     - name: CI
-      uses: untillpro/ci-action@master
+      uses: untillpro/ci-action@main
       with:
         ignore: ${{ inputs.ignore_copyright }}
         test-folder: ${{ inputs.test_folder }}
@@ -79,23 +79,23 @@ jobs:
         codecov-token: ${{ secrets.codecov_token }}
         short-test:  ${{ inputs.short_test }}
         ignore-build:  ${{ inputs.ignore_build }}
-        codecov-go-race: ${{ inputs.go_race }} 
+        codecov-go-race: ${{ inputs.go_race }}
         run-mod-tidy: false
 
     - name: Test subfolders
       if: ${{ inputs.test_subfolders == 'true' }}
       run: |
         if [ "${{ inputs.short_test }}" == "true" ]; then
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/test_subfolders.sh | bash -s "$(go env GOPATH)" 
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s "$(go env GOPATH)"
         else
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/test_subfolders_full.sh | bash -s "$(go env GOPATH)"
-        fi        
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders_full.sh | bash -s "$(go env GOPATH)"
+        fi
 
     - name: Check copyright
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
 
     - name: Linters
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/master/scripts/gbash.sh | bash -s "$(go env GOPATH)"
-      env: 
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/gbash.sh | bash -s "$(go env GOPATH)"
+      env:
         testfolder: ${{ inputs.test_folder }}
 
