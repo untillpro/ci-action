@@ -41,10 +41,6 @@ else
       echo "Commit $commit_hash does not exists"
       exit 1	
     fi 
-    if [[ $cmt != $orig_branch ]]; then
-      echo "Commit $commit_hash does not belong to original branch $orig_branch"
-      exit 1	
-    fi 
   done
 fi
 
