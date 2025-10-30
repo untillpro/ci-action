@@ -38,7 +38,7 @@ jobs:
 
     - name: Push changes to pb3
       if: success()
-      uses: ad-m/github-push-action@main
+      uses: ad-m/github-push-action@master
       with:
         directory: ../../${{ github.event.repository.name }}/airs-bp3
         repository: untillpro/airs-bp3
