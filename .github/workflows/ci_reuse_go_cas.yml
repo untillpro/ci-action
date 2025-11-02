@@ -23,6 +23,12 @@ on:
       build_cmd:
         required: false
         type: string
+      fiscal_vatnr:	
+        required: false
+        type: string
+      fiscal_caption:	
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
@@ -73,6 +79,8 @@ jobs:
       env:
         CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
         CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
+        FISCALCLOUD_TEST_GERMANY_VATNR: ${{ inputs.fiscal_vatnr }}
+        FISCALCLOUD_TEST_GERMANY_CAPTION: ${{ inputs.fiscal_caption }}
 
     - name: Check copyright
       if: inputs.build_cmd != ''
