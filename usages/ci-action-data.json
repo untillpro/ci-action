@@ -1,0 +1,517 @@
+{
+  "all_ci_action_files": [
+    {
+      "path": ".github/workflows/ci-extrachecks.yml"
+    },
+    {
+      "path": ".github/workflows/ci.yml"
+    },
+    {
+      "path": ".github/workflows/ci_rebuild_bp3.yml"
+    },
+    {
+      "path": ".github/workflows/ci_reuse.yml"
+    },
+    {
+      "path": ".github/workflows/ci_reuse_go.yml"
+    },
+    {
+      "path": ".github/workflows/ci_reuse_go_cas.yml"
+    },
+    {
+      "path": ".github/workflows/ci_reuse_go_norebuild.yml"
+    },
+    {
+      "path": ".github/workflows/ci_reuse_go_pr.yml"
+    },
+    {
+      "path": ".github/workflows/cp.yml"
+    },
+    {
+      "path": ".github/workflows/create_issue.yml"
+    },
+    {
+      "path": ".github/workflows/rc.yml"
+    },
+    {
+      "path": "action.yml"
+    },
+    {
+      "path": "scripts/add-issue-commit.sh"
+    },
+    {
+      "path": "scripts/cancelworkflow.sh"
+    },
+    {
+      "path": "scripts/checkPR.sh"
+    },
+    {
+      "path": "scripts/check_copyright.sh"
+    },
+    {
+      "path": "scripts/close-issue.sh"
+    },
+    {
+      "path": "scripts/cp.sh"
+    },
+    {
+      "path": "scripts/createissue.sh"
+    },
+    {
+      "path": "scripts/deleteDockerImages.sh"
+    },
+    {
+      "path": "scripts/domergepr.sh"
+    },
+    {
+      "path": "scripts/execgovuln.sh"
+    },
+    {
+      "path": "scripts/gbash.sh"
+    },
+    {
+      "path": "scripts/git-release.sh"
+    },
+    {
+      "path": "scripts/large-file-hook.sh"
+    },
+    {
+      "path": "scripts/linkmilestone.sh"
+    },
+    {
+      "path": "scripts/pre-commit-hook.sh"
+    },
+    {
+      "path": "scripts/rc.sh"
+    },
+    {
+      "path": "scripts/rebuild-schemas-bp3.sh"
+    },
+    {
+      "path": "scripts/rebuild-test-bp3.sh"
+    },
+    {
+      "path": "scripts/test_subfolders.sh"
+    },
+    {
+      "path": "scripts/test_subfolders_full.sh"
+    },
+    {
+      "path": "scripts/unlinkmilestone.sh"
+    },
+    {
+      "path": "scripts/update-bp3-voedger.sh"
+    },
+    {
+      "path": "scripts/updateConfig.sh"
+    },
+    {
+      "path": "scripts/updateConfigDummy.sh"
+    },
+    {
+      "path": "scripts/vulncheck.sh"
+    }
+  ],
+  "usages": [
+    {
+      "ci_action_file": "action.yml",
+      "repo_name": "airs-template-implementation",
+      "repo_file": ".github/workflows/go.yml"
+    },
+    {
+      "ci_action_file": "action.yml",
+      "repo_name": "dynobuffers",
+      "repo_file": ".github/workflows/go.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/ci_rebuild_bp3.yml",
+      "repo_name": "airs-scheme",
+      "repo_file": ".github/workflows/short_go.yml"
+    },
+    {
+      "ci_action_file": "scripts/rebuild-test-bp3.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_rebuild_bp3.yml"
+    },
+    {
+      "ci_action_file": "scripts/checkPR.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse.yml"
+    },
+    {
+      "ci_action_file": "action.yml",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse.yml"
+    },
+    {
+      "ci_action_file": "scripts/checkPR.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go.yml"
+    },
+    {
+      "ci_action_file": "action.yml",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go.yml"
+    },
+    {
+      "ci_action_file": "scripts/test_subfolders.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go.yml"
+    },
+    {
+      "ci_action_file": "scripts/test_subfolders_full.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go.yml"
+    },
+    {
+      "ci_action_file": "scripts/check_copyright.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go.yml"
+    },
+    {
+      "ci_action_file": "scripts/gbash.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go.yml"
+    },
+    {
+      "ci_action_file": "scripts/checkPR.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go_cas.yml"
+    },
+    {
+      "ci_action_file": "action.yml",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go_cas.yml"
+    },
+    {
+      "ci_action_file": "scripts/check_copyright.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go_cas.yml"
+    },
+    {
+      "ci_action_file": "scripts/gbash.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go_cas.yml"
+    },
+    {
+      "ci_action_file": "scripts/checkPR.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go_norebuild.yml"
+    },
+    {
+      "ci_action_file": "action.yml",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go_norebuild.yml"
+    },
+    {
+      "ci_action_file": "scripts/check_copyright.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go_norebuild.yml"
+    },
+    {
+      "ci_action_file": "scripts/gbash.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go_norebuild.yml"
+    },
+    {
+      "ci_action_file": "scripts/checkPR.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go_pr.yml"
+    },
+    {
+      "ci_action_file": "scripts/cancelworkflow.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go_pr.yml"
+    },
+    {
+      "ci_action_file": "action.yml",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go_pr.yml"
+    },
+    {
+      "ci_action_file": "scripts/test_subfolders.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go_pr.yml"
+    },
+    {
+      "ci_action_file": "scripts/check_copyright.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go_pr.yml"
+    },
+    {
+      "ci_action_file": "scripts/gbash.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/ci_reuse_go_pr.yml"
+    },
+    {
+      "ci_action_file": "scripts/add-issue-commit.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/cp.yml"
+    },
+    {
+      "ci_action_file": "scripts/cp.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/cp.yml"
+    },
+    {
+      "ci_action_file": "scripts/close-issue.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/cp.yml"
+    },
+    {
+      "ci_action_file": "scripts/add-issue-commit.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/cp.yml"
+    },
+    {
+      "ci_action_file": "scripts/createissue.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/create_issue.yml"
+    },
+    {
+      "ci_action_file": "scripts/add-issue-commit.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/rc.yml"
+    },
+    {
+      "ci_action_file": "scripts/rc.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/rc.yml"
+    },
+    {
+      "ci_action_file": "scripts/close-issue.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/rc.yml"
+    },
+    {
+      "ci_action_file": "scripts/add-issue-commit.sh",
+      "repo_name": "ci-action",
+      "repo_file": ".github/workflows/rc.yml"
+    },
+    {
+      "ci_action_file": "scripts/deleteDockerImages.sh",
+      "repo_name": "airs-bp3",
+      "repo_file": ".github/workflows/cd_go.yml"
+    },
+    {
+      "ci_action_file": "scripts/deleteDockerImages.sh",
+      "repo_name": "airs-bp3",
+      "repo_file": ".github/workflows/cdd_go.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/ci_reuse_go_cas.yml",
+      "repo_name": "airs-bp3",
+      "repo_file": ".github/workflows/ci.yml"
+    },
+    {
+      "ci_action_file": "scripts/close-issue.sh",
+      "repo_name": "airs-bp3",
+      "repo_file": ".github/workflows/close_cprelease.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/cp.yml",
+      "repo_name": "airs-bp3",
+      "repo_file": ".github/workflows/cp.yml"
+    },
+    {
+      "ci_action_file": "action.yml",
+      "repo_name": "airs-bp3",
+      "repo_file": ".github/workflows/nightly_tests.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/create_issue.yml",
+      "repo_name": "airs-bp3",
+      "repo_file": ".github/workflows/nightly_tests.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/rc.yml",
+      "repo_name": "airs-bp3",
+      "repo_file": ".github/workflows/rc.yml"
+    },
+    {
+      "ci_action_file": "scripts/rebuild-schemas-bp3.sh",
+      "repo_name": "airs-bp3",
+      "repo_file": ".github/workflows/update_baseline_schemas.yml"
+    },
+    {
+      "ci_action_file": "scripts/updateConfig.sh",
+      "repo_name": "airs-bp3",
+      "repo_file": ".github/workflows/update_config_sync.yml"
+    },
+    {
+      "ci_action_file": "scripts/update-bp3-voedger.sh",
+      "repo_name": "airs-bp3",
+      "repo_file": ".github/workflows/update_voedger.yml"
+    },
+    {
+      "ci_action_file": "action.yml",
+      "repo_name": "airs-bp3",
+      "repo_file": ".github/workflows/update_voedger.yml"
+    },
+    {
+      "ci_action_file": "scripts/deleteDockerImages.sh",
+      "repo_name": "airc-backoffice2",
+      "repo_file": ".github/workflows/cd.yml"
+    },
+    {
+      "ci_action_file": "scripts/updateConfig.sh",
+      "repo_name": "airc-backoffice2",
+      "repo_file": ".github/workflows/cdd.yml"
+    },
+    {
+      "ci_action_file": "scripts/deleteDockerImages.sh",
+      "repo_name": "airc-backoffice2",
+      "repo_file": ".github/workflows/cdd.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/ci_reuse.yml",
+      "repo_name": "airc-backoffice2",
+      "repo_file": ".github/workflows/ci.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/cp.yml",
+      "repo_name": "airc-backoffice2",
+      "repo_file": ".github/workflows/cp.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/cp.yml",
+      "repo_name": "airc-backoffice2",
+      "repo_file": ".github/workflows/cronecprelease.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/rc.yml",
+      "repo_name": "airc-backoffice2",
+      "repo_file": ".github/workflows/rc.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/ci_reuse_go_norebuild.yml",
+      "repo_name": "airc-ticket-layouts",
+      "repo_file": ".github/workflows/short_go.yml"
+    },
+    {
+      "ci_action_file": "scripts/deleteDockerImages.sh",
+      "repo_name": "web-portals",
+      "repo_file": ".github/workflows/cd-payment.yml"
+    },
+    {
+      "ci_action_file": "scripts/deleteDockerImages.sh",
+      "repo_name": "web-portals",
+      "repo_file": ".github/workflows/cd-reseller.yml"
+    },
+    {
+      "ci_action_file": "scripts/updateConfig.sh",
+      "repo_name": "web-portals",
+      "repo_file": ".github/workflows/cdd-payment.yml"
+    },
+    {
+      "ci_action_file": "scripts/deleteDockerImages.sh",
+      "repo_name": "web-portals",
+      "repo_file": ".github/workflows/cdd-payment.yml"
+    },
+    {
+      "ci_action_file": "scripts/updateConfig.sh",
+      "repo_name": "web-portals",
+      "repo_file": ".github/workflows/cdd-reseller.yml"
+    },
+    {
+      "ci_action_file": "scripts/deleteDockerImages.sh",
+      "repo_name": "web-portals",
+      "repo_file": ".github/workflows/cdd-reseller.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/ci_reuse.yml",
+      "repo_name": "web-portals",
+      "repo_file": ".github/workflows/ci.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/ci_reuse.yml",
+      "repo_name": "web-portals",
+      "repo_file": ".github/workflows/ci_payment.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/ci_reuse.yml",
+      "repo_name": "web-portals",
+      "repo_file": ".github/workflows/ci_reseller.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/cp.yml",
+      "repo_name": "web-portals",
+      "repo_file": ".github/workflows/cp.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/cp.yml",
+      "repo_name": "web-portals",
+      "repo_file": ".github/workflows/cronecprelease.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/rc.yml",
+      "repo_name": "web-portals",
+      "repo_file": ".github/workflows/rc.yml"
+    },
+    {
+      "ci_action_file": "scripts/updateConfig.sh",
+      "repo_name": "airc-web-pos",
+      "repo_file": ".github/workflows/cd.yml"
+    },
+    {
+      "ci_action_file": "scripts/deleteDockerImages.sh",
+      "repo_name": "airc-web-pos",
+      "repo_file": ".github/workflows/cd.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/ci_reuse_go.yml",
+      "repo_name": "voedger",
+      "repo_file": ".github/workflows/ci-full.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/create_issue.yml",
+      "repo_name": "voedger",
+      "repo_file": ".github/workflows/ci-full.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/ci_reuse_go.yml",
+      "repo_name": "voedger",
+      "repo_file": ".github/workflows/ci-pkg-cmd.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/ci_reuse_go_pr.yml",
+      "repo_name": "voedger",
+      "repo_file": ".github/workflows/ci-pkg-cmd_pr.yml"
+    },
+    {
+      "ci_action_file": "scripts/execgovuln.sh",
+      "repo_name": "voedger",
+      "repo_file": ".github/workflows/ci-vulncheck.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/create_issue.yml",
+      "repo_name": "voedger",
+      "repo_file": ".github/workflows/ci_amazon.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/create_issue.yml",
+      "repo_name": "voedger",
+      "repo_file": ".github/workflows/ci_cas.yml"
+    },
+    {
+      "ci_action_file": ".github/workflows/cp.yml",
+      "repo_name": "voedger",
+      "repo_file": ".github/workflows/cp.yml"
+    },
+    {
+      "ci_action_file": "scripts/linkmilestone.sh",
+      "repo_name": "voedger",
+      "repo_file": ".github/workflows/linkIssue.yml"
+    },
+    {
+      "ci_action_file": "scripts/domergepr.sh",
+      "repo_name": "voedger",
+      "repo_file": ".github/workflows/merge.yml"
+    },
+    {
+      "ci_action_file": "scripts/unlinkmilestone.sh",
+      "repo_name": "voedger",
+      "repo_file": ".github/workflows/unlinkIssue.yml"
+    }
+  ]
+}
