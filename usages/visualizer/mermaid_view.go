@@ -62,6 +62,11 @@ func generateMermaidGraph(allFiles []CIActionFile, usages []Usage) string {
 		usageMap[usage.CIActionFile] = append(usageMap[usage.CIActionFile], usage)
 	}
 
+	repoFiles := make(map[string][]Usage)
+	for _, usage := range usages {
+		repoFiles[usage.RepoName] = append(repoFiles[usage.RepoName], usage)
+	}
+
 	var sb strings.Builder
 	sb.WriteString("# CI-Action Usage Graph\n\n")
 	sb.WriteString("This graph shows which repositories are using files from the ci-action repository.\n\n")
@@ -84,12 +89,33 @@ func generateMermaidGraph(allFiles []CIActionFile, usages []Usage) string {
 	for _, ciFile := range allFiles {
 		ciNodeID := getNodeID(ciFile.Path)
 		sb.WriteString(fmt.Sprintf("    %s[\"%s\"]\n", ciNodeID, ciFile.Path))
+	}
+
+	subgraphID := 0
+	for repoName, repoUsages := range repoFiles {
+		subgraphID++
+		sb.WriteString(fmt.Sprintf("    subgraph SG%d[\"%s\"]\n", subgraphID, repoName))
+
+		filesSeen := make(map[string]bool)
+		for _, usage := range repoUsages {
+			if !filesSeen[usage.RepoFile] {
+				filesSeen[usage.RepoFile] = true
+				targetKey := usage.RepoName + "/" + usage.RepoFile
+				targetNodeID := getNodeID(targetKey)
+				sb.WriteString(fmt.Sprintf("        %s[\"%s\"]\n", targetNodeID, usage.RepoFile))
+			}
+		}
+
+		sb.WriteString("    end\n")
+	}
+
+	for _, ciFile := range allFiles {
+		ciNodeID := getNodeID(ciFile.Path)
 
 		if usageList, used := usageMap[ciFile.Path]; used {
 			for _, usage := range usageList {
 				targetKey := usage.RepoName + "/" + usage.RepoFile
 				targetNodeID := getNodeID(targetKey)
-				sb.WriteString(fmt.Sprintf("    %s[\"%s\"]\n", targetNodeID, targetKey))
 				sb.WriteString(fmt.Sprintf("    %s --> %s\n", targetNodeID, ciNodeID))
 			}
 		} else {
