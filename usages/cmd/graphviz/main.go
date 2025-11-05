@@ -5,22 +5,9 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"ci-action-usages/pkg/types"
 )
-
-type CIActionFile struct {
-	Path string `json:"path"`
-}
-
-type Usage struct {
-	CIActionFile string `json:"ci_action_file"`
-	RepoName     string `json:"repo_name"`
-	RepoFile     string `json:"repo_file"`
-}
-
-type CollectedData struct {
-	AllCIActionFiles []CIActionFile `json:"all_ci_action_files"`
-	Usages           []Usage        `json:"usages"`
-}
 
 func main() {
 	if len(os.Args) < 2 {
@@ -40,7 +27,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	var data CollectedData
+	var data types.CollectedData
 	if err := json.Unmarshal(jsonData, &data); err != nil {
 		fmt.Fprintf(os.Stderr, "Error parsing JSON: %v\n", err)
 		os.Exit(1)
@@ -59,8 +46,8 @@ func main() {
 	fmt.Printf("  dot -Tsvg %s -o ci-action-usages.svg\n", outputFile)
 }
 
-func generateGraphvizDot(allFiles []CIActionFile, usages []Usage) string {
-	usageMap := make(map[string][]Usage)
+func generateGraphvizDot(allFiles []types.CIActionFile, usages []types.Usage) string {
+	usageMap := make(map[string][]types.Usage)
 	for _, usage := range usages {
 		usageMap[usage.CIActionFile] = append(usageMap[usage.CIActionFile], usage)
 	}
@@ -156,3 +143,4 @@ func escapeLabel(s string) string {
 	s = strings.ReplaceAll(s, "\"", "\\\"")
 	return s
 }
+

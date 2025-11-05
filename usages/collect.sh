@@ -3,9 +3,9 @@
 set -e
 
 echo "Collecting ci-action usage data..."
-cd collector
-export GITHUB_TOKEN=$(gh auth token) && go run collector.go
-cd ..
+export GITHUB_TOKEN=$(gh auth token)
+export GOWORK=off
+go run ./cmd/collector/main.go
 
 echo ""
 echo "Data collection complete!"

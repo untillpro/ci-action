@@ -11,22 +11,9 @@ import (
 	"sort"
 	"strings"
 	"time"
+
+	"ci-action-usages/pkg/types"
 )
-
-type CIActionFile struct {
-	Path string `json:"path"`
-}
-
-type Usage struct {
-	CIActionFile string `json:"ci_action_file"`
-	RepoName     string `json:"repo_name"`
-	RepoFile     string `json:"repo_file"`
-}
-
-type CollectedData struct {
-	AllCIActionFiles []CIActionFile `json:"all_ci_action_files"`
-	Usages           []Usage        `json:"usages"`
-}
 
 type GitHubRepo struct {
 	Name     string `json:"name"`
@@ -60,11 +47,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	rootDir := filepath.Join(workDir, "..")
-	ciActionPath := filepath.Join(rootDir, "ci-action")
-	var allCIActionFiles []CIActionFile
+	// workDir is usages/ when run from shell script
+	usagesDir := workDir
+	ciActionPath := filepath.Join(workDir, "..")
+	var allCIActionFiles []types.CIActionFile
 
-	if _, err := os.Stat(ciActionPath); os.IsNotExist(err) {
+	if _, err := os.Stat(filepath.Join(ciActionPath, "action.yml")); os.IsNotExist(err) {
 		fmt.Println("Local ci-action folder not found, fetching from GitHub...")
 		allCIActionFiles, err = getAllCIActionFilesFromGitHub()
 		if err != nil {
@@ -75,7 +63,7 @@ func main() {
 		allCIActionFiles = getAllCIActionFiles(ciActionPath)
 	}
 
-	outdatedReposFile := filepath.Join(rootDir, "outdated-repos.txt")
+	outdatedReposFile := filepath.Join(usagesDir, "outdated-repos.txt")
 	outdatedRepos, err := loadOutdatedRepos(outdatedReposFile)
 	if err != nil {
 		outdatedRepos = make(map[string]bool)
@@ -91,7 +79,7 @@ func main() {
 	}
 	fmt.Printf("Found %d non-archived repositories\n", len(repos))
 
-	var usages []Usage
+	var usages []types.Usage
 	reposWithUsages := make(map[string]bool)
 	skippedCount := 0
 
@@ -122,7 +110,7 @@ func main() {
 		fmt.Printf("Skipped %d outdated repositories\n", skippedCount)
 	}
 
-	data := CollectedData{
+	data := types.CollectedData{
 		AllCIActionFiles: allCIActionFiles,
 		Usages:           usages,
 	}
@@ -133,7 +121,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	outputFile := filepath.Join(rootDir, "ci-action-data.json")
+	outputFile := filepath.Join(usagesDir, "ci-action-data.json")
 	if err := os.WriteFile(outputFile, jsonData, 0644); err != nil {
 		fmt.Fprintf(os.Stderr, "Error writing JSON file: %v\n", err)
 		os.Exit(1)
@@ -219,13 +207,13 @@ func fetchNonArchivedRepos() ([]GitHubRepo, error) {
 	return allRepos, nil
 }
 
-func scanRepositoryFromGitHub(repoName string) ([]Usage, error) {
+func scanRepositoryFromGitHub(repoName string) ([]types.Usage, error) {
 	contents, err := fetchGitHubDirectoryContents(repoName, ".github")
 	if err != nil {
 		return nil, nil
 	}
 
-	var usages []Usage
+	var usages []types.Usage
 
 	for idx := range contents {
 		if contents[idx].Type == "file" {
@@ -246,13 +234,13 @@ func scanRepositoryFromGitHub(repoName string) ([]Usage, error) {
 	return usages, nil
 }
 
-func scanGitHubDirectory(repoName, dirPath string) ([]Usage, error) {
+func scanGitHubDirectory(repoName, dirPath string) ([]types.Usage, error) {
 	contents, err := fetchGitHubDirectoryContents(repoName, dirPath)
 	if err != nil {
 		return nil, err
 	}
 
-	var usages []Usage
+	var usages []types.Usage
 
 	for idx := range contents {
 		if contents[idx].Type == "file" {
@@ -310,7 +298,7 @@ func fetchGitHubDirectoryContents(repoName, dirPath string) ([]GitHubContent, er
 	return contents, nil
 }
 
-func scanGitHubFile(repoName, filePath, downloadURL string) ([]Usage, error) {
+func scanGitHubFile(repoName, filePath, downloadURL string) ([]types.Usage, error) {
 	resp, err := httpClient.Get(downloadURL)
 	if err != nil {
 		return nil, err
@@ -321,7 +309,7 @@ func scanGitHubFile(repoName, filePath, downloadURL string) ([]Usage, error) {
 		return nil, fmt.Errorf("failed to download file")
 	}
 
-	var usages []Usage
+	var usages []types.Usage
 	scanner := bufio.NewScanner(resp.Body)
 
 	for scanner.Scan() {
@@ -335,19 +323,19 @@ func scanGitHubFile(repoName, filePath, downloadURL string) ([]Usage, error) {
 	return usages, nil
 }
 
-func getAllCIActionFilesFromGitHub() ([]CIActionFile, error) {
-	var files []CIActionFile
+func getAllCIActionFilesFromGitHub() ([]types.CIActionFile, error) {
+	var files []types.CIActionFile
 	githubToken := os.Getenv("GITHUB_TOKEN")
 
 	if _, err := os.Stat(filepath.Join("ci-action", "action.yml")); err == nil {
-		files = append(files, CIActionFile{Path: "action.yml"})
+		files = append(files, types.CIActionFile{Path: "action.yml"})
 	}
 
 	workflowsContents, err := fetchGitHubDirectoryContents("ci-action", ".github/workflows")
 	if err == nil {
 		for idx := range workflowsContents {
 			if workflowsContents[idx].Type == "file" && strings.HasSuffix(workflowsContents[idx].Name, ".yml") {
-				files = append(files, CIActionFile{Path: ".github/workflows/" + workflowsContents[idx].Name})
+				files = append(files, types.CIActionFile{Path: ".github/workflows/" + workflowsContents[idx].Name})
 			}
 		}
 	}
@@ -356,7 +344,7 @@ func getAllCIActionFilesFromGitHub() ([]CIActionFile, error) {
 	if err == nil {
 		for idx := range scriptsContents {
 			if scriptsContents[idx].Type == "file" && strings.HasSuffix(scriptsContents[idx].Name, ".sh") {
-				files = append(files, CIActionFile{Path: "scripts/" + scriptsContents[idx].Name})
+				files = append(files, types.CIActionFile{Path: "scripts/" + scriptsContents[idx].Name})
 			}
 		}
 	}
@@ -371,7 +359,7 @@ func getAllCIActionFilesFromGitHub() ([]CIActionFile, error) {
 		resp, err := httpClient.Do(req)
 		if err == nil && resp.StatusCode == http.StatusOK {
 			resp.Body.Close()
-			files = append(files, CIActionFile{Path: "action.yml"})
+			files = append(files, types.CIActionFile{Path: "action.yml"})
 		} else if resp != nil {
 			resp.Body.Close()
 		}
@@ -381,7 +369,7 @@ func getAllCIActionFilesFromGitHub() ([]CIActionFile, error) {
 		return files[i].Path < files[j].Path
 	})
 
-	uniqueFiles := make([]CIActionFile, 0)
+	uniqueFiles := make([]types.CIActionFile, 0)
 	seen := make(map[string]bool)
 	for idx := range files {
 		if !seen[files[idx].Path] {
@@ -393,18 +381,18 @@ func getAllCIActionFilesFromGitHub() ([]CIActionFile, error) {
 	return uniqueFiles, nil
 }
 
-func getAllCIActionFiles(ciActionPath string) []CIActionFile {
-	var files []CIActionFile
+func getAllCIActionFiles(ciActionPath string) []types.CIActionFile {
+	var files []types.CIActionFile
 
 	if _, err := os.Stat(filepath.Join(ciActionPath, "action.yml")); err == nil {
-		files = append(files, CIActionFile{Path: "action.yml"})
+		files = append(files, types.CIActionFile{Path: "action.yml"})
 	}
 
 	workflowsPath := filepath.Join(ciActionPath, ".github", "workflows")
 	if entries, err := os.ReadDir(workflowsPath); err == nil {
 		for _, entry := range entries {
 			if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".yml") {
-				files = append(files, CIActionFile{Path: ".github/workflows/" + entry.Name()})
+				files = append(files, types.CIActionFile{Path: ".github/workflows/" + entry.Name()})
 			}
 		}
 	}
@@ -413,7 +401,7 @@ func getAllCIActionFiles(ciActionPath string) []CIActionFile {
 	if entries, err := os.ReadDir(scriptsPath); err == nil {
 		for _, entry := range entries {
 			if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".sh") {
-				files = append(files, CIActionFile{Path: "scripts/" + entry.Name()})
+				files = append(files, types.CIActionFile{Path: "scripts/" + entry.Name()})
 			}
 		}
 	}
@@ -425,12 +413,12 @@ func getAllCIActionFiles(ciActionPath string) []CIActionFile {
 	return files
 }
 
-func extractUsagesFromLine(line, repoName, relPath string) []Usage {
-	var usages []Usage
+func extractUsagesFromLine(line, repoName, relPath string) []types.Usage {
+	var usages []types.Usage
 
 	if matches := usesWorkflowRegex.FindStringSubmatch(line); matches != nil {
 		workflowPath := matches[1]
-		usages = append(usages, Usage{
+		usages = append(usages, types.Usage{
 			CIActionFile: workflowPath,
 			RepoName:     repoName,
 			RepoFile:     relPath,
@@ -439,7 +427,7 @@ func extractUsagesFromLine(line, repoName, relPath string) []Usage {
 
 	if matches := usesActionRegex.FindStringSubmatch(line); matches != nil {
 		if !usesWorkflowRegex.MatchString(line) {
-			usages = append(usages, Usage{
+			usages = append(usages, types.Usage{
 				CIActionFile: "action.yml",
 				RepoName:     repoName,
 				RepoFile:     relPath,
@@ -449,7 +437,7 @@ func extractUsagesFromLine(line, repoName, relPath string) []Usage {
 
 	if matches := curlScriptRegex.FindStringSubmatch(line); matches != nil {
 		scriptName := matches[2]
-		usages = append(usages, Usage{
+		usages = append(usages, types.Usage{
 			CIActionFile: "scripts/" + scriptName,
 			RepoName:     repoName,
 			RepoFile:     relPath,
@@ -457,7 +445,7 @@ func extractUsagesFromLine(line, repoName, relPath string) []Usage {
 	} else if matches := curlAnyRegex.FindStringSubmatch(line); matches != nil {
 		if !strings.Contains(line, "/scripts/") {
 			filePath := matches[2]
-			usages = append(usages, Usage{
+			usages = append(usages, types.Usage{
 				CIActionFile: filePath,
 				RepoName:     repoName,
 				RepoFile:     relPath,

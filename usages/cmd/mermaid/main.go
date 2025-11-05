@@ -5,22 +5,9 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"ci-action-usages/pkg/types"
 )
-
-type CIActionFile struct {
-	Path string `json:"path"`
-}
-
-type Usage struct {
-	CIActionFile string `json:"ci_action_file"`
-	RepoName     string `json:"repo_name"`
-	RepoFile     string `json:"repo_file"`
-}
-
-type CollectedData struct {
-	AllCIActionFiles []CIActionFile `json:"all_ci_action_files"`
-	Usages           []Usage        `json:"usages"`
-}
 
 func main() {
 	if len(os.Args) < 2 {
@@ -40,7 +27,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	var data CollectedData
+	var data types.CollectedData
 	if err := json.Unmarshal(jsonData, &data); err != nil {
 		fmt.Fprintf(os.Stderr, "Error parsing JSON: %v\n", err)
 		os.Exit(1)
@@ -56,13 +43,13 @@ func main() {
 	fmt.Printf("Generated mermaid graph with %d files and %d usages. Written to %s\n", len(data.AllCIActionFiles), len(data.Usages), outputFile)
 }
 
-func generateMermaidGraph(allFiles []CIActionFile, usages []Usage) string {
-	usageMap := make(map[string][]Usage)
+func generateMermaidGraph(allFiles []types.CIActionFile, usages []types.Usage) string {
+	usageMap := make(map[string][]types.Usage)
 	for _, usage := range usages {
 		usageMap[usage.CIActionFile] = append(usageMap[usage.CIActionFile], usage)
 	}
 
-	repoFiles := make(map[string][]Usage)
+	repoFiles := make(map[string][]types.Usage)
 	for _, usage := range usages {
 		repoFiles[usage.RepoName] = append(repoFiles[usage.RepoName], usage)
 	}
@@ -128,3 +115,4 @@ func generateMermaidGraph(allFiles []CIActionFile, usages []Usage) string {
 	sb.WriteString("```\n")
 	return sb.String()
 }
+
