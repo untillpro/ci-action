@@ -16,8 +16,12 @@ import (
 )
 
 type GitHubRepo struct {
-	Name     string `json:"name"`
-	Archived bool   `json:"archived"`
+	Name          string `json:"name"`
+	Archived      bool   `json:"archived"`
+	DefaultBranch string `json:"default_branch"`
+	Owner         struct {
+		Login string `json:"login"`
+	} `json:"owner"`
 }
 
 type GitHubContent struct {
@@ -94,7 +98,13 @@ func main() {
 
 		fmt.Printf("Scanning %s (%d/%d)...\n", repoName, idx+1, len(repos))
 
-		repoUsages, err := scanRepositoryFromGitHub(repoName)
+		repoInfo := types.RepoInfo{
+			Name:          repoName,
+			Owner:         repos[idx].Owner.Login,
+			DefaultBranch: repos[idx].DefaultBranch,
+		}
+
+		repoUsages, err := scanRepositoryFromGitHub(repoInfo)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Warning: Error scanning %s: %v\n", repoName, err)
 			continue
@@ -207,8 +217,8 @@ func fetchNonArchivedRepos() ([]GitHubRepo, error) {
 	return allRepos, nil
 }
 
-func scanRepositoryFromGitHub(repoName string) ([]types.Usage, error) {
-	contents, err := fetchGitHubDirectoryContents(repoName, ".github")
+func scanRepositoryFromGitHub(repoInfo types.RepoInfo) ([]types.Usage, error) {
+	contents, err := fetchGitHubDirectoryContents(repoInfo.Name, ".github")
 	if err != nil {
 		return nil, nil
 	}
@@ -217,13 +227,13 @@ func scanRepositoryFromGitHub(repoName string) ([]types.Usage, error) {
 
 	for idx := range contents {
 		if contents[idx].Type == "file" {
-			fileUsages, err := scanGitHubFile(repoName, contents[idx].Path, contents[idx].DownloadURL)
+			fileUsages, err := scanGitHubFile(repoInfo, contents[idx].Path, contents[idx].DownloadURL)
 			if err != nil {
 				continue
 			}
 			usages = append(usages, fileUsages...)
 		} else if contents[idx].Type == "dir" {
-			subUsages, err := scanGitHubDirectory(repoName, contents[idx].Path)
+			subUsages, err := scanGitHubDirectory(repoInfo, contents[idx].Path)
 			if err != nil {
 				continue
 			}
@@ -234,8 +244,8 @@ func scanRepositoryFromGitHub(repoName string) ([]types.Usage, error) {
 	return usages, nil
 }
 
-func scanGitHubDirectory(repoName, dirPath string) ([]types.Usage, error) {
-	contents, err := fetchGitHubDirectoryContents(repoName, dirPath)
+func scanGitHubDirectory(repoInfo types.RepoInfo, dirPath string) ([]types.Usage, error) {
+	contents, err := fetchGitHubDirectoryContents(repoInfo.Name, dirPath)
 	if err != nil {
 		return nil, err
 	}
@@ -244,13 +254,13 @@ func scanGitHubDirectory(repoName, dirPath string) ([]types.Usage, error) {
 
 	for idx := range contents {
 		if contents[idx].Type == "file" {
-			fileUsages, err := scanGitHubFile(repoName, contents[idx].Path, contents[idx].DownloadURL)
+			fileUsages, err := scanGitHubFile(repoInfo, contents[idx].Path, contents[idx].DownloadURL)
 			if err != nil {
 				continue
 			}
 			usages = append(usages, fileUsages...)
 		} else if contents[idx].Type == "dir" {
-			subUsages, err := scanGitHubDirectory(repoName, contents[idx].Path)
+			subUsages, err := scanGitHubDirectory(repoInfo, contents[idx].Path)
 			if err != nil {
 				continue
 			}
@@ -298,7 +308,7 @@ func fetchGitHubDirectoryContents(repoName, dirPath string) ([]GitHubContent, er
 	return contents, nil
 }
 
-func scanGitHubFile(repoName, filePath, downloadURL string) ([]types.Usage, error) {
+func scanGitHubFile(repoInfo types.RepoInfo, filePath, downloadURL string) ([]types.Usage, error) {
 	resp, err := httpClient.Get(downloadURL)
 	if err != nil {
 		return nil, err
@@ -314,7 +324,7 @@ func scanGitHubFile(repoName, filePath, downloadURL string) ([]types.Usage, erro
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		fileUsages := extractUsagesFromLine(line, repoName, filePath)
+		fileUsages := extractUsagesFromLine(line, repoInfo, filePath)
 		usages = append(usages, fileUsages...)
 	}
 
@@ -413,15 +423,17 @@ func getAllCIActionFiles(ciActionPath string) []types.CIActionFile {
 	return files
 }
 
-func extractUsagesFromLine(line, repoName, relPath string) []types.Usage {
+func extractUsagesFromLine(line string, repoInfo types.RepoInfo, relPath string) []types.Usage {
 	var usages []types.Usage
 
 	if matches := usesWorkflowRegex.FindStringSubmatch(line); matches != nil {
 		workflowPath := matches[1]
 		usages = append(usages, types.Usage{
 			CIActionFile: workflowPath,
-			RepoName:     repoName,
+			RepoName:     repoInfo.Name,
 			RepoFile:     relPath,
+			RepoOwner:    repoInfo.Owner,
+			RepoBranch:   repoInfo.DefaultBranch,
 		})
 	}
 
@@ -429,8 +441,10 @@ func extractUsagesFromLine(line, repoName, relPath string) []types.Usage {
 		if !usesWorkflowRegex.MatchString(line) {
 			usages = append(usages, types.Usage{
 				CIActionFile: "action.yml",
-				RepoName:     repoName,
+				RepoName:     repoInfo.Name,
 				RepoFile:     relPath,
+				RepoOwner:    repoInfo.Owner,
+				RepoBranch:   repoInfo.DefaultBranch,
 			})
 		}
 	}
@@ -439,16 +453,20 @@ func extractUsagesFromLine(line, repoName, relPath string) []types.Usage {
 		scriptName := matches[2]
 		usages = append(usages, types.Usage{
 			CIActionFile: "scripts/" + scriptName,
-			RepoName:     repoName,
+			RepoName:     repoInfo.Name,
 			RepoFile:     relPath,
+			RepoOwner:    repoInfo.Owner,
+			RepoBranch:   repoInfo.DefaultBranch,
 		})
 	} else if matches := curlAnyRegex.FindStringSubmatch(line); matches != nil {
 		if !strings.Contains(line, "/scripts/") {
 			filePath := matches[2]
 			usages = append(usages, types.Usage{
 				CIActionFile: filePath,
-				RepoName:     repoName,
+				RepoName:     repoInfo.Name,
 				RepoFile:     relPath,
+				RepoOwner:    repoInfo.Owner,
+				RepoBranch:   repoInfo.DefaultBranch,
 			})
 		}
 	}

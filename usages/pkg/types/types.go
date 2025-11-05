@@ -10,6 +10,15 @@ type Usage struct {
 	CIActionFile string `json:"ci_action_file"`
 	RepoName     string `json:"repo_name"`
 	RepoFile     string `json:"repo_file"`
+	RepoOwner    string `json:"repo_owner"`
+	RepoBranch   string `json:"repo_branch"`
+}
+
+// RepoInfo contains repository metadata
+type RepoInfo struct {
+	Name          string
+	Owner         string
+	DefaultBranch string
 }
 
 // CollectedData contains all collected ci-action files and their usages
@@ -17,4 +26,3 @@ type CollectedData struct {
 	AllCIActionFiles []CIActionFile `json:"all_ci_action_files"`
 	Usages           []Usage        `json:"usages"`
 }
-
