@@ -120,5 +120,4 @@ typings/
 
 # TernJS port file
 .tern-port
-/usages/ci-action-data.json
 /usage-analyzer/ci-action-data.json
