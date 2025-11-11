@@ -79,7 +79,7 @@ def generate_graphviz_dot(usages: List[Dict]) -> str:
         if source_url is None:
             continue
         # Extract repo name and file from URL
-        repo_name, file_path, _ = parse_github_url(source_url)
+        repo_name, file_path = parse_github_url(source_url)
         target_key = f"{repo_name}/{file_path}"
         if repo_name not in repo_map:
             repo_map[repo_name] = []
@@ -104,7 +104,7 @@ def generate_graphviz_dot(usages: List[Dict]) -> str:
             if source_url is None:
                 continue
             # Extract repo name and file from URL
-            url_repo_name, file_path, _ = parse_github_url(source_url)
+            url_repo_name, file_path = parse_github_url(source_url)
 
             if url_repo_name == repo_name:
                 target_key = f"{repo_name}/{file_path}"
@@ -126,7 +126,7 @@ def generate_graphviz_dot(usages: List[Dict]) -> str:
             continue
         ci_action_id = node_gen.get_id(usage['ci_action_file'])
         # Extract repo name and file from URL
-        repo_name, file_path, _ = parse_github_url(source_url)
+        repo_name, file_path = parse_github_url(source_url)
         target_key = f"{repo_name}/{file_path}"
         repo_file_id = node_gen.get_id(target_key)
         lines.append(f"  {repo_file_id} -> {ci_action_id};\n")
