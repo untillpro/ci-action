@@ -118,7 +118,7 @@ def fetch_github_directory_contents(client: GitHubClient, repo_name: str, dir_pa
     return response['data']
 
 
-def extract_usages_from_line(line: str, repo_info: Dict, file_path: str) -> List[Dict]:
+def extract_usages_from_line(line: str, repo_info: Dict, file_path: str, line_number: int) -> List[Dict]:
     """Extract ci-action usages from a single line of text."""
     usages = []
 
@@ -131,7 +131,8 @@ def extract_usages_from_line(line: str, repo_info: Dict, file_path: str) -> List
             'repo_name': repo_info['name'],
             'repo_file': file_path,
             'repo_owner': repo_info['owner'],
-            'repo_branch': repo_info['default_branch']
+            'repo_branch': repo_info['default_branch'],
+            'line_number': line_number
         })
 
     # Check for action usage (but not if it's a workflow usage)
@@ -143,7 +144,8 @@ def extract_usages_from_line(line: str, repo_info: Dict, file_path: str) -> List
                 'repo_name': repo_info['name'],
                 'repo_file': file_path,
                 'repo_owner': repo_info['owner'],
-                'repo_branch': repo_info['default_branch']
+                'repo_branch': repo_info['default_branch'],
+                'line_number': line_number
             })
 
     # Check for script curl usage
@@ -155,7 +157,8 @@ def extract_usages_from_line(line: str, repo_info: Dict, file_path: str) -> List
             'repo_name': repo_info['name'],
             'repo_file': file_path,
             'repo_owner': repo_info['owner'],
-            'repo_branch': repo_info['default_branch']
+            'repo_branch': repo_info['default_branch'],
+            'line_number': line_number
         })
     elif '/scripts/' not in line:
         # Check for any other curl usage
@@ -167,7 +170,8 @@ def extract_usages_from_line(line: str, repo_info: Dict, file_path: str) -> List
                 'repo_name': repo_info['name'],
                 'repo_file': file_path,
                 'repo_owner': repo_info['owner'],
-                'repo_branch': repo_info['default_branch']
+                'repo_branch': repo_info['default_branch'],
+                'line_number': line_number
             })
 
     return usages
@@ -183,8 +187,8 @@ def scan_github_file(client: GitHubClient, repo_info: Dict, file_path: str, down
 
             content = response.read().decode('utf-8')
             usages = []
-            for line in content.splitlines():
-                usages.extend(extract_usages_from_line(line, repo_info, file_path))
+            for line_number, line in enumerate(content.splitlines(), start=1):
+                usages.extend(extract_usages_from_line(line, repo_info, file_path, line_number))
 
             time.sleep(0.05)  # Rate limiting
             return usages

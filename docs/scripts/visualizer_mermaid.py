@@ -42,22 +42,29 @@ def generate_incoming_calls(all_files: List[Dict], usage_map: Dict[str, List[Dic
                 'repo_name': usage['repo_name'],
                 'repo_file': usage['repo_file'],
                 'repo_owner': usage['repo_owner'],
-                'repo_branch': usage['repo_branch']
+                'repo_branch': usage['repo_branch'],
+                'line_number': usage.get('line_number')
             })
 
         # Sort callers alphabetically
-        callers.sort(key=lambda x: (x['repo_name'], x['repo_file']))
+        callers.sort(key=lambda x: (x['repo_name'], x['repo_file'], x['line_number'] or 0))
 
         # Write callers
         for caller in callers:
             repo_owner = caller['repo_owner']
             repo_branch = caller['repo_branch'] or 'main'
+            line_number = caller['line_number']
+
             # Strip .github/workflows/ prefix for display
             display_file_name = caller['repo_file'].replace('.github/workflows/', '', 1)
-            lines.append(
-                f"  - [{caller['repo_name']}: {display_file_name}]"
-                f"(https://github.com/{repo_owner}/{caller['repo_name']}/blob/{repo_branch}/{caller['repo_file']})\n"
-            )
+
+            # Build the link with line number if available
+            if line_number:
+                link = f"https://github.com/{repo_owner}/{caller['repo_name']}/blob/{repo_branch}/{caller['repo_file']}#L{line_number}"
+                lines.append(f"  - [{caller['repo_name']}: {display_file_name}:{line_number}]({link})\n")
+            else:
+                link = f"https://github.com/{repo_owner}/{caller['repo_name']}/blob/{repo_branch}/{caller['repo_file']}"
+                lines.append(f"  - [{caller['repo_name']}: {display_file_name}]({link})\n")
 
     return ''.join(lines)
 
@@ -68,7 +75,7 @@ def generate_outgoing_calls(all_files: List[Dict], usage_map: Dict[str, List[Dic
     lines.append("## Outgoing calls\n\n")
     lines.append("Files in all repositories that call ci-action files:\n\n")
 
-    # Build map: calling file -> list of ci-action files it calls
+    # Build map: calling file -> list of ci-action files it calls with details
     calling_files = {}
 
     for ci_file_path, usages in usage_map.items():
@@ -81,14 +88,18 @@ def generate_outgoing_calls(all_files: List[Dict], usage_map: Dict[str, List[Dic
                     'repo_file': usage['repo_file'],
                     'repo_owner': usage['repo_owner'],
                     'repo_branch': usage['repo_branch'],
-                    'calls': set()
+                    'calls': []
                 }
-            calling_files[key]['calls'].add(ci_file_path)
+            calling_files[key]['calls'].append({
+                'ci_file': ci_file_path,
+                'line_number': usage.get('line_number')
+            })
 
     # Create sorted list of calling files
     files_with_calls = []
     for info in calling_files.values():
-        call_list = sorted(info['calls'])
+        # Sort calls by ci_file and line_number
+        call_list = sorted(info['calls'], key=lambda x: (x['ci_file'], x['line_number'] or 0))
         files_with_calls.append({
             'repo_name': info['repo_name'],
             'repo_file': info['repo_file'],
@@ -100,22 +111,38 @@ def generate_outgoing_calls(all_files: List[Dict], usage_map: Dict[str, List[Dic
     # Sort files alphabetically by repo name, then by file name
     files_with_calls.sort(key=lambda x: (x['repo_name'], x['repo_file']))
 
-    # Generate the list
+    # Generate the list - group calls by unique line numbers
     for file_with_call in files_with_calls:
         repo_owner = file_with_call['repo_owner']
         repo_branch = file_with_call['repo_branch'] or 'main'
+        repo_file = file_with_call['repo_file']
 
         # Strip .github/workflows/ prefix for display
-        display_file_name = file_with_call['repo_file'].replace('.github/workflows/', '', 1)
+        display_file_name = repo_file.replace('.github/workflows/', '', 1)
 
-        lines.append(
-            f"- [{file_with_call['repo_name']}: {display_file_name}]"
-            f"(https://github.com/{repo_owner}/{file_with_call['repo_name']}/blob/{repo_branch}/{file_with_call['repo_file']})\n"
-        )
-
-        # Write calls (ci-action files being called)
+        # Group calls by line number to show each source line separately
+        calls_by_line = {}
         for call in file_with_call['calls']:
-            lines.append(f"  - [{call}](https://github.com/untillpro/ci-action/blob/main/{call})\n")
+            line_num = call['line_number']
+            if line_num not in calls_by_line:
+                calls_by_line[line_num] = []
+            calls_by_line[line_num].append(call['ci_file'])
+
+        # Sort by line number
+        for line_number in sorted(calls_by_line.keys(), key=lambda x: x or 0):
+            # Build the source file link with line number
+            if line_number:
+                source_link = f"https://github.com/{repo_owner}/{file_with_call['repo_name']}/blob/{repo_branch}/{repo_file}#L{line_number}"
+                source_display = f"{file_with_call['repo_name']}: {display_file_name}:{line_number}"
+            else:
+                source_link = f"https://github.com/{repo_owner}/{file_with_call['repo_name']}/blob/{repo_branch}/{repo_file}"
+                source_display = f"{file_with_call['repo_name']}: {display_file_name}"
+
+            lines.append(f"- [{source_display}]({source_link})\n")
+
+            # Write ci-action files called from this line
+            for ci_file in calls_by_line[line_number]:
+                lines.append(f"  - [{ci_file}](https://github.com/untillpro/ci-action/blob/main/{ci_file})\n")
 
     return ''.join(lines)
 

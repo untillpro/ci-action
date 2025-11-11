@@ -118,553 +118,632 @@
       "repo_name": "dynobuffers",
       "repo_file": ".github/workflows/go.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 25
     },
     {
       "ci_action_file": ".github/workflows/ci_rebuild_bp3.yml",
       "repo_name": "airs-scheme",
       "repo_file": ".github/workflows/short_go.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "master"
+      "repo_branch": "master",
+      "line_number": 7
     },
     {
       "ci_action_file": "scripts/rebuild-test-bp3.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_rebuild_bp3.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 31
     },
     {
       "ci_action_file": "scripts/checkPR.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 32
     },
     {
       "ci_action_file": "action.yml",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 54
     },
     {
       "ci_action_file": "scripts/checkPR.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 59
     },
     {
       "ci_action_file": "action.yml",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 73
     },
     {
       "ci_action_file": "scripts/test_subfolders.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 89
     },
     {
       "ci_action_file": "scripts/test_subfolders_full.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 91
     },
     {
       "ci_action_file": "scripts/check_copyright.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 95
     },
     {
       "ci_action_file": "scripts/gbash.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 98
     },
     {
       "ci_action_file": "scripts/checkPR.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go_cas.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 63
     },
     {
       "ci_action_file": "action.yml",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go_cas.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 69
     },
     {
       "ci_action_file": "scripts/check_copyright.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go_cas.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 87
     },
     {
       "ci_action_file": "scripts/gbash.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go_cas.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 91
     },
     {
       "ci_action_file": "scripts/checkPR.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go_norebuild.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 42
     },
     {
       "ci_action_file": "action.yml",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go_norebuild.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 56
     },
     {
       "ci_action_file": "scripts/check_copyright.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go_norebuild.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 66
     },
     {
       "ci_action_file": "scripts/gbash.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go_norebuild.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 69
     },
     {
       "ci_action_file": "scripts/checkPR.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go_pr.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 61
     },
     {
       "ci_action_file": "scripts/cancelworkflow.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go_pr.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 67
     },
     {
       "ci_action_file": "action.yml",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go_pr.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 83
     },
     {
       "ci_action_file": "scripts/test_subfolders.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go_pr.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 98
     },
     {
       "ci_action_file": "scripts/check_copyright.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go_pr.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 101
     },
     {
       "ci_action_file": "scripts/gbash.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/ci_reuse_go_pr.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 104
     },
     {
       "ci_action_file": "scripts/add-issue-commit.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/cp.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 50
     },
     {
       "ci_action_file": "scripts/cp.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/cp.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 149
     },
     {
       "ci_action_file": "scripts/close-issue.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/cp.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 162
     },
     {
       "ci_action_file": "scripts/add-issue-commit.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/cp.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 185
     },
     {
       "ci_action_file": "scripts/createissue.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/create_issue.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 36
     },
     {
       "ci_action_file": "scripts/add-issue-commit.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/rc.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 43
     },
     {
       "ci_action_file": "scripts/rc.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/rc.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 90
     },
     {
       "ci_action_file": "scripts/close-issue.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/rc.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 98
     },
     {
       "ci_action_file": "scripts/add-issue-commit.sh",
       "repo_name": "ci-action",
       "repo_file": ".github/workflows/rc.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 115
     },
     {
       "ci_action_file": "scripts/deleteDockerImages.sh",
       "repo_name": "airs-bp3",
       "repo_file": ".github/workflows/cd_go.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 79
     },
     {
       "ci_action_file": "scripts/deleteDockerImages.sh",
       "repo_name": "airs-bp3",
       "repo_file": ".github/workflows/cdd_go.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 94
     },
     {
       "ci_action_file": ".github/workflows/ci_reuse_go_cas.yml",
       "repo_name": "airs-bp3",
       "repo_file": ".github/workflows/ci.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 50
     },
     {
       "ci_action_file": "scripts/close-issue.sh",
       "repo_name": "airs-bp3",
       "repo_file": ".github/workflows/close_cprelease.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 34
     },
     {
       "ci_action_file": ".github/workflows/cp.yml",
       "repo_name": "airs-bp3",
       "repo_file": ".github/workflows/cp.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 15
     },
     {
       "ci_action_file": "action.yml",
       "repo_name": "airs-bp3",
       "repo_file": ".github/workflows/nightly_tests.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 39
     },
     {
       "ci_action_file": ".github/workflows/create_issue.yml",
       "repo_name": "airs-bp3",
       "repo_file": ".github/workflows/nightly_tests.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 69
     },
     {
       "ci_action_file": ".github/workflows/rc.yml",
       "repo_name": "airs-bp3",
       "repo_file": ".github/workflows/rc.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 14
     },
     {
       "ci_action_file": "scripts/rebuild-schemas-bp3.sh",
       "repo_name": "airs-bp3",
       "repo_file": ".github/workflows/update_baseline_schemas.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 34
     },
     {
       "ci_action_file": "scripts/updateConfig.sh",
       "repo_name": "airs-bp3",
       "repo_file": ".github/workflows/update_config_sync.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 30
     },
     {
       "ci_action_file": "scripts/update-bp3-voedger.sh",
       "repo_name": "airs-bp3",
       "repo_file": ".github/workflows/update_voedger.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 24
     },
     {
       "ci_action_file": "action.yml",
       "repo_name": "airs-bp3",
       "repo_file": ".github/workflows/update_voedger.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 32
     },
     {
       "ci_action_file": "scripts/deleteDockerImages.sh",
       "repo_name": "airc-backoffice2",
       "repo_file": ".github/workflows/cd.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 90
     },
     {
       "ci_action_file": "scripts/updateConfig.sh",
       "repo_name": "airc-backoffice2",
       "repo_file": ".github/workflows/cdd.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 96
     },
     {
       "ci_action_file": "scripts/deleteDockerImages.sh",
       "repo_name": "airc-backoffice2",
       "repo_file": ".github/workflows/cdd.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 118
     },
     {
       "ci_action_file": ".github/workflows/ci_reuse.yml",
       "repo_name": "airc-backoffice2",
       "repo_file": ".github/workflows/ci.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 17
     },
     {
       "ci_action_file": ".github/workflows/cp.yml",
       "repo_name": "airc-backoffice2",
       "repo_file": ".github/workflows/cp.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 14
     },
     {
       "ci_action_file": ".github/workflows/cp.yml",
       "repo_name": "airc-backoffice2",
       "repo_file": ".github/workflows/cronecprelease.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 42
     },
     {
       "ci_action_file": ".github/workflows/rc.yml",
       "repo_name": "airc-backoffice2",
       "repo_file": ".github/workflows/rc.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 14
     },
     {
       "ci_action_file": ".github/workflows/ci_reuse_go_norebuild.yml",
       "repo_name": "airc-ticket-layouts",
       "repo_file": ".github/workflows/short_go.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 7
     },
     {
       "ci_action_file": "scripts/deleteDockerImages.sh",
       "repo_name": "web-portals",
       "repo_file": ".github/workflows/cd-payment.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 92
     },
     {
       "ci_action_file": "scripts/deleteDockerImages.sh",
       "repo_name": "web-portals",
       "repo_file": ".github/workflows/cd-reseller.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 93
     },
     {
       "ci_action_file": "scripts/updateConfig.sh",
       "repo_name": "web-portals",
       "repo_file": ".github/workflows/cdd-payment.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 100
     },
     {
       "ci_action_file": "scripts/deleteDockerImages.sh",
       "repo_name": "web-portals",
       "repo_file": ".github/workflows/cdd-payment.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 122
     },
     {
       "ci_action_file": "scripts/updateConfig.sh",
       "repo_name": "web-portals",
       "repo_file": ".github/workflows/cdd-reseller.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 100
     },
     {
       "ci_action_file": "scripts/deleteDockerImages.sh",
       "repo_name": "web-portals",
       "repo_file": ".github/workflows/cdd-reseller.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 122
     },
     {
       "ci_action_file": ".github/workflows/ci_reuse.yml",
       "repo_name": "web-portals",
       "repo_file": ".github/workflows/ci.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 12
     },
     {
       "ci_action_file": ".github/workflows/ci_reuse.yml",
       "repo_name": "web-portals",
       "repo_file": ".github/workflows/ci_payment.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 20
     },
     {
       "ci_action_file": ".github/workflows/ci_reuse.yml",
       "repo_name": "web-portals",
       "repo_file": ".github/workflows/ci_reseller.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 19
     },
     {
       "ci_action_file": ".github/workflows/cp.yml",
       "repo_name": "web-portals",
       "repo_file": ".github/workflows/cp.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 14
     },
     {
       "ci_action_file": ".github/workflows/cp.yml",
       "repo_name": "web-portals",
       "repo_file": ".github/workflows/cronecprelease.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 41
     },
     {
       "ci_action_file": ".github/workflows/rc.yml",
       "repo_name": "web-portals",
       "repo_file": ".github/workflows/rc.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 14
     },
     {
       "ci_action_file": "scripts/updateConfig.sh",
       "repo_name": "airc-web-pos",
       "repo_file": ".github/workflows/cd.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 93
     },
     {
       "ci_action_file": "scripts/deleteDockerImages.sh",
       "repo_name": "airc-web-pos",
       "repo_file": ".github/workflows/cd.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 115
     },
     {
       "ci_action_file": ".github/workflows/ci_reuse_go.yml",
       "repo_name": "voedger",
       "repo_file": ".github/workflows/ci-full.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 11
     },
     {
       "ci_action_file": ".github/workflows/create_issue.yml",
       "repo_name": "voedger",
       "repo_file": ".github/workflows/ci-full.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 37
     },
     {
       "ci_action_file": ".github/workflows/ci_reuse_go.yml",
       "repo_name": "voedger",
       "repo_file": ".github/workflows/ci-pkg-cmd.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 13
     },
     {
       "ci_action_file": ".github/workflows/ci_reuse_go_pr.yml",
       "repo_name": "voedger",
       "repo_file": ".github/workflows/ci-pkg-cmd_pr.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 11
     },
     {
       "ci_action_file": "scripts/execgovuln.sh",
       "repo_name": "voedger",
       "repo_file": ".github/workflows/ci-vulncheck.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 24
     },
     {
       "ci_action_file": ".github/workflows/create_issue.yml",
       "repo_name": "voedger",
       "repo_file": ".github/workflows/ci_amazon.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 71
     },
     {
       "ci_action_file": ".github/workflows/create_issue.yml",
       "repo_name": "voedger",
       "repo_file": ".github/workflows/ci_cas.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 62
     },
     {
       "ci_action_file": ".github/workflows/cp.yml",
       "repo_name": "voedger",
       "repo_file": ".github/workflows/cp.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 15
     },
     {
       "ci_action_file": "scripts/linkmilestone.sh",
       "repo_name": "voedger",
       "repo_file": ".github/workflows/linkIssue.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 17
     },
     {
       "ci_action_file": "scripts/domergepr.sh",
       "repo_name": "voedger",
       "repo_file": ".github/workflows/merge.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 22
     },
     {
       "ci_action_file": "scripts/unlinkmilestone.sh",
       "repo_name": "voedger",
       "repo_file": ".github/workflows/unlinkIssue.yml",
       "repo_owner": "untillpro",
-      "repo_branch": "main"
+      "repo_branch": "main",
+      "line_number": 17
     }
   ]
 }
