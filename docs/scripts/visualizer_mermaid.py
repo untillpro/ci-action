@@ -35,36 +35,33 @@ def generate_incoming_calls(all_files: List[Dict], usage_map: Dict[str, List[Dic
         file_path = file_with_usage['file_path']
         lines.append(f"- [{file_path}](https://github.com/untillpro/ci-action/blob/main/{file_path})\n")
 
-        # Group usages by repo and file
+        # Collect and sort callers by URL
         callers = []
         for usage in file_with_usage['usages']:
-            callers.append({
-                'repo_name': usage['repo_name'],
-                'repo_file': usage['repo_file'],
-                'repo_owner': usage['repo_owner'],
-                'repo_branch': usage['repo_branch'],
-                'line_number': usage.get('line_number')
-            })
+            callers.append(usage['source_url'])
 
         # Sort callers alphabetically
-        callers.sort(key=lambda x: (x['repo_name'], x['repo_file'], x['line_number'] or 0))
+        callers.sort()
 
         # Write callers
-        for caller in callers:
-            repo_owner = caller['repo_owner']
-            repo_branch = caller['repo_branch'] or 'main'
-            line_number = caller['line_number']
+        for source_url in callers:
+            # Extract display name from URL
+            # URL format: https://github.com/{owner}/{repo}/blob/{branch}/{file}#L{line}
+            parts = source_url.split('/')
+            repo_name = parts[4]  # repo name
+            file_part = '/'.join(parts[7:]).split('#')[0]  # file path
+            line_number = source_url.split('#L')[1] if '#L' in source_url else None
 
             # Strip .github/workflows/ prefix for display
-            display_file_name = caller['repo_file'].replace('.github/workflows/', '', 1)
+            display_file_name = file_part.replace('.github/workflows/', '', 1)
 
-            # Build the link with line number if available
+            # Build display text
             if line_number:
-                link = f"https://github.com/{repo_owner}/{caller['repo_name']}/blob/{repo_branch}/{caller['repo_file']}#L{line_number}"
-                lines.append(f"  - [{caller['repo_name']}: {display_file_name}:{line_number}]({link})\n")
+                display_text = f"{repo_name}: {display_file_name}:{line_number}"
             else:
-                link = f"https://github.com/{repo_owner}/{caller['repo_name']}/blob/{repo_branch}/{caller['repo_file']}"
-                lines.append(f"  - [{caller['repo_name']}: {display_file_name}]({link})\n")
+                display_text = f"{repo_name}: {display_file_name}"
+
+            lines.append(f"  - [{display_text}]({source_url})\n")
 
     return ''.join(lines)
 
@@ -75,74 +72,42 @@ def generate_outgoing_calls(all_files: List[Dict], usage_map: Dict[str, List[Dic
     lines.append("## Outgoing calls\n\n")
     lines.append("Files in all repositories that call ci-action files:\n\n")
 
-    # Build map: calling file -> list of ci-action files it calls with details
-    calling_files = {}
+    # Build map: source_url -> list of ci-action files called from that line
+    calls_by_source = {}
 
     for ci_file_path, usages in usage_map.items():
         for usage in usages:
-            key = f"{usage['repo_name']}/{usage['repo_file']}"
+            source_url = usage['source_url']
+            if source_url not in calls_by_source:
+                calls_by_source[source_url] = []
+            calls_by_source[source_url].append(ci_file_path)
 
-            if key not in calling_files:
-                calling_files[key] = {
-                    'repo_name': usage['repo_name'],
-                    'repo_file': usage['repo_file'],
-                    'repo_owner': usage['repo_owner'],
-                    'repo_branch': usage['repo_branch'],
-                    'calls': []
-                }
-            calling_files[key]['calls'].append({
-                'ci_file': ci_file_path,
-                'line_number': usage.get('line_number')
-            })
+    # Sort by source URL
+    sorted_sources = sorted(calls_by_source.keys())
 
-    # Create sorted list of calling files
-    files_with_calls = []
-    for info in calling_files.values():
-        # Sort calls by ci_file and line_number
-        call_list = sorted(info['calls'], key=lambda x: (x['ci_file'], x['line_number'] or 0))
-        files_with_calls.append({
-            'repo_name': info['repo_name'],
-            'repo_file': info['repo_file'],
-            'repo_owner': info['repo_owner'],
-            'repo_branch': info['repo_branch'],
-            'calls': call_list
-        })
-
-    # Sort files alphabetically by repo name, then by file name
-    files_with_calls.sort(key=lambda x: (x['repo_name'], x['repo_file']))
-
-    # Generate the list - group calls by unique line numbers
-    for file_with_call in files_with_calls:
-        repo_owner = file_with_call['repo_owner']
-        repo_branch = file_with_call['repo_branch'] or 'main'
-        repo_file = file_with_call['repo_file']
+    # Generate the list
+    for source_url in sorted_sources:
+        # Extract display name from URL
+        # URL format: https://github.com/{owner}/{repo}/blob/{branch}/{file}#L{line}
+        parts = source_url.split('/')
+        repo_name = parts[4]  # repo name
+        file_part = '/'.join(parts[7:]).split('#')[0]  # file path
+        line_number = source_url.split('#L')[1] if '#L' in source_url else None
 
         # Strip .github/workflows/ prefix for display
-        display_file_name = repo_file.replace('.github/workflows/', '', 1)
+        display_file_name = file_part.replace('.github/workflows/', '', 1)
 
-        # Group calls by line number to show each source line separately
-        calls_by_line = {}
-        for call in file_with_call['calls']:
-            line_num = call['line_number']
-            if line_num not in calls_by_line:
-                calls_by_line[line_num] = []
-            calls_by_line[line_num].append(call['ci_file'])
+        # Build display text
+        if line_number:
+            display_text = f"{repo_name}: {display_file_name}:{line_number}"
+        else:
+            display_text = f"{repo_name}: {display_file_name}"
 
-        # Sort by line number
-        for line_number in sorted(calls_by_line.keys(), key=lambda x: x or 0):
-            # Build the source file link with line number
-            if line_number:
-                source_link = f"https://github.com/{repo_owner}/{file_with_call['repo_name']}/blob/{repo_branch}/{repo_file}#L{line_number}"
-                source_display = f"{file_with_call['repo_name']}: {display_file_name}:{line_number}"
-            else:
-                source_link = f"https://github.com/{repo_owner}/{file_with_call['repo_name']}/blob/{repo_branch}/{repo_file}"
-                source_display = f"{file_with_call['repo_name']}: {display_file_name}"
+        lines.append(f"- [{display_text}]({source_url})\n")
 
-            lines.append(f"- [{source_display}]({source_link})\n")
-
-            # Write ci-action files called from this line
-            for ci_file in calls_by_line[line_number]:
-                lines.append(f"  - [{ci_file}](https://github.com/untillpro/ci-action/blob/main/{ci_file})\n")
+        # Write ci-action files called from this line
+        for ci_file in sorted(calls_by_source[source_url]):
+            lines.append(f"  - [{ci_file}](https://github.com/untillpro/ci-action/blob/main/{ci_file})\n")
 
     return ''.join(lines)
 
@@ -195,7 +160,12 @@ def generate_mermaid_graph(all_files: List[Dict], usages: List[Dict]) -> str:
         ci_path = ci_file['path']
         if ci_path in usage_map:
             for usage in usage_map[ci_path]:
-                key = f"{usage['repo_name']}/{usage['repo_file']}"
+                source_url = usage['source_url']
+                # Extract repo/file from URL for node key
+                parts = source_url.split('/')
+                repo_name = parts[4]
+                file_part = '/'.join(parts[7:]).split('#')[0]
+                key = f"{repo_name}/{file_part}"
                 if key not in left_nodes_seen:
                     left_nodes_seen.add(key)
                     left_nodes_ordered.append(key)
@@ -217,7 +187,12 @@ def generate_mermaid_graph(all_files: List[Dict], usages: List[Dict]) -> str:
 
         if ci_path in usage_map:
             for usage in usage_map[ci_path]:
-                target_key = f"{usage['repo_name']}/{usage['repo_file']}"
+                source_url = usage['source_url']
+                # Extract repo/file from URL for node key
+                parts = source_url.split('/')
+                repo_name = parts[4]
+                file_part = '/'.join(parts[7:]).split('#')[0]
+                target_key = f"{repo_name}/{file_part}"
                 target_node_id = get_node_id(target_key)
                 lines.append(f"    {target_node_id} --> {ci_node_id}\n")
 

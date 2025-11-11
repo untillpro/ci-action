@@ -122,17 +122,19 @@ def extract_usages_from_line(line: str, repo_info: Dict, file_path: str, line_nu
     """Extract ci-action usages from a single line of text."""
     usages = []
 
+    # Build the source URL
+    repo_owner = repo_info['owner']
+    repo_name = repo_info['name']
+    repo_branch = repo_info['default_branch'] or 'main'
+    source_url = f"https://github.com/{repo_owner}/{repo_name}/blob/{repo_branch}/{file_path}#L{line_number}"
+
     # Check for workflow usage
     match = USES_WORKFLOW_REGEX.search(line)
     if match:
         workflow_path = match.group(1)
         usages.append({
             'ci_action_file': workflow_path,
-            'repo_name': repo_info['name'],
-            'repo_file': file_path,
-            'repo_owner': repo_info['owner'],
-            'repo_branch': repo_info['default_branch'],
-            'line_number': line_number
+            'source_url': source_url
         })
 
     # Check for action usage (but not if it's a workflow usage)
@@ -141,11 +143,7 @@ def extract_usages_from_line(line: str, repo_info: Dict, file_path: str, line_nu
         if match:
             usages.append({
                 'ci_action_file': 'action.yml',
-                'repo_name': repo_info['name'],
-                'repo_file': file_path,
-                'repo_owner': repo_info['owner'],
-                'repo_branch': repo_info['default_branch'],
-                'line_number': line_number
+                'source_url': source_url
             })
 
     # Check for script curl usage
@@ -154,11 +152,7 @@ def extract_usages_from_line(line: str, repo_info: Dict, file_path: str, line_nu
         script_name = match.group(2)
         usages.append({
             'ci_action_file': f'scripts/{script_name}',
-            'repo_name': repo_info['name'],
-            'repo_file': file_path,
-            'repo_owner': repo_info['owner'],
-            'repo_branch': repo_info['default_branch'],
-            'line_number': line_number
+            'source_url': source_url
         })
     elif '/scripts/' not in line:
         # Check for any other curl usage
@@ -167,11 +161,7 @@ def extract_usages_from_line(line: str, repo_info: Dict, file_path: str, line_nu
             file_path_match = match.group(2)
             usages.append({
                 'ci_action_file': file_path_match,
-                'repo_name': repo_info['name'],
-                'repo_file': file_path,
-                'repo_owner': repo_info['owner'],
-                'repo_branch': repo_info['default_branch'],
-                'line_number': line_number
+                'source_url': source_url
             })
 
     return usages
