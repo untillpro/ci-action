@@ -123,45 +123,36 @@ def extract_usages_from_line(line: str, repo_info: Dict, file_path: str, line_nu
     """Extract ci-action usages from a single line of text."""
     usages = []
 
-    # Build the source URL
-    repo_owner = repo_info['owner']
-    repo_name = repo_info['name']
-    repo_branch = repo_info['default_branch'] or 'main'
-    source_url = f"https://github.com/{repo_owner}/{repo_name}/blob/{repo_branch}/{file_path}#L{line_number}"
+    # Build the source URL once
+    source_url = f"https://github.com/{repo_info['owner']}/{repo_info['name']}/blob/{repo_info['default_branch'] or 'main'}/{file_path}#L{line_number}"
 
-    # Check for workflow usage
-    match = USES_WORKFLOW_REGEX.search(line)
-    if match:
-        workflow_path = match.group(1)
+    # Check for workflow usage (most specific pattern first)
+    workflow_match = USES_WORKFLOW_REGEX.search(line)
+    if workflow_match:
         usages.append({
-            'ci_action_file': workflow_path,
+            'ci_action_file': workflow_match.group(1),
             'source_url': source_url
         })
-
-    # Check for action usage (but not if it's a workflow usage)
-    if not USES_WORKFLOW_REGEX.search(line):
-        match = USES_ACTION_REGEX.search(line)
-        if match:
-            usages.append({
-                'ci_action_file': 'action.yml',
-                'source_url': source_url
-            })
+    # Check for action usage (only if not a workflow usage)
+    elif USES_ACTION_REGEX.search(line):
+        usages.append({
+            'ci_action_file': 'action.yml',
+            'source_url': source_url
+        })
 
     # Check for script curl usage
-    match = CURL_SCRIPT_REGEX.search(line)
-    if match:
-        script_name = match.group(2)
+    script_match = CURL_SCRIPT_REGEX.search(line)
+    if script_match:
         usages.append({
-            'ci_action_file': f'scripts/{script_name}',
+            'ci_action_file': f'scripts/{script_match.group(2)}',
             'source_url': source_url
         })
+    # Check for any other curl usage (only if no script match)
     elif '/scripts/' not in line:
-        # Check for any other curl usage
-        match = CURL_ANY_REGEX.search(line)
-        if match:
-            file_path_match = match.group(2)
+        any_match = CURL_ANY_REGEX.search(line)
+        if any_match:
             usages.append({
-                'ci_action_file': file_path_match,
+                'ci_action_file': any_match.group(2),
                 'source_url': source_url
             })
 
@@ -207,55 +198,37 @@ def scan_github_directory(client: GitHubClient, repo_info: Dict, dir_path: str) 
 
 def scan_repository_from_github(client: GitHubClient, repo_info: Dict) -> List[Dict]:
     """Scan a repository for ci-action usages."""
-    contents = fetch_github_directory_contents(client, repo_info['name'], '.github')
-    if not contents:
-        return []
-
-    usages = []
-    for item in contents:
-        if item['type'] == 'file':
-            file_usages = scan_github_file(client, repo_info, item['path'], item['download_url'])
-            usages.extend(file_usages)
-        elif item['type'] == 'dir':
-            sub_usages = scan_github_directory(client, repo_info, item['path'])
-            usages.extend(sub_usages)
-
-    return usages
+    return scan_github_directory(client, repo_info, '.github')
 
 
 def get_all_ci_action_files_from_github(client: GitHubClient) -> List[Dict]:
     """Get all ci-action files from the ci-action repository."""
-    files = []
+    files = {}  # Use dict to automatically handle duplicates
 
     # Check for action.yml
     url = f"{GITHUB_API_BASE}/repos/{ORG_NAME}/ci-action/contents/action.yml"
     response = client.get(url)
     if response['status_code'] == 200:
-        files.append({'path': 'action.yml'})
+        files['action.yml'] = {'path': 'action.yml'}
 
     # Get workflow files
     workflows = fetch_github_directory_contents(client, 'ci-action', '.github/workflows')
     if workflows:
         for item in workflows:
             if item['type'] == 'file' and item['name'].endswith('.yml'):
-                files.append({'path': f".github/workflows/{item['name']}"})
+                path = f".github/workflows/{item['name']}"
+                files[path] = {'path': path}
 
     # Get script files
     scripts = fetch_github_directory_contents(client, 'ci-action', 'scripts')
     if scripts:
         for item in scripts:
             if item['type'] == 'file' and item['name'].endswith('.sh'):
-                files.append({'path': f"scripts/{item['name']}"})
+                path = f"scripts/{item['name']}"
+                files[path] = {'path': path}
 
-    # Remove duplicates and sort
-    seen = set()
-    unique_files = []
-    for file in sorted(files, key=lambda x: x['path']):
-        if file['path'] not in seen:
-            seen.add(file['path'])
-            unique_files.append(file)
-
-    return unique_files
+    # Return sorted list
+    return sorted(files.values(), key=lambda x: x['path'])
 
 
 def get_all_ci_action_files_local(ci_action_path: Path) -> List[Dict]:

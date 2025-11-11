@@ -120,4 +120,16 @@ typings/
 
 # TernJS port file
 .tern-port
-/usage-analyzer/ci-action-data.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# CI-Action generated files
+/docs/scripts/ci-action-data.csv

@@ -5,10 +5,11 @@ CI-Action Graphviz Visualizer
 Reads the CSV data and generates a Graphviz DOT format visualization.
 """
 
-import csv
 import sys
 from pathlib import Path
 from typing import Dict, List
+
+from visualizer_utils import read_csv_data, parse_github_url, NodeIdGenerator
 
 
 def escape_label(s: str) -> str:
@@ -44,21 +45,12 @@ def generate_graphviz_dot(usages: List[Dict]) -> str:
     lines.append("    color=lightblue;\n")
     lines.append("    \n")
 
-    node_map = {}
-    node_id = 0
-
-    def get_node_id(label: str) -> str:
-        nonlocal node_id
-        if label in node_map:
-            return node_map[label]
-        node_id += 1
-        node_id_str = f"n{node_id}"
-        node_map[label] = node_id_str
-        return node_id_str
+    # Use shared node ID generator
+    node_gen = NodeIdGenerator('n')
 
     # Define ci-action file nodes
     for ci_file in sorted(all_ci_files):
-        node_id_str = get_node_id(ci_file)
+        node_id_str = node_gen.get_id(ci_file)
         label = escape_label(ci_file)
 
         # Check if file is used (has at least one non-null source_url)
@@ -87,10 +79,8 @@ def generate_graphviz_dot(usages: List[Dict]) -> str:
         if source_url is None:
             continue
         # Extract repo name and file from URL
-        parts = source_url.split('/')
-        repo_name = parts[4]
-        file_part = '/'.join(parts[7:]).split('#')[0]
-        target_key = f"{repo_name}/{file_part}"
+        repo_name, file_path, _ = parse_github_url(source_url)
+        target_key = f"{repo_name}/{file_path}"
         if repo_name not in repo_map:
             repo_map[repo_name] = []
         repo_map[repo_name].append(target_key)
@@ -114,15 +104,13 @@ def generate_graphviz_dot(usages: List[Dict]) -> str:
             if source_url is None:
                 continue
             # Extract repo name and file from URL
-            parts = source_url.split('/')
-            url_repo_name = parts[4]
-            file_part = '/'.join(parts[7:]).split('#')[0]
+            url_repo_name, file_path, _ = parse_github_url(source_url)
 
             if url_repo_name == repo_name:
-                target_key = f"{repo_name}/{file_part}"
+                target_key = f"{repo_name}/{file_path}"
                 if target_key not in seen:
-                    node_id_str = get_node_id(target_key)
-                    label = escape_label(file_part)
+                    node_id_str = node_gen.get_id(target_key)
+                    label = escape_label(file_path)
                     lines.append(f'    {node_id_str} [label="{label}", style="rounded,filled", fillcolor=white];\n')
                     seen.add(target_key)
 
@@ -136,13 +124,11 @@ def generate_graphviz_dot(usages: List[Dict]) -> str:
         # Skip null source_url (unused files)
         if source_url is None:
             continue
-        ci_action_id = get_node_id(usage['ci_action_file'])
+        ci_action_id = node_gen.get_id(usage['ci_action_file'])
         # Extract repo name and file from URL
-        parts = source_url.split('/')
-        repo_name = parts[4]
-        file_part = '/'.join(parts[7:]).split('#')[0]
-        target_key = f"{repo_name}/{file_part}"
-        repo_file_id = get_node_id(target_key)
+        repo_name, file_path, _ = parse_github_url(source_url)
+        target_key = f"{repo_name}/{file_path}"
+        repo_file_id = node_gen.get_id(target_key)
         lines.append(f"  {repo_file_id} -> {ci_action_id};\n")
 
     lines.append("}\n")
@@ -161,16 +147,7 @@ def main():
 
     # Read input CSV
     try:
-        with open(input_file, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            usages = []
-            for row in reader:
-                # Convert empty string to None for source_url
-                source_url = row['source_url'] if row['source_url'] else None
-                usages.append({
-                    'ci_action_file': row['ci_action_file'],
-                    'source_url': source_url
-                })
+        usages = read_csv_data(input_file)
     except Exception as e:
         print(f"Error reading input file: {e}", file=sys.stderr)
         sys.exit(1)
