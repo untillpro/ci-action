@@ -1,117 +1,4 @@
 {
-  "all_ci_action_files": [
-    {
-      "path": ".github/workflows/ci-extrachecks.yml"
-    },
-    {
-      "path": ".github/workflows/ci.yml"
-    },
-    {
-      "path": ".github/workflows/ci_rebuild_bp3.yml"
-    },
-    {
-      "path": ".github/workflows/ci_reuse.yml"
-    },
-    {
-      "path": ".github/workflows/ci_reuse_go.yml"
-    },
-    {
-      "path": ".github/workflows/ci_reuse_go_cas.yml"
-    },
-    {
-      "path": ".github/workflows/ci_reuse_go_norebuild.yml"
-    },
-    {
-      "path": ".github/workflows/ci_reuse_go_pr.yml"
-    },
-    {
-      "path": ".github/workflows/cp.yml"
-    },
-    {
-      "path": ".github/workflows/create_issue.yml"
-    },
-    {
-      "path": ".github/workflows/rc.yml"
-    },
-    {
-      "path": "action.yml"
-    },
-    {
-      "path": "scripts/add-issue-commit.sh"
-    },
-    {
-      "path": "scripts/cancelworkflow.sh"
-    },
-    {
-      "path": "scripts/checkPR.sh"
-    },
-    {
-      "path": "scripts/check_copyright.sh"
-    },
-    {
-      "path": "scripts/close-issue.sh"
-    },
-    {
-      "path": "scripts/cp.sh"
-    },
-    {
-      "path": "scripts/createissue.sh"
-    },
-    {
-      "path": "scripts/deleteDockerImages.sh"
-    },
-    {
-      "path": "scripts/domergepr.sh"
-    },
-    {
-      "path": "scripts/execgovuln.sh"
-    },
-    {
-      "path": "scripts/gbash.sh"
-    },
-    {
-      "path": "scripts/git-release.sh"
-    },
-    {
-      "path": "scripts/large-file-hook.sh"
-    },
-    {
-      "path": "scripts/linkmilestone.sh"
-    },
-    {
-      "path": "scripts/pre-commit-hook.sh"
-    },
-    {
-      "path": "scripts/rc.sh"
-    },
-    {
-      "path": "scripts/rebuild-schemas-bp3.sh"
-    },
-    {
-      "path": "scripts/rebuild-test-bp3.sh"
-    },
-    {
-      "path": "scripts/test_subfolders.sh"
-    },
-    {
-      "path": "scripts/test_subfolders_full.sh"
-    },
-    {
-      "path": "scripts/unlinkmilestone.sh"
-    },
-    {
-      "path": "scripts/update-bp3-voedger.sh"
-    },
-    {
-      "path": "scripts/updateConfig.sh"
-    },
-    {
-      "path": "scripts/updateConfigDummy.sh"
-    },
-    {
-      "path": "scripts/vulncheck.sh"
-    }
-  ],
   "usages": [
     {
       "ci_action_file": "action.yml",
@@ -428,6 +315,34 @@
     {
       "ci_action_file": "scripts/unlinkmilestone.sh",
       "source_url": "https://github.com/untillpro/voedger/blob/main/.github/workflows/unlinkIssue.yml#L17"
+    },
+    {
+      "ci_action_file": ".github/workflows/ci-extrachecks.yml",
+      "source_url": null
+    },
+    {
+      "ci_action_file": ".github/workflows/ci.yml",
+      "source_url": null
+    },
+    {
+      "ci_action_file": "scripts/git-release.sh",
+      "source_url": null
+    },
+    {
+      "ci_action_file": "scripts/large-file-hook.sh",
+      "source_url": null
+    },
+    {
+      "ci_action_file": "scripts/pre-commit-hook.sh",
+      "source_url": null
+    },
+    {
+      "ci_action_file": "scripts/updateConfigDummy.sh",
+      "source_url": null
+    },
+    {
+      "ci_action_file": "scripts/vulncheck.sh",
+      "source_url": null
     }
   ]
 }

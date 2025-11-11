@@ -333,9 +333,20 @@ def main():
     if skipped_count > 0:
         print(f"Skipped {skipped_count} outdated repositories")
 
-    # Prepare output data
+    # Find unused ci-action files and add them to usages with source_url=null
+    used_files = set()
+    for usage in usages:
+        used_files.add(usage['ci_action_file'])
+
+    for ci_file in all_ci_action_files:
+        if ci_file['path'] not in used_files:
+            usages.append({
+                'ci_action_file': ci_file['path'],
+                'source_url': None
+            })
+
+    # Prepare output data (only usages, no all_ci_action_files)
     data = {
-        'all_ci_action_files': all_ci_action_files,
         'usages': usages
     }
 

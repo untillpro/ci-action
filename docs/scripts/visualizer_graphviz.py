@@ -18,12 +18,14 @@ def escape_label(s: str) -> str:
     return s
 
 
-def generate_graphviz_dot(all_files: List[Dict], usages: List[Dict]) -> str:
+def generate_graphviz_dot(usages: List[Dict]) -> str:
     """Generate Graphviz DOT format graph."""
-    # Build usage map
+    # Build usage map and collect all ci-action files
     usage_map = {}
+    all_ci_files = set()
     for usage in usages:
         ci_file = usage['ci_action_file']
+        all_ci_files.add(ci_file)
         if ci_file not in usage_map:
             usage_map[ci_file] = []
         usage_map[ci_file].append(usage)
@@ -55,12 +57,19 @@ def generate_graphviz_dot(all_files: List[Dict], usages: List[Dict]) -> str:
         return node_id_str
 
     # Define ci-action file nodes
-    for ci_file in all_files:
-        file_path = ci_file['path']
-        node_id_str = get_node_id(file_path)
-        label = escape_label(file_path)
+    for ci_file in sorted(all_ci_files):
+        node_id_str = get_node_id(ci_file)
+        label = escape_label(ci_file)
 
-        if file_path not in usage_map:
+        # Check if file is used (has at least one non-null source_url)
+        is_used = False
+        if ci_file in usage_map:
+            for usage in usage_map[ci_file]:
+                if usage['source_url'] is not None:
+                    is_used = True
+                    break
+
+        if not is_used:
             # Unused files - red
             lines.append(f'    {node_id_str} [label="{label}", color=red, style="rounded,filled", fillcolor=lightcoral];\n')
         else:
@@ -70,10 +79,13 @@ def generate_graphviz_dot(all_files: List[Dict], usages: List[Dict]) -> str:
     lines.append("  }\n")
     lines.append("  \n")
 
-    # Build repo map from URLs
+    # Build repo map from URLs (skip null source_url)
     repo_map = {}
     for usage in usages:
         source_url = usage['source_url']
+        # Skip null source_url (unused files)
+        if source_url is None:
+            continue
         # Extract repo name and file from URL
         parts = source_url.split('/')
         repo_name = parts[4]
@@ -98,6 +110,9 @@ def generate_graphviz_dot(all_files: List[Dict], usages: List[Dict]) -> str:
         seen = set()
         for usage in usages:
             source_url = usage['source_url']
+            # Skip null source_url (unused files)
+            if source_url is None:
+                continue
             # Extract repo name and file from URL
             parts = source_url.split('/')
             url_repo_name = parts[4]
@@ -117,8 +132,11 @@ def generate_graphviz_dot(all_files: List[Dict], usages: List[Dict]) -> str:
     # Create edges
     lines.append("  // Edges\n")
     for usage in usages:
-        ci_action_id = get_node_id(usage['ci_action_file'])
         source_url = usage['source_url']
+        # Skip null source_url (unused files)
+        if source_url is None:
+            continue
+        ci_action_id = get_node_id(usage['ci_action_file'])
         # Extract repo name and file from URL
         parts = source_url.split('/')
         repo_name = parts[4]
@@ -149,11 +167,10 @@ def main():
         print(f"Error reading input file: {e}", file=sys.stderr)
         sys.exit(1)
 
-    all_files = data.get('all_ci_action_files', [])
     usages = data.get('usages', [])
 
     # Generate Graphviz DOT
-    dot_graph = generate_graphviz_dot(all_files, usages)
+    dot_graph = generate_graphviz_dot(usages)
 
     # Write output
     try:
@@ -163,7 +180,9 @@ def main():
         print(f"Error writing dot file: {e}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"Generated graphviz DOT with {len(all_files)} files and {len(usages)} usages. Written to {output_file}")
+    # Count unique ci-action files
+    ci_files = set(u['ci_action_file'] for u in usages)
+    print(f"Generated graphviz DOT with {len(ci_files)} files and {len(usages)} usages. Written to {output_file}")
     print("\nTo render the graph, run:")
     print(f"  dot -Tpng {output_file} -o ci-action-usages.png")
     print(f"  dot -Tsvg {output_file} -o ci-action-usages.svg")
