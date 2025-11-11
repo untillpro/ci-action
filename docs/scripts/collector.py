@@ -345,15 +345,10 @@ def main():
                 'source_url': None
             })
 
-    # Prepare output data (only usages, no all_ci_action_files)
-    data = {
-        'usages': usages
-    }
-
-    # Write JSON output
+    # Write JSON output (just the array, no wrapper)
     output_file = work_dir / 'ci-action-data.json'
     with open(output_file, 'w') as f:
-        json.dump(data, f, indent=2)
+        json.dump(usages, f, indent=2)
 
     print(f"\nCollected {len(all_ci_action_files)} ci-action files and {len(usages)} usages from {len(repos_with_usages)} repositories")
     print("Data written to ci-action-data.json")

@@ -159,15 +159,13 @@ def main():
     input_file = Path(sys.argv[1])
     output_file = Path(sys.argv[2]) if len(sys.argv) >= 3 else Path('ci-action-usages.dot')
 
-    # Read input JSON
+    # Read input JSON (direct array)
     try:
         with open(input_file, 'r') as f:
-            data = json.load(f)
+            usages = json.load(f)
     except Exception as e:
         print(f"Error reading input file: {e}", file=sys.stderr)
         sys.exit(1)
-
-    usages = data.get('usages', [])
 
     # Generate Graphviz DOT
     dot_graph = generate_graphviz_dot(usages)
