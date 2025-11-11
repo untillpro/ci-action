@@ -5,6 +5,7 @@ CI-Action Usage Collector
 Scans all non-archived repositories from GitHub and collects raw usage data.
 """
 
+import csv
 import json
 import os
 import re
@@ -345,13 +346,15 @@ def main():
                 'source_url': None
             })
 
-    # Write JSON output (just the array, no wrapper)
-    output_file = work_dir / 'ci-action-data.json'
-    with open(output_file, 'w') as f:
-        json.dump(usages, f, indent=2)
+    # Write CSV output
+    output_file = work_dir / 'ci-action-data.csv'
+    with open(output_file, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=['ci_action_file', 'source_url'])
+        writer.writeheader()
+        writer.writerows(usages)
 
     print(f"\nCollected {len(all_ci_action_files)} ci-action files and {len(usages)} usages from {len(repos_with_usages)} repositories")
-    print("Data written to ci-action-data.json")
+    print("Data written to ci-action-data.csv")
 
 
 if __name__ == '__main__':

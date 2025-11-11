@@ -20,8 +20,8 @@ cd "$SCRIPTS_DIR"
 
 ./collect.sh
 
-if [ ! -f "ci-action-data.json" ]; then
-    echo "Error: ci-action-data.json was not created"
+if [ ! -f "ci-action-data.csv" ]; then
+    echo "Error: ci-action-data.csv was not created"
     exit 1
 fi
 

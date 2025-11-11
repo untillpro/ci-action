@@ -2,10 +2,10 @@
 """
 CI-Action Graphviz Visualizer
 
-Reads the JSON data and generates a Graphviz DOT format visualization.
+Reads the CSV data and generates a Graphviz DOT format visualization.
 """
 
-import json
+import csv
 import sys
 from pathlib import Path
 from typing import Dict, List
@@ -153,16 +153,24 @@ def generate_graphviz_dot(usages: List[Dict]) -> str:
 def main():
     """Main entry point."""
     if len(sys.argv) < 2:
-        print(f"Usage: {sys.argv[0]} <input-json-file> [output-dot-file]", file=sys.stderr)
+        print(f"Usage: {sys.argv[0]} <input-csv-file> [output-dot-file]", file=sys.stderr)
         sys.exit(1)
 
     input_file = Path(sys.argv[1])
     output_file = Path(sys.argv[2]) if len(sys.argv) >= 3 else Path('ci-action-usages.dot')
 
-    # Read input JSON (direct array)
+    # Read input CSV
     try:
-        with open(input_file, 'r') as f:
-            usages = json.load(f)
+        with open(input_file, 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            usages = []
+            for row in reader:
+                # Convert empty string to None for source_url
+                source_url = row['source_url'] if row['source_url'] else None
+                usages.append({
+                    'ci_action_file': row['ci_action_file'],
+                    'source_url': source_url
+                })
     except Exception as e:
         print(f"Error reading input file: {e}", file=sys.stderr)
         sys.exit(1)

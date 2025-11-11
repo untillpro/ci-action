@@ -22,7 +22,7 @@ case $FORMAT in
     mermaid)
         echo "Generating Mermaid graph visualization..."
 
-        python visualizer_mermaid.py ci-action-data.json ci-action-usages.md
+        python visualizer_mermaid.py ci-action-data.csv ci-action-usages.md
 
         echo ""
         echo "Visualization complete!"
@@ -30,7 +30,7 @@ case $FORMAT in
         ;;
     graphviz)
         echo "Generating Graphviz DOT visualization..."
-        python visualizer_graphviz.py ci-action-data.json ci-action-usages.dot
+        python visualizer_graphviz.py ci-action-data.csv ci-action-usages.dot
         echo ""
         if command -v dot &> /dev/null; then
             echo "Rendering SVG with Graphviz..."
