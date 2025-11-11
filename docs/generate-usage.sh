@@ -6,8 +6,7 @@ set -e
 # It collects usage data from GitHub repositories and creates a Mermaid visualization
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-USAGE_ANALYZER_DIR="$REPO_ROOT/usage-analyzer"
+SCRIPTS_DIR="$SCRIPT_DIR/scripts"
 DOCS_DIR="$SCRIPT_DIR"
 
 echo "=========================================="
@@ -17,7 +16,8 @@ echo ""
 
 # Step 1: Collect usage data
 echo "Step 1: Collecting usage data from GitHub..."
-cd "$USAGE_ANALYZER_DIR"
+cd "$SCRIPTS_DIR"
+
 ./collect.sh
 
 if [ ! -f "ci-action-data.json" ]; then

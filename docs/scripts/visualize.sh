@@ -21,14 +21,16 @@ FORMAT=$1
 case $FORMAT in
     mermaid)
         echo "Generating Mermaid graph visualization..."
-        go run ./cmd/mermaid/main.go ci-action-data.json ci-action-usages.md
+
+        python visualizer_mermaid.py ci-action-data.json ci-action-usages.md
+
         echo ""
         echo "Visualization complete!"
         echo "Output: ci-action-usages.md"
         ;;
     graphviz)
         echo "Generating Graphviz DOT visualization..."
-        go run ./cmd/graphviz/main.go ci-action-data.json ci-action-usages.dot
+        python visualizer_graphviz.py ci-action-data.json ci-action-usages.dot
         echo ""
         if command -v dot &> /dev/null; then
             echo "Rendering SVG with Graphviz..."
