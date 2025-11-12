@@ -57,4 +57,4 @@ mv ci-action-usages.md ../docs/
 
 ## See also
 
-- [`../usage-analyzer/README.md`](../usage-analyzer/README.md)
+- [`scripts/README.md`](scripts/README.md)
