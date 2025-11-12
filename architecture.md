@@ -1,98 +1,197 @@
 # untillpro/ci-action Architecture
 
-The untillpro/ci-action is a GitHub Action designed to provide continuous integration capabilities for Go and Node.js projects. Its architecture consists of several key components working together to validate code, run tests, and publish releases.
+The untillpro/ci-action is a GitHub Action designed to provide continuous integration capabilities for Go and Node.js projects. Its architecture is implemented as a **composite action** using bash scripts, providing a lightweight and transparent CI/CD solution without Node.js dependencies.
+
+---
+
+## Implementation Overview
+
+**Type**: Composite GitHub Action
+**Runtime**: Bash shell
+**Dependencies**: Standard Unix tools + GitHub CLI (for publishing)
+**Configuration**: [action.yml](./action.yml)
 
 ---
 
 ## Core Components
 
-### Main Action Entry Point
+### Action Configuration
 
-- **[index.js](./index.js)**: The primary entry point that orchestrates the entire CI process
-- Uses `@actions/core` and `@actions/github` libraries to interact with GitHub Actions
+- **[action.yml](./action.yml)**: Defines the composite action with all inputs, outputs, and execution steps
+  - Configures the action as `using: 'composite'`
+  - Maps all inputs to environment variables (`INPUT_*`)
+  - Executes the main bash script: `scripts/ci_main.sh`
 
-### Core Functionality Modules
+### Main CI Scripts
 
-- **[checkSources.js](./checkSources.js)**: Validates source files for copyright notices and other requirements
-- **[common.js](./common.js)**: Provides utility functions, particularly for executing commands
-- **[publish.js](./publish.js)**: Handles release publishing functionality
-- **[rejectHiddenFolders.js](./rejectHiddenFolders.js)**: Enforces rules against hidden directories
+The core CI functionality is implemented in bash scripts located in the `scripts/` directory:
 
-### Shell Scripts Collection
+#### Primary CI Scripts
 
-The scripts directory contains numerous bash scripts that perform specific CI operations:
+- **[ci_main.sh](./scripts/ci_main.sh)**: Main orchestration script that coordinates the entire CI process
+  - Reads inputs from environment variables
+  - Calls validation scripts
+  - Detects project language
+  - Runs language-specific build and test workflows
+  - Triggers publishing when appropriate
 
-- Code linting (e.g., [gbash.sh](./scripts/gbash.sh))
-- Vulnerability checking (e.g., [vulncheck.sh](./scripts/vulncheck.sh), [execgovuln.sh](./scripts/execgovuln.sh))
-- Testing (e.g., [test_subfolders.sh](./scripts/test_subfolders.sh))
-- Release management (e.g., [git-release.sh](./scripts/git-release.sh))
-- Configuration updates (e.g., [updateConfig.sh](./scripts/updateConfig.sh))
+- **[reject_hidden_folders.sh](./scripts/reject_hidden_folders.sh)**: Validates repository structure
+  - Rejects unexpected hidden folders
+  - Allows: `.git`, `.github`, `.husky`, `.augment`
+  - Supports ignore list
 
-### Workflow Templates
+- **[detect_language.sh](./scripts/detect_language.sh)**: Auto-detects project language
+  - Returns: `go`, `node_js`, or `unknown`
+  - Checks for `go.mod`, `*.go` files, or JavaScript/TypeScript files
 
-The workflows directory contains reusable GitHub workflow templates:
+- **[check_source_copyright.sh](./scripts/check_source_copyright.sh)**: Validates source file compliance
+  - Checks copyright notices in `.go` and `.js` files
+  - Validates LICENSE file consistency
+  - Skips files marked with "DO NOT EDIT"
 
-- Language-specific workflows (e.g., [ci_reuse_go.yml](.github/workflows/ci_reuse_go.yml), [ci_reuse.yml](.github/workflows/ci_reuse.yml) for Node.js)
-- Specialized workflows (e.g., [cp.yml](.github/workflows/cp.yml) for cherry-picking, [rc.yml](.github/workflows/rc.yml) for release candidates)
+- **[check_gomod.sh](./scripts/check_gomod.sh)**: Validates Go module configuration
+  - Ensures `go.mod` has no local replace directives
+  - Prevents accidental commits with local dependencies
 
----
+- **[publish_release.sh](./scripts/publish_release.sh)**: Handles release publishing
+  - Creates GitHub releases with timestamp-based versioning
+  - Uploads assets as zip files
+  - Manages release retention (keeps N most recent)
+  - Uses GitHub CLI (`gh`) for API interactions
 
-## `dist` folder
+#### Additional Utility Scripts
 
-`dist` folder serves as the distribution or build output directory for the GitHub Action.
+The scripts directory also contains specialized bash scripts for extended functionality:
 
-1. In the action.yml file, the entry point is specified as:
-   ```yaml
-   runs:
-     using: 'node20'
-     main: 'dist/index.js'
-   ```
-   This shows that the GitHub Action is configured to use the compiled JavaScript from the dist directory.
+- Code linting: [gbash.sh](./scripts/gbash.sh) - Runs golangci-lint
+- Vulnerability checking: [vulncheck.sh](./scripts/vulncheck.sh), [execgovuln.sh](./scripts/execgovuln.sh)
+- Testing: [test_subfolders.sh](./scripts/test_subfolders.sh), [test_subfolders_full.sh](./scripts/test_subfolders_full.sh)
+- Release management: [git-release.sh](./scripts/git-release.sh)
+- Copyright checking: [check_copyright.sh](./scripts/check_copyright.sh)
+- Configuration updates: [updateConfig.sh](./scripts/updateConfig.sh)
+- PR management: [checkPR.sh](./scripts/checkPR.sh), [domergepr.sh](./scripts/domergepr.sh)
+- Issue management: [createissue.sh](./scripts/createissue.sh), [close-issue.sh](./scripts/close-issue.sh)
 
-2. The package.json file contains a script to build the distribution:
-   ```json
-   "scripts": {
-     "package": "ncc build index.js"
-   }
-   ```
-   This uses `@vercel/ncc` (listed in devDependencies) to bundle the code into a single file.
+### Reusable Workflow Templates
 
-3. The .gitignore file has `dist/*` entries (although commented out in one place), indicating it's a generated directory.
+The `.github/workflows/` directory contains reusable GitHub workflow templates that use this action:
 
-4. The .eslintignore file specifically excludes the dist directory from linting.
-
-The dist folder is indeed built automatically as part of the development workflow. When contributors run `npm run package`, it compiles and bundles the action's JavaScript code into a single file in the dist folder. This bundling process is essential for GitHub Actions as it packages all dependencies, making the action self-contained and ready for execution in GitHub's environment.
-
-When the action is used in workflows, GitHub executes the compiled code from this dist folder rather than running the source files directly.
+- **Go workflows**:
+  - [ci_reuse_go.yml](.github/workflows/ci_reuse_go.yml) - Standard Go CI with linting
+  - [ci_reuse_go_pr.yml](.github/workflows/ci_reuse_go_pr.yml) - Go CI for pull requests
+  - [ci_reuse_go_cas.yml](.github/workflows/ci_reuse_go_cas.yml) - Go CI with custom environment
+  - [ci_reuse_go_norebuild.yml](.github/workflows/ci_reuse_go_norebuild.yml) - Go CI without rebuild
+- **Node.js workflows**:
+  - [ci_reuse.yml](.github/workflows/ci_reuse.yml) - Node.js CI
+- **Specialized workflows**:
+  - [cp.yml](.github/workflows/cp.yml) - Cherry-picking
+  - [rc.yml](.github/workflows/rc.yml) - Release candidates
+  - [ci-extrachecks.yml](.github/workflows/ci-extrachecks.yml) - Extra security checks (govulncheck)
 
 
 ---
 
 ## Execution Flow
 
-1. **Input Processing**: Action reads inputs like `ignore`, `organization`, and `token`
-2. **Environment Setup**: Configures necessary environment variables
-3. **Source Validation**:
-   - Rejects hidden folders
-   - Checks copyright notices in source files
-   - Validates go.mod for local replaces
-4. **Language Detection**: Determines if the project is Go or Node.js
-5. **Build & Test**:
-   - For Go: Runs `go build`, `go test`, linters, and vulnerability checks
-   - For Node.js: Runs `npm install`, `npm run build`, and `npm test`
-6. **Optional Publishing**: If configured, creates GitHub releases
+The composite action executes the following workflow via `ci_main.sh`:
+
+### 1. Input Processing
+- Reads all inputs from environment variables (`INPUT_*`)
+- Extracts repository owner and name
+- Determines current branch name
+- Prints context information (repository, organization, actor, event, branch)
+
+### 2. Repository Validation
+- **Hidden Folders Check** (`reject_hidden_folders.sh`)
+  - Scans for unexpected hidden folders
+  - Allows: `.git`, `.github`, `.husky`, `.augment`
+  - Respects ignore list
+
+### 3. Source Code Validation
+- **Copyright Check** (`check_source_copyright.sh`)
+  - Validates copyright notices in `.go` and `.js` files
+  - Checks LICENSE file consistency
+  - Skips files with "DO NOT EDIT" marker
+  - Respects ignore list and `ignore-copyright` flag
+
+### 4. Language Detection
+- **Auto-detection** (`detect_language.sh`)
+  - Checks for `go.mod` or `*.go` files → Go project
+  - Checks for `*.js`, `*.jsx`, `*.ts`, `*.tsx` files → Node.js project
+  - Returns `unknown` if neither detected
+
+### 5. Language-Specific Build & Test
+
+#### For Go Projects:
+1. **Go Module Validation** (`check_gomod.sh`)
+   - Ensures no local replace directives in `go.mod`
+
+2. **Environment Configuration**
+   - Configures `GOPRIVATE` for private repositories
+   - Sets up git authentication for private dependencies
+
+3. **Build & Test**
+   - Optionally runs `go mod tidy`
+   - Runs `go build ./...` (unless `ignore-build` is set)
+   - Runs `go test ./...` with optional:
+     - Race detection (`-race`)
+     - Short mode (`-short`)
+     - Custom test folder
+     - Codecov integration with coverage reports
+
+4. **Custom Build Command**
+   - Executes `build-cmd` if specified
+
+#### For Node.js Projects:
+1. **Build & Test**
+   - Runs `npm install`
+   - Runs `npm run build --if-present`
+   - Runs `npm test`
+
+2. **Codecov Integration**
+   - Installs codecov globally
+   - Runs istanbul coverage
+   - Uploads to codecov
+
+### 6. Release Publishing (Optional)
+- **Triggered when**:
+  - Current branch matches `main-branch` (default: `main`)
+  - `publish-asset` is specified
+
+- **Publishing Process** (`publish_release.sh`)
+  - Generates timestamp-based version tag (e.g., `20240115.143022.123`)
+  - Creates zip archive from asset (file or directory)
+  - Creates GitHub release using GitHub CLI
+  - Uploads zip asset to release
+  - Creates and uploads `deploy.txt` with download URL
+  - Manages release retention (deletes old releases, keeps N most recent)
+  - Sets GitHub Actions outputs (release_id, release_name, release_html_url, etc.)
 
 ---
 
-## Key Features
-
-1. **Language Support**: Handles both Go and Node.js projects
-2. **Private Repository Access**: Configures authentication for private dependencies
-3. **Code Quality Enforcement**:
-   - Copyright verification
-   - Go linting via golangci-lint
-   - Vulnerability scanning
-4. **Release Automation**: Creates and manages GitHub releases
-5. **Reusable Workflows**: Provides templates for common CI scenarios
+## Usage in Workflows
 
 The action is designed to be highly configurable through input parameters while providing sensible defaults, making it adaptable to various project requirements within the untillpro ecosystem.
+
+Example usage:
+
+```yaml
+- uses: untillpro/ci-action@main
+  with:
+    organization: 'untillpro,heeus'
+    token: ${{ secrets.REPOREADING_TOKEN }}
+    codecov-token: ${{ secrets.CODECOV_TOKEN }}
+    codecov-go-race: true
+    publish-asset: 'my-app'
+    publish-keep: 8
+```
+
+For additional functionality like linting and vulnerability scanning, use the standalone scripts in separate workflow steps:
+
+```yaml
+- name: Linters
+  run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/gbash.sh | bash -s "$(go env GOPATH)"
+
+- name: Vulnerability Check
+  run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/vulncheck.sh | bash
+```

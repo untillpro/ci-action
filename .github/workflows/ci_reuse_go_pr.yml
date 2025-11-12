@@ -80,7 +80,7 @@ jobs:
           ${{ runner.os }}-go-
 
     - name: CI
-      uses: untillpro/ci-action@main
+      uses: host6/ci-action@AIR-2075-ci-action-get-rid-of-JavaScript-dev
       with:
         ignore: ${{ inputs.ignore_copyright }}
         test-folder: ${{ inputs.test_folder }}
