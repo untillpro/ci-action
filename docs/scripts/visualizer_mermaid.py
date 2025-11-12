@@ -47,8 +47,8 @@ def generate_incoming_calls(usage_map: Dict[str, List[Dict]]) -> str:
 
         # Write callers
         for source_url in callers:
-            repo_name, file_path, line_number = parse_github_url(source_url)
-            display_text = format_display_name(repo_name, file_path, line_number)
+            repo_name, file_path = parse_github_url(source_url)
+            display_text = format_display_name(repo_name, file_path, 0)
             lines.append(f"  - [{display_text}]({source_url})\n")
 
     return ''.join(lines)
@@ -78,8 +78,8 @@ def generate_outgoing_calls(usage_map: Dict[str, List[Dict]]) -> str:
 
     # Generate the list
     for source_url in sorted_sources:
-        repo_name, file_path, line_number = parse_github_url(source_url)
-        display_text = format_display_name(repo_name, file_path, line_number)
+        repo_name, file_path = parse_github_url(source_url)
+        display_text = format_display_name(repo_name, file_path, 0)
         lines.append(f"- [{display_text}]({source_url})\n")
 
         # Write ci-action files called from this line
@@ -134,7 +134,7 @@ def generate_mermaid_graph(usages: List[Dict]) -> str:
                 if source_url is None:
                     continue
                 # Extract repo/file from URL for node key
-                repo_name, file_path, _ = parse_github_url(source_url)
+                repo_name, file_path = parse_github_url(source_url)
                 key = f"{repo_name}/{file_path}"
                 if key not in left_nodes_seen:
                     left_nodes_seen.add(key)
@@ -161,7 +161,7 @@ def generate_mermaid_graph(usages: List[Dict]) -> str:
                 if source_url is None:
                     continue
                 # Extract repo/file from URL for node key
-                repo_name, file_path, _ = parse_github_url(source_url)
+                repo_name, file_path = parse_github_url(source_url)
                 target_key = f"{repo_name}/{file_path}"
                 target_node_id = node_gen.get_id(target_key)
                 lines.append(f"    {target_node_id} --> {ci_node_id}\n")
