@@ -2,19 +2,36 @@
 
 Continuous Integration action for go- and node- projects
 
-* Reject ".*" folders (except `ignore` folders)
-* For sources, except `ignore` and first comments which include `DO NOT EDIT`:
+**Implementation**: This action is implemented as a **composite action** using bash scripts, providing a lightweight and transparent CI/CD solution without Node.js dependencies.
+
+## Features
+
+* **Repository Validation**
+  * Reject ".*" folders (except `ignore` folders and `.git`, `.github`, `.husky`, `.augment`)
+* **Source Code Validation** (except `ignore` and first comments which include `DO NOT EDIT`)
   * Reject sources which do not have "Copyright" word in first comment
   * Reject sources which have LICENSE word in first comment but LICENSE file does not exist
-* Reject go.mod with local replaces
-* For Go projects
-  * Run `go build ./...` and `go test ./...`
-  * Run linting with golangci-lint
-  * Run vulnerability checks with govulncheck
-* For Node.js projects
+* **Go Project Validation**
+  * Reject go.mod with local replaces
+* **Go Projects**
+  * Auto-detect Go projects (via `go.mod` or `*.go` files)
+  * Configure GOPRIVATE for private repositories
+  * Run `go mod tidy` (optional)
+  * Run `go build ./...` (unless `ignore-build` is set)
+  * Run `go test ./...` with optional race detection and short mode
+  * Support for custom test folders
+  * Codecov integration with coverage reports
+* **Node.js Projects**
+  * Auto-detect Node.js projects (via `*.js`, `*.jsx`, `*.ts`, `*.tsx` files)
   * Run `npm install`, `npm run build --if-present` and `npm test`
-* Publish Release (only for "main" branch if `publish-asset` property is set)
+  * Codecov integration
+* **Release Publishing** (only for "main" branch if `publish-asset` property is set)
+  * Create GitHub releases with timestamp-based versioning
+  * Upload assets as zip files
+  * Manage release retention (keep N most recent)
   * The `deployer.url` file must be present in the root of the repository
+
+**Note**: Linting (golangci-lint) and vulnerability checks (govulncheck) are available as separate scripts in the `scripts/` directory and are typically run as separate workflow steps. See the reusable workflows in `.github/workflows/` for examples.
 
 ## Usage
 
@@ -194,25 +211,33 @@ jobs:
 
 - [architecture.md](architecture.md)
 
-## Development
+## Implementation
 
-Install the dependencies
+This action is implemented using **bash scripts** instead of Node.js/JavaScript:
 
-```sh
-npm install
-```
+- **Type**: Composite action (defined in `action.yml`)
+- **Runtime**: Bash shell (no Node.js required)
+- **Dependencies**: Standard Unix tools + GitHub CLI (for publishing)
+- **Scripts**: Located in `scripts/` directory
 
-Run the tests
+### Main Scripts
 
-```sh
-npm test
-```
+| Script | Purpose |
+|--------|---------|
+| `ci_main.sh` | Main CI orchestration |
+| `reject_hidden_folders.sh` | Validate repository structure |
+| `detect_language.sh` | Auto-detect Go or Node.js projects |
+| `check_source_copyright.sh` | Validate copyright notices |
+| `check_gomod.sh` | Validate go.mod has no local replaces |
+| `publish_release.sh` | Create and publish GitHub releases |
 
-Run package
+### Additional Scripts
 
-```sh
-npm run package
-```
+The `scripts/` directory also contains standalone scripts for:
+- `gbash.sh` - Run golangci-lint
+- `vulncheck.sh` / `execgovuln.sh` - Run govulncheck
+- `check_copyright.sh` - Alternative copyright checker
+- Various other utility scripts
 
 ## License
 
