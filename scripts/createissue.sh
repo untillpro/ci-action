@@ -1,12 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 # Variables
-REPO=$repo 
+REPO=$repo
 DATE=$(date +%d/%m/%Y\ %H:%M)
 TITLE="$name $DATE"
 BODY=$body
-ASSIGNEE=$assignee 
-LABEL=$label 
+ASSIGNEE=$assignee
+LABEL=$label
 
 echo "REPO :    $repo"
 echo "TITLE:    $name"

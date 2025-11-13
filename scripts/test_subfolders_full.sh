@@ -1,5 +1,5 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
 cd "$REPO_ROOT"
@@ -7,7 +7,7 @@ cd "$REPO_ROOT"
 # Iterate through all subfolders with their own go.mod and run tests
 for dir in $(find . -name "go.mod" -not -path "./go.mod" -not -path "*/testdata/*" -not -path "*/examples/*" -not -path "*/edger/*" -exec dirname {} \;); do
     echo "Running tests in $dir..."
-    
+
     # Run tests normally in all other directories
     (cd "$dir" && go test ./... -race) || any_test_failed=1
 done

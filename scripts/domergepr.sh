@@ -1,4 +1,5 @@
-#!/bin/bash                    
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 jqbase64 () {
   echo "$team" | base64 -d | jq -r "$1"
@@ -19,31 +20,31 @@ jqbase64 () {
     newrepl="#"
     body=${body/$repl/$newrepl}
     needbody=1
-  fi 
+  fi
 
   userfound=0
   header="Accept: application/vnd.github+json"
   urlteams="https://api.github.com/repos/${repo}/teams"
 
-  # Get teams, included in project 
+  # Get teams, included in project
   teams=$(curl -s -u "${token}:x-oauth-basic" -H "$header" "$urlteams")
   for team in $(echo "$teams" | jq -r '.[] | @base64'); do
-    slug=$(jqbase64 '.slug') 
+    slug=$(jqbase64 '.slug')
     echo "Team: $slug"
     if [[ slug=="devs" ]] || [[ slug=="developers" ]]; then
-      url=$(jqbase64 '.url') 
+      url=$(jqbase64 '.url')
       users=$(curl -s -u "${token}:x-oauth-basic" -H "$header" "$url/members")
       for user in $(echo "$users" | jq -r '.[].login'); do
         echo "user: $user"
         # Check if author belongs to a team
-        if [[ $auth_login == $user ]]; then   
-	 userfound=1	
+        if [[ $auth_login == $user ]]; then
+	 userfound=1
         fi
       done
     fi
   done
 
-  if [[ $userfound -eq 0 ]]; then 
+  if [[ $userfound -eq 0 ]]; then
     # User is not from pour team
     echo "Pull request $pr_number is not auto-merged, because it's author $auth_login not from developers team."
     exit 0
@@ -63,11 +64,11 @@ jqbase64 () {
   fi
 
   # Merge pull request with squash
-  if [[ $needbody -eq 0 ]]; then 
-    gh pr merge https://github.com/${repo}/pull/$pr_number --squash --delete-branch 
-  else 
-    gh pr merge https://github.com/${repo}/pull/$pr_number -b " " -t "$body" --squash --delete-branch 
+  if [[ $needbody -eq 0 ]]; then
+    gh pr merge https://github.com/${repo}/pull/$pr_number --squash --delete-branch
+  else
+    gh pr merge https://github.com/${repo}/pull/$pr_number -b " " -t "$body" --squash --delete-branch
   fi
-  
+
   # Delete remote branch
   # git push origin :$br_name

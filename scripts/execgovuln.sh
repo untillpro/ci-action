@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 # Execute govulncheck
 govulncheck ./... >> golulnres
@@ -40,14 +41,14 @@ done < "$main_file"
 issue_exist=0
 while IFS= read -r line; do
   if [[ $line == "Vulnerability #"* ]]; then
-    issue_exist=1  
+    issue_exist=1
     break
-  fi 
+  fi
 done < "$temp_file"
 
 if [ $issue_exist -eq 1 ]; then
-  echo "::error::One or more vulnerabilities found in packages. See detailed report."	   
-  cat "$temp_file" 
+  echo "::error::One or more vulnerabilities found in packages. See detailed report."
+  cat "$temp_file"
   exit 1
 fi
 
