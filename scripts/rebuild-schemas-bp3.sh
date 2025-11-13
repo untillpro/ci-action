@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 echo "making build airs-bp3"
   go build -o airs-bp airsbp3/cli/*.go

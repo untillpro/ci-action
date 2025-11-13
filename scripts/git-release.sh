@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 branchname="main"
 # Get version from tag
@@ -30,16 +31,16 @@ echo "Tag will be done with version: $version"
 cd ./.
 buildsh="build.sh"
 # Check if build.sh exists
-if [[ ! -f ${buildsh} ]]; then	 
+if [[ ! -f ${buildsh} ]]; then
   echo "File build.sh does not exist."
   exit 1
 fi
 
 if [[ -z $branchname ]]
-then 
+then
   echo "Can not define current branch name."
   exit 1
-fi	
+fi
 prev_branchname=$branchname
 
 repo_full_name=$(git config --get remote.origin.url | sed 's/.*:\/\/github.com\///;s/.git$//')
@@ -67,7 +68,7 @@ bash build.sh ${shver} ${shrel}
 
 builddir=".build"
 echo "Check if new ".build" folder exists"
-if [[ ! -d ${builddir} ]]; then	 
+if [[ ! -d ${builddir} ]]; then
   echo "Folder .build does not exists. Something went wrong during building."
   exit 1
 fi
@@ -79,8 +80,8 @@ then
     execDone=true
   fi
 fi
-	
-if [ ${execDone} = false ];then 
+
+if [ ${execDone} = false ];then
   echo "Folder .build is empty - nothing was built."
   exit 1
 fi

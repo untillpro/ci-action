@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 br=$(git symbolic-ref --short HEAD)
 # Fallback to the environment variable 'branch' if 'br' is empty
@@ -43,10 +44,10 @@ i=0
 packfound=0
 while read -r line; do
   i=$((i+1))
-  if [ $packfound -eq 0 ]; then 
+  if [ $packfound -eq 0 ]; then
     if [[ $line =~ "pack: $pack" ]]; then
-	packfound=1	
-    fi 
+	packfound=1
+    fi
   else
      if [[ $line =~ "$updtag:" ]]; then
        sed -i "${i}s/.*$updtag.*/      $reptag: $tagvalue/" ${stackfile}
