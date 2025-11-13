@@ -45,7 +45,7 @@ printbad() {
      dir=$dirname
      if [ -d "$dirname" ]
      then
-       printbad $dir $cname
+       printbad $dir
      fi
   done
 }
