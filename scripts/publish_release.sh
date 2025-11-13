@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Copyright (c) 2020-present unTill Pro, Ltd. and Contributors
 #
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-set -e
+set -Eeuo pipefail
 
 ASSET="$1"
 TOKEN="$2"
@@ -124,7 +124,7 @@ fi
 # Delete old releases if KEEP is set
 if [ "$KEEP" -gt 0 ]; then
     echo "Cleaning up old releases (keeping $KEEP most recent)..."
-    
+
     # Get all releases with timestamp-based names, sorted by name (descending)
     gh release list \
         --repo "$REPOSITORY_OWNER/$REPOSITORY_NAME" \
