@@ -22,6 +22,7 @@ IGNORE_BUILD="${INPUT_IGNORE_BUILD:-false}"
 TEST_FOLDER="${INPUT_TEST_FOLDER:-}"
 SHORT_TEST="${INPUT_SHORT_TEST:-false}"
 BUILD_CMD="${INPUT_BUILD_CMD:-}"
+GOPRIVATE="${GOPRIVATE:-}"
 
 # Get script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
