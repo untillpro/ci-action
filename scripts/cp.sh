@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 # The input is a comma-separated list of commit hashes
 echo "Starting cherry-pick..."
@@ -24,11 +25,11 @@ if [ $lengthsha -eq 0 ]; then
     echo "List of commits to cherry-pick is empty"
     exit 1
   fi
-else 
+else
   if [[ "$branch" == "rc" ]]; then
-    orig_branch="main"   
+    orig_branch="main"
   else
-    orig_branch="rc"   
+    orig_branch="rc"
   fi
   echo "original branch: $orig_branch"
 
@@ -39,8 +40,8 @@ else
     echo "cmt2=$cmt"
     if [ -z "$cmt" ]; then
       echo "Commit $commit_hash does not exists"
-      exit 1	
-    fi 
+      exit 1
+    fi
   done
 fi
 
@@ -75,7 +76,7 @@ if [ $lengthsha -eq 0 ]; then # Means pb3 wans to update voedger version
 #  fi
 
   go mod tidy
-  git commit -am "Cherry-pick auto-create" --allow-empty 
+  git commit -am "Cherry-pick auto-create" --allow-empty
   git push origin $rc
   exit 0
 fi
@@ -97,7 +98,7 @@ git config --local user.email "v.istratenko@dev.untill.com"
 git config --local user.name "upload-robot"
 for commit_hash in $sorted_commits; do
     echo "Cherry-picking commit $commit_hash from main to $branch..."
-    echo $(git show -s --format=%ci $commit_hash) $commit_hash	
+    echo $(git show -s --format=%ci $commit_hash) $commit_hash
     commit_hash=$(echo $commit_hash | tr -d ' ')
     echo "commiting sha: $commit_hash"
     git cherry-pick "$commit_hash" -m 1 || {
@@ -113,7 +114,7 @@ else
 fi
 go mod tidy
 git add .
-git commit -m "Cherry-pick auto-create" --allow-empty 
+git commit -m "Cherry-pick auto-create" --allow-empty
 git push origin $rc
 
 echo "Cherry-pick completed successfully."

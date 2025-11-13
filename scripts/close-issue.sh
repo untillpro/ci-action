@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 # The input is a comma-separated list of commit hashes
 if [ -z "$repo" ];  then

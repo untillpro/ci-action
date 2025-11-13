@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 go env -w GOSUMDB=off
 echo "gh_event: $gh_event"
-set -euo pipefail
 
 if [[ "$gh_event" == "workflow_dispatch" || "$gh_event" == "schedule" ]]; then
 

@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
 echo "argument: $1"
 
 if [ "$#" -ne 1 ]; then

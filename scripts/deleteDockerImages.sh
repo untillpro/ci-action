@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 cntleft=10
 reponame=${repo}
@@ -21,13 +22,13 @@ do
   idx=$((idx+1))
   if [[ $j =~ "alpha" ]]; then
 	continue
-  fi 
+  fi
   if [[ $j =~ "main" ]]; then
 	continue
-  fi 
+  fi
   if [[ $j =~ "rc" ]]; then
 	continue
-  fi 
+  fi
   if [ $idx -gt $cntleft ]
   then
        ## Please uncomment below line to delete docker hub images of docker hub repositories
@@ -36,7 +37,7 @@ do
         echo "Deleting: https://hub.docker.com/v2/repositories/$j/..."
         curl -s -X DELETE  -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/$j/
         echo "Done"
-  fi 	
-done        
+  fi
+done
 
 

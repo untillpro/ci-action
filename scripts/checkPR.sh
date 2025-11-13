@@ -1,5 +1,6 @@
-#!/bin/bash                    
-                                           
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
 jqbase64 () {
   echo "$file" | base64 -d | jq -r "$1"
 }
@@ -8,7 +9,7 @@ doCheckPR ()  {
 
   overalsize=2000000
   singlelimit=100000
-  cntlimit=200  
+  cntlimit=200
 
   # Set git token
   header="Accept: application/vnd.github+json"
@@ -22,8 +23,8 @@ doCheckPR ()  {
   maxfile=""
   fcnt=0
   for file in $(echo "$body" | jq -r '.[] | @base64'); do
-    fn=$(jqbase64 '.filename') 
-    fc=$(jqbase64 '.patch') 
+    fn=$(jqbase64 '.filename')
+    fc=$(jqbase64 '.patch')
     fc=${fc#*@@}
     fc=${fc#*@@}
     newln=${#fc}
@@ -51,4 +52,4 @@ doCheckPR ()  {
   fi
 }
 
-doCheckPR     
+doCheckPR

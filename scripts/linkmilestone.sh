@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 # Get milestone list
 rawmilestones=$(gh api repos/${repo}/milestones --jq '.[] | .title')
@@ -12,17 +13,17 @@ if [ $l -eq 1 ]; then
   if [ -z "$ml" ]; then
     gh issue reopen ${issue} --repo ${repo}
     echo "::error::No open milestones found"
-    exit 1	
+    exit 1
   fi
   gh issue edit ${issue} --milestone ${ml} --repo ${repo}
-else 
+else
   gh issue reopen ${issue} --repo ${repo}
   if [ $l -eq 0 ]; then
      echo "::error::No open milestones found"
-  fi 
+  fi
   if [ $l -gt 1 ]; then
      echo "::error::More than one open milestone found."
   fi
   exit 1
-fi 
+fi
 

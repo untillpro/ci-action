@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 echo "Clone https://github.com/$org/$repo"
 git clone https://github.com/$org/$repo repo
@@ -30,7 +31,7 @@ git checkout $source_branch
 git pull origin $source_branch
 git checkout -b $new_branch
 git switch $new_branch
-git commit -am "Release candidate auto-create" --allow-empty 
+git commit -am "Release candidate auto-create" --allow-empty
 git push origin rc
 cd ..
 
