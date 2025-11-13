@@ -60,6 +60,8 @@ echo "::endgroup::"
 # Step 3: Detect language
 LANGUAGE=$(bash "$SCRIPT_DIR/detect_language.sh")
 
+echo "Language detected: $LANGUAGE"
+
 # Step 4: Language-specific build and test
 if [ "$LANGUAGE" = "go" ]; then
     echo "Go project detected"
