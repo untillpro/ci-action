@@ -14,10 +14,10 @@ if [ -f "go.mod" ]; then
 fi
 
 # Check for .go files
-# if find . -name "*.go" -not -path "./.git/*" -not -path "./.*" | grep -q .; then
-#     echo "go"
-#     exit 0
-# fi
+if find . -name "*.go" -not -path "./.git/*" -not -path "./.*" | grep -q .; then
+    echo "go"
+    exit 0
+fi
 
 # Check for .js, .jsx, .ts, .tsx files
 if find . \( -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" \) -not -path "./.git/*" -not -path "./.*" -not -path "*/node_modules/*" | grep -q .; then
