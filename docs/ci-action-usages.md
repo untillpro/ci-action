@@ -87,11 +87,6 @@ Files in ci-action repository that are called by other repositories:
   - [voedger: merge.yml](https://github.com/untillpro/voedger/blob/main/.github/workflows/merge.yml#L22)
 - [scripts/execgovuln.sh](https://github.com/untillpro/ci-action/blob/main/scripts/execgovuln.sh)
   - [voedger: ci-vulncheck.yml](https://github.com/untillpro/voedger/blob/main/.github/workflows/ci-vulncheck.yml#L24)
-- [scripts/run-linters.sh](https://github.com/untillpro/ci-action/blob/main/scripts/run-linters.sh)
-  - [ci-action: ci_reuse_go.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go.yml#L98)
-  - [ci-action: ci_reuse_go_cas.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_cas.yml#L91)
-  - [ci-action: ci_reuse_go_norebuild.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_norebuild.yml#L69)
-  - [ci-action: ci_reuse_go_pr.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_pr.yml#L104)
 - [scripts/linkmilestone.sh](https://github.com/untillpro/ci-action/blob/main/scripts/linkmilestone.sh)
   - [voedger: linkIssue.yml](https://github.com/untillpro/voedger/blob/main/.github/workflows/linkIssue.yml#L17)
 - [scripts/rc.sh](https://github.com/untillpro/ci-action/blob/main/scripts/rc.sh)
@@ -100,11 +95,15 @@ Files in ci-action repository that are called by other repositories:
   - [airs-bp3: update_baseline_schemas.yml](https://github.com/untillpro/airs-bp3/blob/main/.github/workflows/update_baseline_schemas.yml#L34)
 - [scripts/rebuild-test-bp3.sh](https://github.com/untillpro/ci-action/blob/main/scripts/rebuild-test-bp3.sh)
   - [ci-action: ci_rebuild_bp3.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_rebuild_bp3.yml#L31)
+- [scripts/run-linters.sh](https://github.com/untillpro/ci-action/blob/main/scripts/run-linters.sh)
+  - [ci-action: ci_reuse_go.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go.yml#L98)
+  - [ci-action: ci_reuse_go_cas.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_cas.yml#L91)
+  - [ci-action: ci_reuse_go_norebuild.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_norebuild.yml#L69)
+  - [ci-action: ci_reuse_go_pr.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_pr.yml#L104)
 - [scripts/test_subfolders.sh](https://github.com/untillpro/ci-action/blob/main/scripts/test_subfolders.sh)
   - [ci-action: ci_reuse_go.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go.yml#L89)
-  - [ci-action: ci_reuse_go_pr.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_pr.yml#L98)
-- [scripts/test_subfolders_full.sh](https://github.com/untillpro/ci-action/blob/main/scripts/test_subfolders_full.sh)
   - [ci-action: ci_reuse_go.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go.yml#L91)
+  - [ci-action: ci_reuse_go_pr.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_pr.yml#L98)
 - [scripts/unlinkmilestone.sh](https://github.com/untillpro/ci-action/blob/main/scripts/unlinkmilestone.sh)
   - [voedger: unlinkIssue.yml](https://github.com/untillpro/voedger/blob/main/.github/workflows/unlinkIssue.yml#L17)
 - [scripts/update-bp3-voedger.sh](https://github.com/untillpro/ci-action/blob/main/scripts/update-bp3-voedger.sh)
@@ -179,7 +178,7 @@ Files in all repositories that call ci-action files:
 - [ci-action: ci_reuse_go.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go.yml#L89)
   - [scripts/test_subfolders.sh](https://github.com/untillpro/ci-action/blob/main/scripts/test_subfolders.sh)
 - [ci-action: ci_reuse_go.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go.yml#L91)
-  - [scripts/test_subfolders_full.sh](https://github.com/untillpro/ci-action/blob/main/scripts/test_subfolders_full.sh)
+  - [scripts/test_subfolders.sh](https://github.com/untillpro/ci-action/blob/main/scripts/test_subfolders.sh)
 - [ci-action: ci_reuse_go.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go.yml#L95)
   - [scripts/check_copyright.sh](https://github.com/untillpro/ci-action/blob/main/scripts/check_copyright.sh)
 - [ci-action: ci_reuse_go.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go.yml#L98)
@@ -348,27 +347,33 @@ graph LR
     F63["scripts/cancelworkflow.sh"]
     F64["scripts/checkPR.sh"]
     F65["scripts/check_copyright.sh"]
-    F66["scripts/close-issue.sh"]
-    F67["scripts/cp.sh"]
-    F68["scripts/createissue.sh"]
-    F69["scripts/deleteDockerImages.sh"]
-    F70["scripts/domergepr.sh"]
-    F71["scripts/execgovuln.sh"]
-    F72["scripts/run-linters.sh"]
-    F73["scripts/git-release.sh"]
-    F74["scripts/large-file-hook.sh"]
-    F75["scripts/linkmilestone.sh"]
-    F76["scripts/pre-commit-hook.sh"]
-    F77["scripts/rc.sh"]
-    F78["scripts/rebuild-schemas-bp3.sh"]
-    F79["scripts/rebuild-test-bp3.sh"]
-    F80["scripts/test_subfolders.sh"]
-    F81["scripts/test_subfolders_full.sh"]
-    F82["scripts/unlinkmilestone.sh"]
-    F83["scripts/update-bp3-voedger.sh"]
-    F84["scripts/updateConfig.sh"]
-    F85["scripts/updateConfigDummy.sh"]
-    F86["scripts/vulncheck.sh"]
+    F66["scripts/check_gomod.sh"]
+    F67["scripts/ci_go.sh"]
+    F68["scripts/ci_main.sh"]
+    F69["scripts/ci_node_js.sh"]
+    F70["scripts/close-issue.sh"]
+    F71["scripts/cp.sh"]
+    F72["scripts/createissue.sh"]
+    F73["scripts/deleteDockerImages.sh"]
+    F74["scripts/detect_language.sh"]
+    F75["scripts/domergepr.sh"]
+    F76["scripts/execgovuln.sh"]
+    F77["scripts/git-release.sh"]
+    F78["scripts/large-file-hook.sh"]
+    F79["scripts/linkmilestone.sh"]
+    F80["scripts/pre-commit-hook.sh"]
+    F81["scripts/publish_release.sh"]
+    F82["scripts/rc.sh"]
+    F83["scripts/rebuild-schemas-bp3.sh"]
+    F84["scripts/rebuild-test-bp3.sh"]
+    F85["scripts/reject_hidden_folders.sh"]
+    F86["scripts/run-linters.sh"]
+    F87["scripts/test_subfolders.sh"]
+    F88["scripts/unlinkmilestone.sh"]
+    F89["scripts/update-bp3-voedger.sh"]
+    F90["scripts/updateConfig.sh"]
+    F91["scripts/updateConfigDummy.sh"]
+    F92["scripts/vulncheck.sh"]
     F1 --> F52
     F2 --> F53
     F3 --> F53
@@ -414,38 +419,38 @@ graph LR
     F26 --> F65
     F27 --> F65
     F28 --> F65
-    F30 --> F66
-    F31 --> F66
-    F32 --> F66
-    F30 --> F67
-    F33 --> F68
-    F34 --> F69
-    F35 --> F69
-    F36 --> F69
-    F37 --> F69
-    F38 --> F69
-    F39 --> F69
-    F40 --> F69
-    F41 --> F69
-    F42 --> F69
-    F43 --> F70
-    F44 --> F71
-    F25 --> F72
-    F26 --> F72
-    F27 --> F72
-    F28 --> F72
-    F45 --> F75
-    F31 --> F77
-    F46 --> F78
-    F47 --> F79
-    F25 --> F80
-    F28 --> F80
-    F25 --> F81
-    F48 --> F82
-    F29 --> F83
-    F49 --> F84
-    F37 --> F84
-    F40 --> F84
-    F41 --> F84
-    F42 --> F84
+    F30 --> F70
+    F31 --> F70
+    F32 --> F70
+    F30 --> F71
+    F33 --> F72
+    F34 --> F73
+    F35 --> F73
+    F36 --> F73
+    F37 --> F73
+    F38 --> F73
+    F39 --> F73
+    F40 --> F73
+    F41 --> F73
+    F42 --> F73
+    F43 --> F75
+    F44 --> F76
+    F45 --> F79
+    F31 --> F82
+    F46 --> F83
+    F47 --> F84
+    F25 --> F86
+    F26 --> F86
+    F27 --> F86
+    F28 --> F86
+    F25 --> F87
+    F25 --> F87
+    F28 --> F87
+    F48 --> F88
+    F29 --> F89
+    F49 --> F90
+    F37 --> F90
+    F40 --> F90
+    F41 --> F90
+    F42 --> F90
 ```
