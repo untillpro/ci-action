@@ -9,6 +9,9 @@ TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'$
 # get tags for repo
 IMAGE_TAGS=$(curl -s -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${du}/${reponame}/tags/?page_size=10000 | jq -r '.results|.[]|.name')
 
+# Initialize image list
+FULL_IMAGE_LIST=""
+
   # build a list of images from tags
   for j in ${IMAGE_TAGS}
   do
