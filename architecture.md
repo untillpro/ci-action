@@ -63,7 +63,7 @@ The core CI functionality is implemented in bash scripts located in the `scripts
 
 The scripts directory also contains specialized bash scripts for extended functionality:
 
-- Code linting: [gbash.sh](./scripts/gbash.sh) - Runs golangci-lint
+- Code linting: [run-linters.sh](./scripts/run-linters.sh) - Runs golangci-lint
 - Vulnerability checking: [vulncheck.sh](./scripts/vulncheck.sh), [execgovuln.sh](./scripts/execgovuln.sh)
 - Testing: [test_subfolders.sh](./scripts/test_subfolders.sh), [test_subfolders_full.sh](./scripts/test_subfolders_full.sh)
 - Release management: [git-release.sh](./scripts/git-release.sh)
@@ -190,7 +190,7 @@ For additional functionality like linting and vulnerability scanning, use the st
 
 ```yaml
 - name: Linters
-  run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/gbash.sh | bash -s "$(go env GOPATH)"
+  run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s "$(go env GOPATH)"
 
 - name: Vulnerability Check
   run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/vulncheck.sh | bash
