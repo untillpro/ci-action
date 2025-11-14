@@ -18,14 +18,12 @@ i=0
 temp=()
 
 # Execute your gh command and read the output line by line
-echo "gh run list -b \"${br}\" --workflow \"${wf}\" --limit 3 -e pull_request_target  -s in_progress --json 'databaseId' --jq '.[] | .databaseId' -R \"${rp}\""
-
 while IFS= read -r line; do
     # Add the line to the temporary array
     temp[i]="$line"
 
     # Increment the counter
-    ((i++))
+    ((++i))
 
     # Every three lines, join them into a single array element and reset
     if [[ $i -eq 1 ]]; then
