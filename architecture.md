@@ -190,7 +190,7 @@ For additional functionality like linting and vulnerability scanning, use the st
 
 ```yaml
 - name: Linters
-  run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s "$(go env GOPATH)"
+  run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
 
 - name: Vulnerability Check
   run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/vulncheck.sh | bash

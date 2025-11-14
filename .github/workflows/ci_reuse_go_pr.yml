@@ -95,13 +95,13 @@ jobs:
     - name: Test subfolders
       if: ${{ inputs.test_subfolders == 'true' }}
       run: |
-        curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s "$(go env GOPATH)"
+        curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s
 
     - name: Check copyright
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s
 
     - name: Linters
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s "$(go env GOPATH)"
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
       env:
         testfolder: ${{ inputs.test_folder }}
 
