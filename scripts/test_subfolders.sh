@@ -4,6 +4,8 @@ set -Eeuo pipefail
 REPO_ROOT=$(git rev-parse --show-toplevel)
 cd "$REPO_ROOT"
 
+any_test_failed=0
+
 # Iterate through all subfolders with their own go.mod and run tests
 for dir in $(find . -name "go.mod" -not -path "./go.mod" -not -path "*/testdata/*" -not -path "*/examples/*" -exec dirname {} \;); do
     echo "Running tests in $dir..."
