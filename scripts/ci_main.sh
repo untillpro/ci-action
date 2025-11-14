@@ -59,7 +59,7 @@ echo "::endgroup::"
 
 # Step 3: Detect language
 LANGUAGE=$(bash "$SCRIPT_DIR/detect_language.sh")
-LANGUAGE="node_js"
+# LANGUAGE="node_js"
 echo "Language detected: $LANGUAGE"
 
 # Step 4: Language-specific build and test
