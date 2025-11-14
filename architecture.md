@@ -65,7 +65,7 @@ The scripts directory also contains specialized bash scripts for extended functi
 
 - Code linting: [run-linters.sh](./scripts/run-linters.sh) - Runs golangci-lint
 - Vulnerability checking: [vulncheck.sh](./scripts/vulncheck.sh), [execgovuln.sh](./scripts/execgovuln.sh)
-- Testing: [test_subfolders.sh](./scripts/test_subfolders.sh), [test_subfolders_full.sh](./scripts/test_subfolders_full.sh)
+- Testing: [test_subfolders.sh](./scripts/test_subfolders.sh), [test_subfolders.sh](./scripts/test_subfolders.sh)
 - Release management: [git-release.sh](./scripts/git-release.sh)
 - Copyright checking: [check_copyright.sh](./scripts/check_copyright.sh)
 - Configuration updates: [updateConfig.sh](./scripts/updateConfig.sh)
