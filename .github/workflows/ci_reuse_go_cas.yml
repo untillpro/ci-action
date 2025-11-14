@@ -84,7 +84,7 @@ jobs:
 
     - name: Check copyright
       if: inputs.build_cmd != ''
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s
 
 #    - name: Linters
 #      if: inputs.ignore_linter != ''
