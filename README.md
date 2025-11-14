@@ -222,19 +222,19 @@ This action is implemented using **bash scripts** instead of Node.js/JavaScript:
 
 ### Main Scripts
 
-| Script | Purpose |
-|--------|---------|
-| `ci_main.sh` | Main CI orchestration |
-| `reject_hidden_folders.sh` | Validate repository structure |
-| `detect_language.sh` | Auto-detect Go or Node.js projects |
-| `check_source_copyright.sh` | Validate copyright notices |
-| `check_gomod.sh` | Validate go.mod has no local replaces |
-| `publish_release.sh` | Create and publish GitHub releases |
+| Script                      | Purpose                               |
+|-----------------------------|---------------------------------------|
+| `ci_main.sh`                | Main CI orchestration                 |
+| `reject_hidden_folders.sh`  | Validate repository structure         |
+| `detect_language.sh`        | Auto-detect Go or Node.js projects    |
+| `check_source_copyright.sh` | Validate copyright notices            |
+| `check_gomod.sh`            | Validate go.mod has no local replaces |
+| `publish_release.sh`        | Create and publish GitHub releases    |
 
 ### Additional Scripts
 
 The `scripts/` directory also contains standalone scripts for:
-- `gbash.sh` - Run golangci-lint
+- `run-linters.sh` - Run golangci-lint
 - `vulncheck.sh` / `execgovuln.sh` - Run govulncheck
 - `check_copyright.sh` - Alternative copyright checker
 - Various other utility scripts

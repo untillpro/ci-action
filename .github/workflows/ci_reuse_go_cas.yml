@@ -23,10 +23,10 @@ on:
       build_cmd:
         required: false
         type: string
-      fiscal_vatnr:	
+      fiscal_vatnr:
         required: false
         type: string
-      fiscal_caption:	
+      fiscal_caption:
         required: false
         type: string
     secrets:
@@ -88,7 +88,7 @@ jobs:
 
 #    - name: Linters
 #      if: inputs.ignore_linter != ''
-#      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/gbash.sh | bash -s "$(go env GOPATH)"
+#      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s "$(go env GOPATH)"
 
     - name: Build executable
       run: |
