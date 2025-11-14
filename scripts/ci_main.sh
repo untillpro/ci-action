@@ -62,102 +62,11 @@ LANGUAGE=$(bash "$SCRIPT_DIR/detect_language.sh")
 
 # Step 4: Language-specific build and test
 if [ "$LANGUAGE" = "go" ]; then
-    echo "Go project detected"
-
-    # Check go.mod
-    bash "$SCRIPT_DIR/check_gomod.sh"
-
-    echo "::group::Build & test"
-
-    # Configure GOPRIVATE for organizations
-    IFS=',' read -ra ORG_ARRAY <<< "$ORGANIZATION"
-    for org in "${ORG_ARRAY[@]}"; do
-        org=$(echo "$org" | xargs)  # Trim whitespace
-        if [ -n "$GOPRIVATE" ]; then
-            export GOPRIVATE="$GOPRIVATE,github.com/$org/*"
-        else
-            export GOPRIVATE="github.com/$org/*"
-        fi
-
-        if [ -n "$TOKEN" ]; then
-            git config --global url."https://${TOKEN}:x-oauth-basic@github.com/${org}".insteadOf "https://github.com/${org}"
-        fi
-    done
-
-    # Change to test folder if specified
-    if [ -n "$TEST_FOLDER" ]; then
-        cd "$TEST_FOLDER"
-    fi
-
-    # Run go mod tidy
-    if [ "$RUN_MOD_TIDY" = "true" ]; then
-        go mod tidy
-    fi
-
-    # Build
-    if [ "$IGNORE_BUILD" != "true" ]; then
-        go build ./...
-    fi
-
-    # Run tests with or without codecov
-    if [ -n "$CODECOV_TOKEN" ]; then
-        echo "::group::Codecov"
-        go install github.com/heeus/gocov@latest
-
-        TEST_CMD="go test ./... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./..."
-        if [ "$CODECOV_GO_RACE" = "true" ]; then
-            TEST_CMD="$TEST_CMD -race"
-        fi
-        if [ "$SHORT_TEST" = "true" ]; then
-            TEST_CMD="$TEST_CMD -short"
-        fi
-
-        eval "$TEST_CMD"
-        echo "::endgroup::"
-
-        bash -c "bash <(curl -Os https://uploader.codecov.io/latest/linux/codecov) -t ${CODECOV_TOKEN}"
-    else
-        TEST_CMD="go test ./..."
-        if [ "$CODECOV_GO_RACE" = "true" ]; then
-            TEST_CMD="$TEST_CMD -race"
-        fi
-        if [ "$SHORT_TEST" = "true" ]; then
-            TEST_CMD="$TEST_CMD -short"
-        fi
-
-        eval "$TEST_CMD"
-    fi
-
-    # Return to original directory
-    if [ -n "$TEST_FOLDER" ]; then
-        cd -
-    fi
-
-    # Run build command if specified
-    if [ -n "$BUILD_CMD" ]; then
-        eval "$BUILD_CMD"
-    fi
-
-    echo "::endgroup::"
-
+    # Go-specific CI logic
+    source "$SCRIPT_DIR/ci_go.sh"
 elif [ "$LANGUAGE" = "node_js" ]; then
-    echo "Node.js project detected"
-
-    echo "::group::Build"
-    npm install
-    npm run build --if-present
-    npm test
-
-    # Run codecov if token provided
-    if [ -n "$CODECOV_TOKEN" ]; then
-        echo "::endgroup::"
-        echo "::group::Codecov"
-        npm install -g codecov
-        istanbul cover ./node_modules/mocha/bin/_mocha --reporter lcovonly -- -R spec
-        codecov --token="$CODECOV_TOKEN"
-    fi
-
-    echo "::endgroup::"
+    # Node.js-specific CI logic
+    source "$SCRIPT_DIR/ci_node_js.sh"
 fi
 
 # Step 5: Publish asset if on main branch
