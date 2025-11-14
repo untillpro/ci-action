@@ -13,17 +13,28 @@ if [ -f "go.mod" ]; then
     exit 0
 fi
 
-# Check for .go files
-if find . -name "*.go" -not -path "./.git/*" -not -path "./.*" | grep -q .; then
+# force use Unix `find` because Windows `find` does not work as it used here
+FIND_BIN=/usr/bin/find
+
+# Check for .go files (excluding hidden directories, vendor, and node_modules)
+if "$FIND_BIN" . -type f -name "*.go" \
+    -not -path "./.git/*" \
+    -not -path "*/.*/*" \
+    -not -path "*/vendor/*" \
+    -not -path "*/node_modules/*" \
+    -print -quit | grep -q .; then
     echo "go"
     exit 0
 fi
 
-# Check for .js, .jsx, .ts, .tsx files
-if find . \( -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" \) -not -path "./.git/*" -not -path "./.*" -not -path "*/node_modules/*" | grep -q .; then
+# Check for .js, .jsx, .ts, .tsx files (excluding hidden directories and node_modules)
+if "$FIND_BIN" . -type f \( -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" \) \
+    -not -path "./.git/*" \
+    -not -path "*/.*/*" \
+    -not -path "*/node_modules/*" \
+    -print -quit | grep -q .; then
     echo "node_js"
     exit 0
 fi
 
 echo "unknown"
-
