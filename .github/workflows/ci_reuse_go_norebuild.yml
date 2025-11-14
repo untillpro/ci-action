@@ -66,4 +66,4 @@ jobs:
       run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s "$(go env GOPATH)"
 
     - name: Linters
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/gbash.sh | bash -s "$(go env GOPATH)"
+      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s "$(go env GOPATH)"

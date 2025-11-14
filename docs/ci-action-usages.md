@@ -87,7 +87,7 @@ Files in ci-action repository that are called by other repositories:
   - [voedger: merge.yml](https://github.com/untillpro/voedger/blob/main/.github/workflows/merge.yml#L22)
 - [scripts/execgovuln.sh](https://github.com/untillpro/ci-action/blob/main/scripts/execgovuln.sh)
   - [voedger: ci-vulncheck.yml](https://github.com/untillpro/voedger/blob/main/.github/workflows/ci-vulncheck.yml#L24)
-- [scripts/gbash.sh](https://github.com/untillpro/ci-action/blob/main/scripts/gbash.sh)
+- [scripts/run-linters.sh](https://github.com/untillpro/ci-action/blob/main/scripts/run-linters.sh)
   - [ci-action: ci_reuse_go.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go.yml#L98)
   - [ci-action: ci_reuse_go_cas.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_cas.yml#L91)
   - [ci-action: ci_reuse_go_norebuild.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_norebuild.yml#L69)
@@ -183,7 +183,7 @@ Files in all repositories that call ci-action files:
 - [ci-action: ci_reuse_go.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go.yml#L95)
   - [scripts/check_copyright.sh](https://github.com/untillpro/ci-action/blob/main/scripts/check_copyright.sh)
 - [ci-action: ci_reuse_go.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go.yml#L98)
-  - [scripts/gbash.sh](https://github.com/untillpro/ci-action/blob/main/scripts/gbash.sh)
+  - [scripts/run-linters.sh](https://github.com/untillpro/ci-action/blob/main/scripts/run-linters.sh)
 - [ci-action: ci_reuse_go_cas.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_cas.yml#L63)
   - [scripts/checkPR.sh](https://github.com/untillpro/ci-action/blob/main/scripts/checkPR.sh)
 - [ci-action: ci_reuse_go_cas.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_cas.yml#L69)
@@ -191,7 +191,7 @@ Files in all repositories that call ci-action files:
 - [ci-action: ci_reuse_go_cas.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_cas.yml#L87)
   - [scripts/check_copyright.sh](https://github.com/untillpro/ci-action/blob/main/scripts/check_copyright.sh)
 - [ci-action: ci_reuse_go_cas.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_cas.yml#L91)
-  - [scripts/gbash.sh](https://github.com/untillpro/ci-action/blob/main/scripts/gbash.sh)
+  - [scripts/run-linters.sh](https://github.com/untillpro/ci-action/blob/main/scripts/run-linters.sh)
 - [ci-action: ci_reuse_go_norebuild.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_norebuild.yml#L42)
   - [scripts/checkPR.sh](https://github.com/untillpro/ci-action/blob/main/scripts/checkPR.sh)
 - [ci-action: ci_reuse_go_norebuild.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_norebuild.yml#L56)
@@ -199,11 +199,11 @@ Files in all repositories that call ci-action files:
 - [ci-action: ci_reuse_go_norebuild.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_norebuild.yml#L66)
   - [scripts/check_copyright.sh](https://github.com/untillpro/ci-action/blob/main/scripts/check_copyright.sh)
 - [ci-action: ci_reuse_go_norebuild.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_norebuild.yml#L69)
-  - [scripts/gbash.sh](https://github.com/untillpro/ci-action/blob/main/scripts/gbash.sh)
+  - [scripts/run-linters.sh](https://github.com/untillpro/ci-action/blob/main/scripts/run-linters.sh)
 - [ci-action: ci_reuse_go_pr.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_pr.yml#L101)
   - [scripts/check_copyright.sh](https://github.com/untillpro/ci-action/blob/main/scripts/check_copyright.sh)
 - [ci-action: ci_reuse_go_pr.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_pr.yml#L104)
-  - [scripts/gbash.sh](https://github.com/untillpro/ci-action/blob/main/scripts/gbash.sh)
+  - [scripts/run-linters.sh](https://github.com/untillpro/ci-action/blob/main/scripts/run-linters.sh)
 - [ci-action: ci_reuse_go_pr.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_pr.yml#L61)
   - [scripts/checkPR.sh](https://github.com/untillpro/ci-action/blob/main/scripts/checkPR.sh)
 - [ci-action: ci_reuse_go_pr.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_reuse_go_pr.yml#L67)
@@ -354,7 +354,7 @@ graph LR
     F69["scripts/deleteDockerImages.sh"]
     F70["scripts/domergepr.sh"]
     F71["scripts/execgovuln.sh"]
-    F72["scripts/gbash.sh"]
+    F72["scripts/run-linters.sh"]
     F73["scripts/git-release.sh"]
     F74["scripts/large-file-hook.sh"]
     F75["scripts/linkmilestone.sh"]
