@@ -61,7 +61,7 @@ jobs:
         run: echo "github.event_name=${{ github.event_name }}"
 
       - name: Checkout (PR)
-        if: github.event_name == 'pull_request' && inputs.mode == 'pr'
+        if: inputs.mode == 'pr'
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
