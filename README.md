@@ -189,8 +189,7 @@ jobs:
 
     - name: Install TinyGo
       run: |
-        wget https://github.com/tinygo-org/tinygo/releases/download/v0.37.0/tinygo_0.37.0_amd64.deb
-        sudo dpkg -i tinygo_0.37.0_amd64.deb
+        curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/install-tinygo.sh | bash -s "${{ steps.detect-go.outputs.go-version }}"
 
     - name: CI
       uses: untillpro/ci-action@main
