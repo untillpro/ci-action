@@ -19,51 +19,12 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
-    steps:
-
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.24'
-        cache: false
-
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Codecov
-      run: |
-       curl -Os https://uploader.codecov.io/latest/linux/codecov
-       chmod +x codecov
-       ./codecov
-
-    - name: Check pull request file size
-      if: github.event_name == 'pull_request'
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/checkPR.sh | bash
-      env:
-        token: ${{ secrets.reporeading_token }}
-        pr_number: ${{ github.event.number }}
-
-    - name: Cache Go - Modules
-      uses: actions/cache@v4
-      with:
-        path: ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
-
-    - name: CI
-      uses: untillpro/ci-action@main
-      with:
-        ignore-build: ${{ inputs.ignore_build }}
-        ignore: ${{ inputs.ignsore_copyright }}
-        organization: 'untillpro,heeus'
-        token: ${{ secrets.reporeading_token }}
-        codecov-token: ${{ secrets.codecov_token }}
-        run-mod-tidy: false
-
-    - name: Check copyright
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s
-
-    - name: Linters
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
+    uses: ./.github/workflows/ci_reuse_go.yml
+    with:
+      ignore_copyright: ${{ inputs.ignore_copyright }}
+      test_folder: ${{ inputs.test_folder }}
+      ignore_build: ${{ inputs.ignore_build }}
+      mode: norebuild
+    secrets:
+      reporeading_token: ${{ secrets.reporeading_token }}
+      codecov_token: ${{ secrets.codecov_token }}
