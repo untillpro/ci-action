@@ -57,8 +57,15 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - name: Log GitHub event name
-        run: echo "github.event_name=${{ github.event_name }}"
+
+      - name: Check if another workflow running and cancel it (PR)
+        if: inputs.mode == 'pr' && inputs.running_workflow != ''
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/cancelworkflow.sh | bash
+        env:
+          GH_TOKEN: ${{ secrets.personal_token }}
+          repo: ${{ github.repository }}
+          branch: ${{ github.event.pull_request.head.ref }}
+          runningworkflow: ${{ inputs.running_workflow }}
 
       - name: Checkout (PR)
         if: inputs.mode == 'pr'
@@ -102,15 +109,6 @@ jobs:
         env:
           token: ${{ secrets.reporeading_token }}
           pr_number: ${{ github.event.number }}
-
-      - name: Check if another workflow running and cancel it
-        if: inputs.mode == 'pr' && inputs.running_workflow != ''
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/cancelworkflow.sh | bash
-        env:
-          GH_TOKEN: ${{ secrets.personal_token }}
-          repo: ${{ github.repository }}
-          branch: ${{ github.event.pull_request.head.ref }}
-          runningworkflow: ${{ inputs.running_workflow }}
 
       - name: Codecov
         if: inputs.mode == 'norebuild'
