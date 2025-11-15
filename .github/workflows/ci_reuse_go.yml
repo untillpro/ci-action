@@ -97,14 +97,14 @@ jobs:
           curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/install-tinygo.sh | bash -s "${{ steps.detect-go.outputs.go-version }}"
 
       - name: Check pull request file size
-        if: github.event_name == 'pull_request'
+        if: inputs.mode == 'pr'
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/checkPR.sh | bash
         env:
           token: ${{ secrets.reporeading_token }}
           pr_number: ${{ github.event.number }}
 
       - name: Check if another workflow running and cancel it
-        if: github.event_name == 'pull_request' && inputs.mode == 'pr' && inputs.running_workflow != ''
+        if: inputs.mode == 'pr' && inputs.running_workflow != ''
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/cancelworkflow.sh | bash
         env:
           GH_TOKEN: ${{ secrets.personal_token }}
