@@ -36,73 +36,18 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
-    steps:
-
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.24'
-        cache: false
-
-    # Install TinyGo
-    - name: Install TinyGo
-      run: |
-        wget https://github.com/tinygo-org/tinygo/releases/download/v0.37.0/tinygo_0.37.0_amd64.deb
-        sudo dpkg -i tinygo_0.37.0_amd64.deb
-
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.pull_request.head.sha }}
-        fetch-depth: 0
-
-    - name: Check pull request file size
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/checkPR.sh | bash
-      env:
-        token: ${{ secrets.reporeading_token }}
-        pr_number: ${{ github.event.number }}
-
-    - name: Check if another workflow running and cancel it
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/cancelworkflow.sh | bash
-      env:
-        GH_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
-        repo: ${{ GITHUB.REPOSITORY }}
-        branch: ${{ github.event.pull_request.head.ref }}
-        runningworkflow: ${{ inputs.running_workflow }}
-
-    - name: Cache Go - Modules
-      uses: actions/cache@v4
-      with:
-        path: ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
-
-    - name: CI
-      uses: untillpro/ci-action@main
-      with:
-        ignore: ${{ inputs.ignore_copyright }}
-        test-folder: ${{ inputs.test_folder }}
-        organization: 'untillpro,heeus'
-        token: ${{ secrets.reporeading_token }}
-        codecov-token: ${{ secrets.codecov_token }}
-        short-test: ${{ inputs.short_test }}
-        ignore-build:  ${{ inputs.ignore_build }}
-        codecov-go-race: ${{ inputs.go_race }}
-        run-mod-tidy: false
-
-    - name: Test subfolders
-      if: ${{ inputs.test_subfolders == 'true' }}
-      run: |
-        curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s
-
-    - name: Check copyright
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s
-
-    - name: Linters
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
-      env:
-        testfolder: ${{ inputs.test_folder }}
-
-
+    uses: ./.github/workflows/ci_reuse_go.yml
+    with:
+      ignore_copyright: ${{ inputs.ignore_copyright }}
+      test_folder: ${{ inputs.test_folder }}
+      ignore_bp3: ${{ inputs.ignore_bp3 }}
+      short_test: ${{ inputs.short_test }}
+      running_workflow: ${{ inputs.running_workflow }}
+      ignore_build: ${{ inputs.ignore_build }}
+      go_race: ${{ inputs.go_race }}
+      test_subfolders: ${{ inputs.test_subfolders }}
+      mode: pr
+    secrets:
+      reporeading_token: ${{ secrets.reporeading_token }}
+      codecov_token: ${{ secrets.codecov_token }}
+      personal_token: ${{ secrets.personal_token }}

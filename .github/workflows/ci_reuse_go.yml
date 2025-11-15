@@ -26,76 +26,151 @@ on:
       test_subfolders:
         required: false
         type: string
+      running_workflow:
+        required: false
+        type: string
+      build_cmd:
+        required: false
+        type: string
+      fiscal_vatnr:
+        required: false
+        type: string
+      fiscal_caption:
+        required: false
+        type: string
+      mode:
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
       codecov_token:
-        required: true
+        required: false
       personal_token:
-        required: true
+        required: false
+      chargebee_token:
+        required: false
+      chargebee_sitename:
+        required: false
 
 jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
+      - name: Checkout (PR)
+        if: github.event_name == 'pull_request' && inputs.mode == 'pr'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
 
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        if: inputs.mode != 'pr'
+        uses: actions/checkout@v4
 
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.24'
-        cache: false
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+          cache: false
 
-    # Install TinyGo
-    - name: Install TinyGo
-      run: |
-        wget https://github.com/tinygo-org/tinygo/releases/download/v0.37.0/tinygo_0.37.0_amd64.deb
-        sudo dpkg -i tinygo_0.37.0_amd64.deb
+      - name: Install TinyGo
+        if: inputs.mode != 'norebuild'
+        run: |
+          wget https://github.com/tinygo-org/tinygo/releases/download/v0.37.0/tinygo_0.37.0_amd64.deb
+          sudo dpkg -i tinygo_0.37.0_amd64.deb
 
-    - name: Check pull request file size
-      if: github.event_name == 'pull_request'
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/checkPR.sh | bash
-      env:
-        token: ${{ secrets.reporeading_token }}
-        pr_number: ${{ github.event.number }}
+      - name: Check pull request file size
+        if: github.event_name == 'pull_request'
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/checkPR.sh | bash
+        env:
+          token: ${{ secrets.reporeading_token }}
+          pr_number: ${{ github.event.number }}
 
-    - name: Cache Go - Modules
-      uses: actions/cache@v4
-      with:
-        path: ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
+      - name: Check if another workflow running and cancel it
+        if: github.event_name == 'pull_request' && inputs.mode == 'pr' && inputs.running_workflow != ''
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/cancelworkflow.sh | bash
+        env:
+          GH_TOKEN: ${{ secrets.personal_token }}
+          repo: ${{ github.repository }}
+          branch: ${{ github.event.pull_request.head.ref }}
+          runningworkflow: ${{ inputs.running_workflow }}
 
-    - name: CI
-      uses: untillpro/ci-action@main
-      with:
-        ignore: ${{ inputs.ignore_copyright }}
-        test-folder: ${{ inputs.test_folder }}
-        organization: 'untillpro,heeus'
-        token: ${{ secrets.reporeading_token }}
-        codecov-token: ${{ secrets.codecov_token }}
-        short-test:  ${{ inputs.short_test }}
-        ignore-build:  ${{ inputs.ignore_build }}
-        codecov-go-race: ${{ inputs.go_race }}
-        run-mod-tidy: false
+      - name: Codecov
+        if: inputs.mode == 'norebuild'
+        run: |
+          curl -Os https://uploader.codecov.io/latest/linux/codecov
+          chmod +x codecov
+          ./codecov
 
-    - name: Test subfolders
-      if: ${{ inputs.test_subfolders == 'true' }}
-      run: |
-        if [ "${{ inputs.short_test }}" == "true" ]; then
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s short
-        else
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s full
-        fi
+      - name: Cache Go - Modules
+        if: inputs.mode != 'cas'
+        uses: actions/cache@v4
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
 
-    - name: Check copyright
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s
+      - name: CI
+        uses: untillpro/ci-action@main
+        with:
+          ignore: ${{ inputs.ignore_copyright }}
+          test-folder: ${{ inputs.test_folder }}
+          organization: "untillpro,heeus"
+          token: ${{ secrets.reporeading_token }}
+          codecov-token: ${{ secrets.codecov_token }}
+          short-test: ${{ inputs.short_test }}
+          ignore-build: ${{ inputs.ignore_build }}
+          codecov-go-race: ${{ inputs.go_race }}
+          run-mod-tidy: false
+        env:
+          CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
+          CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
+          FISCALCLOUD_TEST_GERMANY_VATNR: ${{ inputs.fiscal_vatnr }}
+          FISCALCLOUD_TEST_GERMANY_CAPTION: ${{ inputs.fiscal_caption }}
 
-    - name: Linters
-      run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
-      env:
-        testfolder: ${{ inputs.test_folder }}
+      - name: Test subfolders
+        if: inputs.test_subfolders == 'true' && inputs.mode != 'pr'
+        run: |
+          if [ "${{ inputs.short_test }}" == "true" ]; then
+            curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s short
+          else
+            curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s full
+          fi
 
+      - name: Test subfolders (PR)
+        if: inputs.test_subfolders == 'true' && inputs.mode == 'pr'
+        run: |
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s
+
+      - name: Build executable
+        if: inputs.mode == 'cas'
+        run: |
+          git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/heeus".insteadOf "https://github.com/heeus"
+          git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/untillpro".insteadOf "https://github.com/untillpro"
+          ${{ inputs.build_cmd }}
+        env:
+          GOPRIVATE: "github.com/untillpro/*,github.com/heeus/*"
+
+      - name: Upload project
+        if: inputs.mode == 'cas'
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-files
+          path: .
+          retention-days: 1
+
+      - name: Copyright
+        if: inputs.mode != 'cas' || inputs.build_cmd != ''
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s
+
+      - name: Linters
+        if: inputs.mode != 'cas' && inputs.mode != 'norebuild'
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
+        env:
+          testfolder: ${{ inputs.test_folder }}
+
+      - name: Linters (norebuild)
+        if: inputs.mode == 'norebuild'
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
