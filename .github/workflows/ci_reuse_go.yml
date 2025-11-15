@@ -68,6 +68,15 @@ jobs:
         if: inputs.mode != 'pr'
         uses: actions/checkout@v4
 
+      - name: Cache Go - Modules
+        if: inputs.mode != 'cas'
+        uses: actions/cache@v4
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
@@ -102,15 +111,6 @@ jobs:
           curl -Os https://uploader.codecov.io/latest/linux/codecov
           chmod +x codecov
           ./codecov
-
-      - name: Cache Go - Modules
-        if: inputs.mode != 'cas'
-        uses: actions/cache@v4
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
 
       - name: CI
         uses: untillpro/ci-action@main
