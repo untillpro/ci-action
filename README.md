@@ -125,13 +125,14 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.24'
-        cache: false
     - name: Checkout
       uses: actions/checkout@v4
+
+    - name: Detect Go version
+      id: detect-go
+      run: |
+        curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/detect-go-version.sh | bash -s
+
     - name: Cache Go - Modules
       uses: actions/cache@v4
       with:
@@ -139,6 +140,13 @@ jobs:
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-go-
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: ${{ steps.detect-go.outputs.go-version }}
+        cache: false
+
     - name: CI
       uses: untillpro/ci-action@main
       with:
@@ -157,17 +165,33 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Detect Go version
+      id: detect-go
+      run: |
+        curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/detect-go-version.sh | bash -s
+
+    - name: Cache Go - Modules
+      uses: actions/cache@v4
+      with:
+        path: ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version: '1.24'
+        go-version: ${{ steps.detect-go.outputs.go-version }}
         cache: false
+
     - name: Install TinyGo
       run: |
         wget https://github.com/tinygo-org/tinygo/releases/download/v0.37.0/tinygo_0.37.0_amd64.deb
         sudo dpkg -i tinygo_0.37.0_amd64.deb
-    - name: Checkout
-      uses: actions/checkout@v4
+
     - name: CI
       uses: untillpro/ci-action@main
       with:
