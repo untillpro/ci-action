@@ -68,6 +68,11 @@ jobs:
         if: inputs.mode != 'pr'
         uses: actions/checkout@v4
 
+      - name: Detect Go version
+        id: detect-go
+        run: |
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/detect-go-version.sh | bash -s
+
       - name: Cache Go - Modules
         if: inputs.mode != 'cas'
         uses: actions/cache@v4
@@ -80,7 +85,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.24"
+          go-version: ${{ steps.detect-go.outputs.go-version }}
           cache: false
 
       - name: Install TinyGo
