@@ -28,11 +28,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: create issue
+      - name: Create issue
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/createissue.sh | bash
         env:
           GH_TOKEN: ${{ secrets.personaltoken }}
@@ -41,5 +37,3 @@ jobs:
           name: ${{ inputs.name }}
           body: ${{ inputs.body }}
           label: ${{ inputs.label }}
-
-
