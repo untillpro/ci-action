@@ -25,11 +25,6 @@ Continuous Integration action for go- and node- projects
   * Auto-detect Node.js projects (via `*.js`, `*.jsx`, `*.ts`, `*.tsx` files)
   * Run `npm install`, `npm run build --if-present` and `npm test`
   * Codecov integration
-* **Release Publishing** (only for "main" branch if `publish-asset` property is set)
-  * Create GitHub releases with timestamp-based versioning
-  * Upload assets as zip files
-  * Manage release retention (keep N most recent)
-  * The `deployer.url` file must be present in the root of the repository
 
 **Note**: Linting (golangci-lint) and vulnerability checks (govulncheck) are available as separate scripts in the `scripts/` directory and are typically run as separate workflow steps. See the reusable workflows in `.github/workflows/` for examples.
 
@@ -228,6 +223,48 @@ jobs:
       uses: untillpro/ci-action@main
       with:
         codecov-token: ${{ secrets.CODECOV_TOKEN }}
+```
+### Reusable workflows
+
+For repositories that want to reuse the CI logic from this repository, you can call the reusable workflows via `workflow_call`.
+
+**Go reusable workflow**
+
+```yaml
+name: CI-Go
+on: [push, pull_request_target]
+jobs:
+  build:
+    uses: untillpro/ci-action/.github/workflows/ci_reuse_go.yml@main
+    secrets:
+      reporeading_token: ${{ secrets.REPOREADING_TOKEN }}
+      codecov_token: ${{ secrets.CODECOV_TOKEN }}
+```
+
+**Go PR reusable workflow**
+
+```yaml
+name: CI-Go-PR
+on: pull_request_target
+jobs:
+  build:
+    uses: untillpro/ci-action/.github/workflows/ci_reuse_go_pr.yml@main
+    secrets:
+      reporeading_token: ${{ secrets.REPOREADING_TOKEN }}
+      codecov_token: ${{ secrets.CODECOV_TOKEN }}
+      personal_token: ${{ secrets.PERSONAL_TOKEN }}
+```
+
+**Node.js reusable workflow**
+
+```yaml
+name: CI-Node
+on: [push, pull_request_target]
+jobs:
+  build:
+    uses: untillpro/ci-action/.github/workflows/ci_reuse.yml@main
+    secrets:
+      reporeading_token: ${{ secrets.REPOREADING_TOKEN }}
 ```
 
 ## Architecture
