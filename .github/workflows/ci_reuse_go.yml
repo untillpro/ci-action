@@ -57,7 +57,6 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-
       - name: Check if another workflow running and cancel it (PR)
         if: inputs.mode == 'pr' && inputs.running_workflow != ''
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/cancelworkflow.sh | bash
@@ -67,16 +66,11 @@ jobs:
           branch: ${{ github.event.pull_request.head.ref }}
           runningworkflow: ${{ inputs.running_workflow }}
 
-      - name: Checkout (PR)
-        if: inputs.mode == 'pr'
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-
-      - name: Checkout
-        if: inputs.mode != 'pr'
-        uses: actions/checkout@v4
+          ref: ${{ inputs.mode == 'pr' && github.event.pull_request.head.sha || github.ref }}
+          fetch-depth: ${{ inputs.mode == 'pr' && 0 || 1 }}
 
       - name: Detect Go version
         id: detect-go
@@ -136,18 +130,13 @@ jobs:
           FISCALCLOUD_TEST_GERMANY_CAPTION: ${{ inputs.fiscal_caption }}
 
       - name: Test subfolders
-        if: inputs.test_subfolders == 'true' && inputs.mode != 'pr'
+        if: inputs.test_subfolders == 'true'
         run: |
-          if [ "${{ inputs.short_test }}" == "true" ]; then
+          if [ "${{ inputs.short_test }}" == "true" || "${{ inputs.mode }}" = "pr" ]; then
             curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s short
           else
             curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s full
           fi
-
-      - name: Test subfolders (PR)
-        if: inputs.test_subfolders == 'true' && inputs.mode == 'pr'
-        run: |
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s
 
       - name: Build executable
         if: inputs.mode == 'cas'
