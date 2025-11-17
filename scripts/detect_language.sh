@@ -17,12 +17,15 @@ fi
 FIND_BIN=/usr/bin/find
 
 # Check for .go files (excluding hidden directories, vendor, and node_modules)
-if "$FIND_BIN" . -type f -name "*.go" \
+go_file=$("$FIND_BIN" . -type f -name "*.go" \
     -not -path "./.git/*" \
     -not -path "*/.*/*" \
     -not -path "*/vendor/*" \
     -not -path "*/node_modules/*" \
-    -print -quit | grep -q .; then
+    -print -quit)
+
+if [ -n "$go_file" ]; then
+    echo "Detected Go file: $go_file" >&2
     echo "go"
     exit 0
 fi
