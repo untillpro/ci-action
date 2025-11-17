@@ -16,20 +16,6 @@ fi
 # force use Unix `find` because Windows `find` does not work as it used here
 FIND_BIN=/usr/bin/find
 
-# Check for .go files (excluding hidden directories, vendor, and node_modules)
-go_file=$("$FIND_BIN" . -type f -name "*.go" \
-    -not -path "./.git/*" \
-    -not -path "*/.*/*" \
-    -not -path "*/vendor/*" \
-    -not -path "*/node_modules/*" \
-    -print -quit)
-
-if [ -n "$go_file" ]; then
-    echo "Detected Go file: $go_file" >&2
-    echo "go"
-    exit 0
-fi
-
 # Check for .js, .jsx, .ts, .tsx files (excluding hidden directories and node_modules)
 if "$FIND_BIN" . -type f \( -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" \) \
     -not -path "./.git/*" \
