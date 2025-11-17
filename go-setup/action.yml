@@ -1,0 +1,30 @@
+name: Go checkout and setup
+description: Checkout repository and install Go based on go.work/go.mod
+
+inputs:
+  fetch_depth:
+    description: Fetch depth for checkout
+    required: false
+    default: 1
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        token: ${{ inputs.token || github.token }}
+        fetch-depth: ${{ inputs.fetch_depth }}
+        submodules: ${{ inputs.submodules }}
+
+    - name: Detect Go version
+      id: detect-go
+      shell: bash
+      run: bash "$GITHUB_ACTION_PATH/../scripts/detect-go-version.sh"
+
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: ${{ steps.detect-go.outputs.go-version }}
+        cache: true
+
