@@ -19,11 +19,15 @@ inputs:
     description: 'Path to checkout the repository into (relative to $GITHUB_WORKSPACE)'
     required: false
     default: '.'
+  go-version:
+    # Need for repositories that contain few languages, e.g. air-devops. Language can not be detected for abomber
+    description: 'Go version to use; if not specified, version will be detected from go.work/go.mod'
+    required: false
 
 outputs:
   go-version:
-    description: Detected Go version
-    value: ${{ steps.detect-go.outputs.go-version }}
+    description: Go version being used (either specified or detected)
+    value: ${{ inputs.go-version || steps.detect-go.outputs.go-version }}
 
 runs:
   using: composite
@@ -39,12 +43,13 @@ runs:
 
     - name: Detect Go version
       id: detect-go
+      if: ${{ !inputs.go-version }}
       shell: bash
       run: bash "$GITHUB_ACTION_PATH/../scripts/detect-go-version.sh"
 
     - name: Setup Go
       uses: actions/setup-go@v5
       with:
-        go-version: ${{ steps.detect-go.outputs.go-version }}
+        go-version: ${{ inputs.go-version || steps.detect-go.outputs.go-version }}
         cache: true
 
