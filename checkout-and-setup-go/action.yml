@@ -6,6 +6,9 @@ inputs:
     description: Fetch depth for checkout
     required: false
     default: 1
+  ref:
+    description: 'Git ref to checkout; defaults to github.ref when not set'
+    required: false
   token:
     description: 'Token for checkout; defaults to GITHUB_TOKEN when not set'
     required: false
@@ -30,6 +33,7 @@ runs:
       with:
         token: ${{ inputs.token || github.token }}
         fetch-depth: ${{ inputs.fetch_depth }}
+        ref: ${{ inputs.ref || github.ref }}
         submodules: ${{ inputs.submodules }}
         path: ${{ inputs.path }}
 
