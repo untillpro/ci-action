@@ -71,7 +71,7 @@ jobs:
         uses: untillpro/ci-action/checkout-and-setup-go@main
         with:
           fetch_depth: ${{ inputs.mode == 'pr' && 0 || 1 }}
-          ref: ${{ inputs.mode == 'pr' github.event.pull_request.head.sha || github.ref }}
+          ref: ${{ inputs.mode == 'pr' && github.event.pull_request.head.sha || github.ref }}
 
       - name: Install TinyGo
         if: inputs.mode != 'norebuild'
