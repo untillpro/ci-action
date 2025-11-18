@@ -9,6 +9,8 @@ if [ -z "$branch" ];  then
 fi
 echo "https://github.com/$org/$repo"
 
+commit_hashes=""
+
 commit_hashes_arr="$commit_list"
 for word in $commit_hashes_arr; do
   # Append word to the list
