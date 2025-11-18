@@ -1,4 +1,4 @@
-name: Go checkout and setup
+name: Checkout and set up Go
 description: Checkout repository and install Go based on go.work/go.mod
 
 inputs:
@@ -6,6 +6,11 @@ inputs:
     description: Fetch depth for checkout
     required: false
     default: 1
+
+outputs:
+  go-version:
+    description: Detected Go version
+    value: ${{ steps.detect-go.outputs.go-version }}
 
 runs:
   using: composite
