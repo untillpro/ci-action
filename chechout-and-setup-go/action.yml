@@ -1,4 +1,4 @@
-name: Checkout and set up Go
+name: Checkout and Setup Go
 description: Checkout repository and install Go based on go.work/go.mod
 
 inputs:
