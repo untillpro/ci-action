@@ -119,6 +119,20 @@ jobs:
             curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s full
           fi
 
+      - name: Copyright
+        if: inputs.mode != 'cas' || inputs.build_cmd != ''
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s
+
+      - name: Linters
+        if: inputs.mode != 'cas' && inputs.mode != 'norebuild'
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
+        env:
+          testfolder: ${{ inputs.test_folder }}
+
+      - name: Linters (norebuild)
+        if: inputs.mode == 'norebuild'
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
+
       - name: Build executable
         if: inputs.mode == 'cas'
         run: |
@@ -135,17 +149,3 @@ jobs:
           name: project-files
           path: .
           retention-days: 1
-
-      - name: Copyright
-        if: inputs.mode != 'cas' || inputs.build_cmd != ''
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s
-
-      - name: Linters
-        if: inputs.mode != 'cas' && inputs.mode != 'norebuild'
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
-        env:
-          testfolder: ${{ inputs.test_folder }}
-
-      - name: Linters (norebuild)
-        if: inputs.mode == 'norebuild'
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
