@@ -72,6 +72,31 @@ The scripts directory also contains specialized bash scripts for extended functi
 - PR management: [checkPR.sh](./scripts/checkPR.sh), [domergepr.sh](./scripts/domergepr.sh)
 - Issue management: [createissue.sh](./scripts/createissue.sh), [close-issue.sh](./scripts/close-issue.sh)
 
+
+### Composite Helper Actions
+
+In addition to the main composite action defined in [action.yml](./action.yml), this repository exposes a focused composite action for Go projects:
+
+- **[checkout-and-setup-go/action.yml](./checkout-and-setup-go/action.yml)**
+  - Wraps repository checkout (`actions/checkout`) and Go toolchain setup (`actions/setup-go`).
+  - Detects the Go version via `scripts/detect-go-version.sh`.
+  - Uses `actions/setup-go` built-in module cache (`cache: true`).
+  - Inputs:
+    - `fetch_depth` — fetch depth passed to `actions/checkout` (default: `1`).
+    - `ref` — git ref to checkout; defaults to `github.ref` when omitted.
+    - `token`, `submodules`, `path` — forwarded directly to `actions/checkout`.
+
+Typical usage in a workflow:
+
+```yaml
+- name: Checkout and setup Go
+  id: go-setup
+  uses: untillpro/ci-action/checkout-and-setup-go@main
+  with:
+    fetch_depth: 0
+    # ref: ${{ github.event.pull_request.head.sha }}  # optional
+```
+
 ### Reusable Workflow Templates
 
 The `.github/workflows/` directory contains reusable GitHub workflow templates that use this action:

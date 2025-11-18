@@ -120,33 +120,18 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout and setup Go
+        id: go-setup
+        uses: untillpro/ci-action/checkout-and-setup-go@main
+        with:
+          fetch_depth: 0
+          # ref: ${{ github.event.pull_request.head.sha }}  # optional for PRs
 
-    - name: Detect Go version
-      id: detect-go
-      run: |
-        curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/detect-go-version.sh | bash -s
-
-    - name: Cache Go - Modules
-      uses: actions/cache@v4
-      with:
-        path: ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
-
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: ${{ steps.detect-go.outputs.go-version }}
-        cache: false
-
-    - name: CI
-      uses: untillpro/ci-action@main
-      with:
-        token: ${{ secrets.REPOREADING_TOKEN }}
-        codecov-token: ${{ secrets.CODECOV_TOKEN }}
+      - name: CI
+        uses: untillpro/ci-action@main
+        with:
+          token: ${{ secrets.REPOREADING_TOKEN }}
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
 ```
 
 ### Go project with TinyGo
@@ -160,37 +145,22 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout and setup Go
+        id: go-setup
+        uses: untillpro/ci-action/checkout-and-setup-go@main
+        with:
+          fetch_depth: 0
+          # ref: ${{ github.event.pull_request.head.sha }}  # optional for PRs
 
-    - name: Detect Go version
-      id: detect-go
-      run: |
-        curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/detect-go-version.sh | bash -s
+      - name: Install TinyGo
+        run: |
+          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/install-tinygo.sh | bash -s "${{ steps.go-setup.outputs.go-version }}"
 
-    - name: Cache Go - Modules
-      uses: actions/cache@v4
-      with:
-        path: ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
-
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: ${{ steps.detect-go.outputs.go-version }}
-        cache: false
-
-    - name: Install TinyGo
-      run: |
-        curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/install-tinygo.sh | bash -s "${{ steps.detect-go.outputs.go-version }}"
-
-    - name: CI
-      uses: untillpro/ci-action@main
-      with:
-        token: ${{ secrets.REPOREADING_TOKEN }}
-        codecov-token: ${{ secrets.CODECOV_TOKEN }}
+      - name: CI
+        uses: untillpro/ci-action@main
+        with:
+          token: ${{ secrets.REPOREADING_TOKEN }}
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
 ```
 
 ### Node.js project
@@ -282,14 +252,15 @@ This action is implemented using **bash scripts** instead of Node.js/JavaScript:
 
 ### Main Scripts
 
-| Script                      | Purpose                               |
-|-----------------------------|---------------------------------------|
-| `ci_main.sh`                | Main CI orchestration                 |
-| `reject_hidden_folders.sh`  | Validate repository structure         |
-| `detect_language.sh`        | Auto-detect Go or Node.js projects    |
-| `check_source_copyright.sh` | Validate copyright notices            |
-| `check_gomod.sh`            | Validate go.mod has no local replaces |
-| `publish_release.sh`        | Create and publish GitHub releases    |
+| Script                              | Purpose                               |
+|-------------------------------------|---------------------------------------|
+| `ci_main.sh`                        | Main CI orchestration                 |
+| `reject_hidden_folders.sh`          | Validate repository structure         |
+| `detect_language.sh`                | Auto-detect Go or Node.js projects    |
+| `check_source_copyright.sh`         | Validate copyright notices            |
+| `check_gomod.sh`                    | Validate go.mod has no local replaces |
+| `publish_release.sh`                | Create and publish GitHub releases    |
+| `checkout-and-setup-go/action.yml`  | Helper composite: checkout + Go setup |
 
 ### Additional Scripts
 
