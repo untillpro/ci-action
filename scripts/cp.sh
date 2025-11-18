@@ -109,12 +109,25 @@ for commit_hash in $sorted_commits; do
     }
 done
 git config --global url.https://$github_token@github.com/.insteadOf https://github.com/
-if [[ "$branch" == "rc" ]]; then
-  go get github.com/voedger/voedger@rc
+
+# Detect project language using detect_language.sh
+LANGUAGE="unknown"
+if [ -f "$SCRIPT_DIR/detect_language.sh" ]; then
+  LANGUAGE=$(bash "$SCRIPT_DIR/detect_language.sh")
 else
-  go get github.com/voedger/voedger@release
+  LANGUAGE=$(curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/detect_language.sh | bash)
 fi
-go mod tidy
+
+# Run Go-specific dependency updates only when the project language is Go
+if [ "$LANGUAGE" = "go" ]; then
+  if [[ "$branch" == "rc" ]]; then
+    go get github.com/voedger/voedger@rc
+  else
+    go get github.com/voedger/voedger@release
+  fi
+  go mod tidy
+fi
+
 git add .
 git commit -m "Cherry-pick auto-create" --allow-empty
 git push origin $rc
