@@ -3,6 +3,7 @@ set -Eeuo pipefail
 
 declare -A tinygo_versions=(
   ["1.24"]="0.37.0"
+  ["1.25"]="0.39.0"
 )
 
 ver="${1-}"
