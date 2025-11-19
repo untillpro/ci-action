@@ -47,7 +47,7 @@ jobs:
           repo: ${{ github.repository }}
           branch: ${{ github.event.pull_request.head.ref }}
           runningworkflow: ${{ inputs.running_workflow }}
-          
+
       - name: CI for go
         uses: ./.github/workflows/ci_reuse_go.yml
         with:
@@ -60,7 +60,3 @@ jobs:
           go_race: ${{ inputs.go_race }}
           test_subfolders: ${{ inputs.test_subfolders }}
           mode: pr
-        secrets:
-          reporeading_token: ${{ secrets.reporeading_token }}
-          codecov_token: ${{ secrets.codecov_token }}
-          personal_token: ${{ secrets.personal_token }}
