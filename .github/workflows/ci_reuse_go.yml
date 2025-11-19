@@ -41,6 +41,9 @@ on:
       mode:
         required: false
         type: string
+      extra_env:
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
@@ -85,6 +88,7 @@ jobs:
       - name: Apply extra env vars
         shell: bash
         run: |
+
           # Secret multi-line KEY=VALUE pairs (from caller)
           if [ -n "${{ secrets.extra_env_from_secret }}" ]; then
             printf '%s\n' "${{ secrets.extra_env_from_secret }}" >> "$GITHUB_ENV"
@@ -94,6 +98,8 @@ jobs:
           if [ -n "${{ inputs.extra_env }}" ]; then
             printf '%s\n' "${{ inputs.extra_env }}" >> "$GITHUB_ENV"
           fi
+
+          echo "GITHUB_ENV file: $GITHUB_ENV"
 
       - name: CI
         uses: untillpro/ci-action@main

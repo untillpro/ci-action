@@ -49,6 +49,8 @@ inputs:
   build-cmd:
     description: 'command to makke build'
     default: ''
+  extra_env:
+    default: ''
 outputs:
   release_id:
     description: 'The ID of the created Release'

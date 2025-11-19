@@ -26,6 +26,9 @@ on:
       test_subfolders:
         required: false
         type: string
+      extra_env:
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
@@ -33,6 +36,8 @@ on:
         required: true
       personal_token:
         required: true
+      extra_env_from_secret:
+        required: false
 
 jobs:
   pull-reauest-check:
