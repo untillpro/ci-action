@@ -49,6 +49,15 @@ on:
       personal_token:
         required: false
 
+      # Secret multi-line KEY=VALUE pairs that will be written to $GITHUB_ENV
+      # Need for the case when env var value should be take from a secret
+      # Not supported by github e.g.:
+      #   extra_env: |
+      #     CHARGEBEE_SITE_NAME=\$\{{ secrets.CHARGEBEE_SITE_NAME }}
+      # because `secrets` is not available in workflow call
+      extra_env_from_secret:
+        required: false
+
 jobs:
   CI:
     name: CI
@@ -74,10 +83,17 @@ jobs:
           ./codecov
 
       - name: Apply extra env vars
-        if: inputs.extra_env != ''
         shell: bash
         run: |
-          printf '%s\n' "${{ inputs.extra_env }}" >> "$GITHUB_ENV"
+          # Secret multi-line KEY=VALUE pairs (from caller)
+          if [ -n "${{ secrets.extra_env_from_secret }}" ]; then
+            printf '%s\n' "${{ secrets.extra_env_from_secret }}" >> "$GITHUB_ENV"
+          fi
+
+          # Non-secret multi-line KEY=VALUE pairs (from inputs.extra_env)
+          if [ -n "${{ inputs.extra_env }}" ]; then
+            printf '%s\n' "${{ inputs.extra_env }}" >> "$GITHUB_ENV"
+          fi
 
       - name: CI
         uses: untillpro/ci-action@main

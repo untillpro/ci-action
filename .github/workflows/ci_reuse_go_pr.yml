@@ -75,7 +75,4 @@ jobs:
       go_race: ${{ inputs.go_race }}
       test_subfolders: ${{ inputs.test_subfolders }}
       mode: pr
-    secrets:
-      reporeading_token: ${{ secrets.reporeading_token }}
-      codecov_token: ${{ secrets.codecov_token }}
-      personal_token: ${{ secrets.personal_token }}
+    secrets: inherit
