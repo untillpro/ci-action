@@ -23,7 +23,10 @@ on:
       build_cmd:
         required: false
         type: string
-      extra_env:
+      fiscal_vatnr:
+        required: false
+        type: string
+      fiscal_caption:
         required: false
         type: string
     secrets:
@@ -31,6 +34,10 @@ on:
         required: true
       codecov_token:
         required: false
+      chargebee_token:
+        required: true
+      chargebee_sitename:
+        required: true
 jobs:
   build:
     uses: ./.github/workflows/ci_reuse_go.yml
@@ -41,7 +48,11 @@ jobs:
       ignore_build: ${{ inputs.ignore_build }}
       go_race: ${{ inputs.go_race }}
       build_cmd: ${{ inputs.build_cmd }}
+      fiscal_vatnr: ${{ inputs.fiscal_vatnr }}
+      fiscal_caption: ${{ inputs.fiscal_caption }}
       mode: cas
     secrets:
       reporeading_token: ${{ secrets.reporeading_token }}
       codecov_token: ${{ secrets.codecov_token }}
+      chargebee_token: ${{ secrets.chargebee_token }}
+      chargebee_sitename: ${{ secrets.chargebee_sitename }}

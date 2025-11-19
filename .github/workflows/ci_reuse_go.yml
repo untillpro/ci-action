@@ -41,9 +41,6 @@ on:
       mode:
         required: false
         type: string
-      extra_env:
-        required: false
-        type: string
     secrets:
       reporeading_token:
         required: true
@@ -51,14 +48,9 @@ on:
         required: false
       personal_token:
         required: false
-
-      # Secret multi-line KEY=VALUE pairs that will be written to $GITHUB_ENV
-      # Need for the case when env var value should be take from a secret
-      # Not supported by github e.g.:
-      #   extra_env: |
-      #     CHARGEBEE_SITE_NAME=\$\{{ secrets.CHARGEBEE_SITE_NAME }}
-      # because `secrets` is not available in workflow call
-      extra_env_from_secret:
+      chargebee_token:
+        required: false
+      chargebee_sitename:
         required: false
 
 jobs:
@@ -85,22 +77,6 @@ jobs:
           chmod +x codecov
           ./codecov
 
-      - name: Apply extra env vars
-        shell: bash
-        run: |
-
-          # Secret multi-line KEY=VALUE pairs (from caller)
-          if [ -n "${{ secrets.extra_env_from_secret }}" ]; then
-            printf '%s\n' "${{ secrets.extra_env_from_secret }}" >> "$GITHUB_ENV"
-          fi
-
-          # Non-secret multi-line KEY=VALUE pairs (from inputs.extra_env)
-          if [ -n "${{ inputs.extra_env }}" ]; then
-            printf '%s\n' "${{ inputs.extra_env }}" >> "$GITHUB_ENV"
-          fi
-
-          echo "GITHUB_ENV file: $GITHUB_ENV"
-
       - name: CI
         uses: untillpro/ci-action@main
         with:
@@ -113,6 +89,11 @@ jobs:
           ignore-build: ${{ inputs.ignore_build }}
           codecov-go-race: ${{ inputs.go_race }}
           run-mod-tidy: false
+        env:
+          CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
+          CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
+          FISCALCLOUD_TEST_GERMANY_VATNR: ${{ inputs.fiscal_vatnr }}
+          FISCALCLOUD_TEST_GERMANY_CAPTION: ${{ inputs.fiscal_caption }}
 
       - name: Test subfolders
         if: inputs.test_subfolders == 'true'

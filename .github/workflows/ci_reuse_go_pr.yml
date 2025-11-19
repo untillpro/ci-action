@@ -26,9 +26,6 @@ on:
       test_subfolders:
         required: false
         type: string
-      extra_env:
-        required: false
-        type: string
     secrets:
       reporeading_token:
         required: true
@@ -36,8 +33,6 @@ on:
         required: true
       personal_token:
         required: true
-      extra_env_from_secret:
-        required: false
 
 jobs:
   pull-reauest-check:
@@ -80,4 +75,7 @@ jobs:
       go_race: ${{ inputs.go_race }}
       test_subfolders: ${{ inputs.test_subfolders }}
       mode: pr
-    secrets: inherit
+    secrets:
+      reporeading_token: ${{ secrets.reporeading_token }}
+      codecov_token: ${{ secrets.codecov_token }}
+      personal_token: ${{ secrets.personal_token }}
