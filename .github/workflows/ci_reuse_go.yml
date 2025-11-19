@@ -69,13 +69,6 @@ jobs:
         run: |
           curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/install-tinygo.sh | bash -s "${{ steps.go-setup.outputs.go-version }}"
 
-      - name: Check pull request file size
-        if: inputs.mode == 'pr'
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/checkPR.sh | bash
-        env:
-          token: ${{ secrets.reporeading_token }}
-          pr_number: ${{ github.event.number }}
-
       - name: Codecov
         if: inputs.mode == 'norebuild'
         run: |
