@@ -31,10 +31,6 @@ on:
         required: true
       codecov_token:
         required: false
-      chargebee_token:
-        required: true
-      chargebee_sitename:
-        required: true
 jobs:
   build:
     uses: ./.github/workflows/ci_reuse_go.yml
@@ -49,5 +45,3 @@ jobs:
     secrets:
       reporeading_token: ${{ secrets.reporeading_token }}
       codecov_token: ${{ secrets.codecov_token }}
-      chargebee_token: ${{ secrets.chargebee_token }}
-      chargebee_sitename: ${{ secrets.chargebee_sitename }}

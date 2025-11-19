@@ -48,10 +48,6 @@ on:
         required: false
       personal_token:
         required: false
-      chargebee_token:
-        required: false
-      chargebee_sitename:
-        required: false
 
 jobs:
   CI:
