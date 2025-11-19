@@ -36,18 +36,31 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/ci_reuse_go.yml
-    with:
-      ignore_copyright: ${{ inputs.ignore_copyright }}
-      test_folder: ${{ inputs.test_folder }}
-      ignore_bp3: ${{ inputs.ignore_bp3 }}
-      short_test: ${{ inputs.short_test }}
-      running_workflow: ${{ inputs.running_workflow }}
-      ignore_build: ${{ inputs.ignore_build }}
-      go_race: ${{ inputs.go_race }}
-      test_subfolders: ${{ inputs.test_subfolders }}
-      mode: pr
-    secrets:
-      reporeading_token: ${{ secrets.reporeading_token }}
-      codecov_token: ${{ secrets.codecov_token }}
-      personal_token: ${{ secrets.personal_token }}
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Check if another workflow running and cancel it (PR)
+        if: inputs.mode == 'pr' && inputs.running_workflow != ''
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/cancelworkflow.sh | bash
+        env:
+          GH_TOKEN: ${{ secrets.personal_token }}
+          repo: ${{ github.repository }}
+          branch: ${{ github.event.pull_request.head.ref }}
+          runningworkflow: ${{ inputs.running_workflow }}
+          
+      - name: CI for go
+        uses: ./.github/workflows/ci_reuse_go.yml
+        with:
+          ignore_copyright: ${{ inputs.ignore_copyright }}
+          test_folder: ${{ inputs.test_folder }}
+          ignore_bp3: ${{ inputs.ignore_bp3 }}
+          short_test: ${{ inputs.short_test }}
+          running_workflow: ${{ inputs.running_workflow }}
+          ignore_build: ${{ inputs.ignore_build }}
+          go_race: ${{ inputs.go_race }}
+          test_subfolders: ${{ inputs.test_subfolders }}
+          mode: pr
+        secrets:
+          reporeading_token: ${{ secrets.reporeading_token }}
+          codecov_token: ${{ secrets.codecov_token }}
+          personal_token: ${{ secrets.personal_token }}
