@@ -35,7 +35,7 @@ on:
         required: true
 
 jobs:
-  cancel-previous:
+  Pull request check:
     runs-on: ubuntu-22.04
     steps:
       - name: Check if another PR workflow running and cancel it
@@ -60,7 +60,7 @@ jobs:
           token: ${{ secrets.reporeading_token }}
           pr_number: ${{ github.event.number }}
 
-  build:
+  CI:
     needs: cancel-previous
     uses: ./.github/workflows/ci_reuse_go.yml
     with:
