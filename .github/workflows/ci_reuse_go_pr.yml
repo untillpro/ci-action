@@ -35,7 +35,8 @@ on:
         required: true
 
 jobs:
-  Pull request check:
+  pull-reauest-check:
+    name: Pull request check
     runs-on: ubuntu-22.04
     steps:
       - name: Check if another PR workflow running and cancel it
