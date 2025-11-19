@@ -62,6 +62,7 @@ jobs:
           pr_number: ${{ github.event.number }}
 
   CI:
+    name: CI
     needs: pull-reauest-check
     uses: ./.github/workflows/ci_reuse_go.yml
     with:

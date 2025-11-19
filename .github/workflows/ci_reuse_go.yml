@@ -54,7 +54,7 @@ on:
         required: false
 
 jobs:
-  build:
+  CI:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout and Set Up Go
