@@ -77,6 +77,12 @@ jobs:
           chmod +x codecov
           ./codecov
 
+      - name: Apply extra env vars
+        if: inputs.extra_env != ''
+        shell: bash
+        run: |
+          printf '%s\n' "${{ inputs.extra_env }}" >> "$GITHUB_ENV"
+
       - name: CI
         uses: untillpro/ci-action@main
         with:
@@ -89,11 +95,6 @@ jobs:
           ignore-build: ${{ inputs.ignore_build }}
           codecov-go-race: ${{ inputs.go_race }}
           run-mod-tidy: false
-        env:
-          CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
-          CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
-          FISCALCLOUD_TEST_GERMANY_VATNR: ${{ inputs.fiscal_vatnr }}
-          FISCALCLOUD_TEST_GERMANY_CAPTION: ${{ inputs.fiscal_caption }}
 
       - name: Test subfolders
         if: inputs.test_subfolders == 'true'
