@@ -35,7 +35,20 @@ on:
         required: true
 
 jobs:
+  cancel-previous:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check if another workflow running and cancel it (PR)
+        if: inputs.running_workflow != ''
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/cancelworkflow.sh | bash
+        env:
+          GH_TOKEN: ${{ secrets.personal_token }}
+          repo: ${{ github.repository }}
+          branch: ${{ github.event.pull_request.head.ref }}
+          runningworkflow: ${{ inputs.running_workflow }}
+
   build:
+    needs: cancel-previous
     uses: ./.github/workflows/ci_reuse_go.yml
     with:
       ignore_copyright: ${{ inputs.ignore_copyright }}

@@ -57,15 +57,6 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - name: Check if another workflow running and cancel it (PR)
-        if: inputs.mode == 'pr' && inputs.running_workflow != ''
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/cancelworkflow.sh | bash
-        env:
-          GH_TOKEN: ${{ secrets.personal_token }}
-          repo: ${{ github.repository }}
-          branch: ${{ github.event.pull_request.head.ref }}
-          runningworkflow: ${{ inputs.running_workflow }}
-
       - name: Checkout and Set Up Go
         id: go-setup
         uses: untillpro/ci-action/checkout-and-setup-go@main
