@@ -1,0 +1,43 @@
+name: CI for Go
+description: run CI action for Go
+
+inputs:
+  ignore_copyright:
+    required: false
+    type: string
+  test_folder:
+    required: false
+    type: string
+  ignore_bp3:
+    required: false
+    type: string
+  short_test:
+    required: false
+    type: string
+  running_workflow:
+    required: false
+    type: string
+  ignore_build:
+    required: false
+    type: string
+  go_race:
+    required: false
+    type: string
+  test_subfolders:
+    required: false
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: CI for go
+      uses: ./.github/workflows/ci_reuse_go.yml
+      with:
+        ignore_copyright: ${{ inputs.ignore_copyright }}
+        test_folder: ${{ inputs.test_folder }}
+        ignore_bp3: ${{ inputs.ignore_bp3 }}
+        short_test: ${{ inputs.short_test }}
+        running_workflow: ${{ inputs.running_workflow }}
+        ignore_build: ${{ inputs.ignore_build }}
+        go_race: ${{ inputs.go_race }}
+        test_subfolders: ${{ inputs.test_subfolders }}

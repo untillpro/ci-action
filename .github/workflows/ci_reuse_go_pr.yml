@@ -49,7 +49,7 @@ jobs:
           runningworkflow: ${{ inputs.running_workflow }}
 
       - name: CI for go
-        uses: ./.github/workflows/ci_reuse_go.yml
+        uses: untillpro/ci-action/ci-go@main
         with:
           ignore_copyright: ${{ inputs.ignore_copyright }}
           test_folder: ${{ inputs.test_folder }}
@@ -59,4 +59,3 @@ jobs:
           ignore_build: ${{ inputs.ignore_build }}
           go_race: ${{ inputs.go_race }}
           test_subfolders: ${{ inputs.test_subfolders }}
-          mode: pr
