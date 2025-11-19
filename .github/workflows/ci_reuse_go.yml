@@ -123,20 +123,3 @@ jobs:
       - name: Linters (norebuild)
         if: inputs.mode == 'norebuild'
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
-
-      - name: Build executable
-        if: inputs.mode == 'cas'
-        run: |
-          git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/heeus".insteadOf "https://github.com/heeus"
-          git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/untillpro".insteadOf "https://github.com/untillpro"
-          ${{ inputs.build_cmd }}
-        env:
-          GOPRIVATE: "github.com/untillpro/*,github.com/heeus/*"
-
-      - name: Upload project
-        if: inputs.mode == 'cas'
-        uses: actions/upload-artifact@v4
-        with:
-          name: project-files
-          path: .
-          retention-days: 1
