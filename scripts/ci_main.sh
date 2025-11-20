@@ -26,38 +26,38 @@ GOPRIVATE="${GOPRIVATE:-}"
 EXTRA_ENV="${INPUT_EXTRA_ENV:-}"
 
 # Apply EXTRA_ENV (newline-separated KEY=VALUE pairs) as environment variables
-if [ -n "$EXTRA_ENV" ]; then
-    while IFS= read -r line; do
-        # Skip empty lines and comments
-        if [ -z "$line" ] || [[ "$line" =~ ^[[:space:]]*# ]]; then
-            continue
-        fi
+# if [ -n "$EXTRA_ENV" ]; then
+#     while IFS= read -r line; do
+#         # Skip empty lines and comments
+#         if [ -z "$line" ] || [[ "$line" =~ ^[[:space:]]*# ]]; then
+#             continue
+#         fi
 
-        # Require KEY=VALUE format
-        if [[ "$line" != *=* ]]; then
-            echo "Error: invalid EXTRA_ENV entry (no '='): $line" >&2
-            exit 1
-        fi
+#         # Require KEY=VALUE format
+#         if [[ "$line" != *=* ]]; then
+#             echo "Error: invalid EXTRA_ENV entry (no '='): $line" >&2
+#             exit 1
+#         fi
 
-        var_name="${line%%=*}"
-        var_value="${line#*=}"
+#         var_name="${line%%=*}"
+#         var_value="${line#*=}"
 
-        # Skip if variable name is empty (silent skip)
-        if [ -z "$var_name" ]; then
-            echo "Error: invalid EXTRA_ENV entry (empty name): $line" >&2
-            exit 1
-        fi
+#         # Skip if variable name is empty (silent skip)
+#         if [ -z "$var_name" ]; then
+#             echo "Error: invalid EXTRA_ENV entry (empty name): $line" >&2
+#             exit 1
+#         fi
 
-        # Skip if variable value is empty (log and skip)
-        if [ -z "$var_value" ]; then
-            echo "Skipping EXTRA_ENV $var_name with empty value" >&2
-            continue
-        fi
+#         # Skip if variable value is empty (log and skip)
+#         if [ -z "$var_value" ]; then
+#             echo "Skipping EXTRA_ENV $var_name with empty value" >&2
+#             continue
+#         fi
 
-        export "$var_name=$var_value"
-        echo "Exported EXTRA_ENV $var_name=$var_value" >&2
-    done <<< "$EXTRA_ENV"
-fi
+#         export "$var_name=$var_value"
+#         echo "Exported EXTRA_ENV $var_name=$var_value" >&2
+#     done <<< "$EXTRA_ENV"
+# fi
 
 # Get script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
