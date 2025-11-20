@@ -26,6 +26,12 @@ on:
       extra_env:
         required: false
         type: string
+      fiscal_vatnr:
+        required: false
+        type: string
+      fiscal_caption:
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
