@@ -88,6 +88,14 @@ echo "::endgroup::"
 # Print all environment variable names after applying EXTRA_ENV
 echo "::group::Environment variables (names only)"
 env | sort | cut -d'=' -f1
+
+# Log values for specific FiscalCloud test variables (if present)
+if [ -n "${FISCALCLOUD_TEST_GERMANY_CAPTION+x}" ]; then
+    echo "FISCALCLOUD_TEST_GERMANY_CAPTION=$FISCALCLOUD_TEST_GERMANY_CAPTION"
+fi
+if [ -n "${FISCALCLOUD_TEST_GERMANY_VATNR+x}" ]; then
+    echo "FISCALCLOUD_TEST_GERMANY_VATNR=$FISCALCLOUD_TEST_GERMANY_VATNR"
+fi
 echo "::endgroup::"
 
 # Step 1: Reject hidden folders
