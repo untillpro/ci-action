@@ -25,7 +25,7 @@ BUILD_CMD="${INPUT_BUILD_CMD:-}"
 GOPRIVATE="${GOPRIVATE:-}"
 EXTRA_ENV="${INPUT_EXTRA_ENV:-}"
 
-Apply EXTRA_ENV (newline-separated KEY=VALUE pairs) as environment variables
+# Apply EXTRA_ENV (newline-separated KEY=VALUE pairs) as environment variables
 if [ -n "$EXTRA_ENV" ]; then
     while IFS= read -r line; do
         # Skip empty lines and comments
