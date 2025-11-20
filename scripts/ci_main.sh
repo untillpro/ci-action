@@ -35,22 +35,28 @@ if [ -n "$EXTRA_ENV" ]; then
 
         # Require KEY=VALUE format
         if [[ "$line" != *=* ]]; then
-            echo "Warning: skipping EXTRA_ENV entry without '=': $line" >&2
-            continue
+            echo "Error: invalid EXTRA_ENV entry (no '='): $line" >&2
+            exit 1
         fi
 
         var_name="${line%%=*}"
         var_value="${line#*=}"
 
-        # Skip if variable name or value is empty
-        if [ -z "$var_name" ] || [ -z "$var_value" ]; then
+        # Skip if variable name is empty (silent skip)
+        if [ -z "$var_name" ]; then
+            echo "Error: invalid EXTRA_ENV entry (empty name): $line" >&2
+            exit 1
+        fi
+
+        # Skip if variable value is empty (log and skip)
+        if [ -z "$var_value" ]; then
+            echo "Skipping EXTRA_ENV $var_name with empty value" >&2
             continue
         fi
 
         export "$var_name=$var_value"
-    done <<'EOF'
-$EXTRA_ENV
-EOF
+        echo "Exported EXTRA_ENV $var_name=$var_value" >&2
+    done <<< "$EXTRA_ENV"
 fi
 
 # Get script directory
@@ -77,11 +83,6 @@ echo "repositoryName: $REPOSITORY_NAME"
 echo "actor: $GITHUB_ACTOR"
 echo "eventName: $GITHUB_EVENT_NAME"
 echo "branchName: $BRANCH_NAME"
-echo "::endgroup::"
-
-# Print all environment variable names after applying EXTRA_ENV
-echo "::group::Environment variables (names only)"
-env | sort | cut -d'=' -f1
 echo "::endgroup::"
 
 # Step 1: Reject hidden folders
