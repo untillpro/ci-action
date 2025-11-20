@@ -85,19 +85,6 @@ echo "eventName: $GITHUB_EVENT_NAME"
 echo "branchName: $BRANCH_NAME"
 echo "::endgroup::"
 
-# Print all environment variable names after applying EXTRA_ENV
-echo "::group::Environment variables (names only)"
-env | sort | cut -d'=' -f1
-
-# Log values for specific FiscalCloud test variables (if present)
-caption=$(printenv FISCALCLOUD_TEST_GERMANY_CAPTION 2>/dev/null || echo "<unset>")
-echo "FISCALCLOUD_TEST_GERMANY_CAPTION=$caption"
-
-vatnr=$(printenv FISCALCLOUD_TEST_GERMANY_VATNR 2>/dev/null || echo "<unset>")
-echo "FISCALCLOUD_TEST_GERMANY_VATNR=$vatnr"
-
-echo "::endgroup::"
-
 # Step 1: Reject hidden folders
 echo "::group::Checking for unexpected hidden folders"
 bash "$SCRIPT_DIR/reject_hidden_folders.sh" "$IGNORE"
