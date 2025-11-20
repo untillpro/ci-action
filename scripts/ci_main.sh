@@ -55,6 +55,7 @@ if [ -n "$EXTRA_ENV" ]; then
         fi
 
         export "$var_name=$var_value"
+        echo "Exported EXTRA_ENV $var_name=$var_value" >&2
     done <<< "$EXTRA_ENV"
 fi
 
