@@ -23,6 +23,35 @@ TEST_FOLDER="${INPUT_TEST_FOLDER:-}"
 SHORT_TEST="${INPUT_SHORT_TEST:-false}"
 BUILD_CMD="${INPUT_BUILD_CMD:-}"
 GOPRIVATE="${GOPRIVATE:-}"
+EXTRA_ENV="${INPUT_EXTRA_ENV:-}"
+
+# Apply EXTRA_ENV (newline-separated KEY=VALUE pairs) as environment variables
+if [ -n "$EXTRA_ENV" ]; then
+    while IFS= read -r line; do
+        # Skip empty lines and comments
+        if [ -z "$line" ] || [[ "$line" =~ ^[[:space:]]*# ]]; then
+            continue
+        fi
+
+        # Require KEY=VALUE format
+        if [[ "$line" != *=* ]]; then
+            echo "Warning: skipping EXTRA_ENV entry without '=': $line" >&2
+            continue
+        fi
+
+        var_name="${line%%=*}"
+        var_value="${line#*=}"
+
+        # Skip if variable name or value is empty
+        if [ -z "$var_name" ] || [ -z "$var_value" ]; then
+            continue
+        fi
+
+        export "$var_name=$var_value"
+    done <<'EOF'
+$EXTRA_ENV
+EOF
+fi
 
 # Get script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -48,6 +77,11 @@ echo "repositoryName: $REPOSITORY_NAME"
 echo "actor: $GITHUB_ACTOR"
 echo "eventName: $GITHUB_EVENT_NAME"
 echo "branchName: $BRANCH_NAME"
+echo "::endgroup::"
+
+# Print all environment variable names after applying EXTRA_ENV
+echo "::group::Environment variables (names only)"
+env | sort | cut -d'=' -f1
 echo "::endgroup::"
 
 # Step 1: Reject hidden folders

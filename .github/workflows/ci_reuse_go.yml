@@ -41,6 +41,9 @@ on:
       mode:
         required: false
         type: string
+      extra_env:
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
@@ -89,11 +92,7 @@ jobs:
           ignore-build: ${{ inputs.ignore_build }}
           codecov-go-race: ${{ inputs.go_race }}
           run-mod-tidy: false
-        env:
-          CHARGEBEE_PUBLISHABLE_KEY: ${{ secrets.chargebee_token }}
-          CHARGEBEE_SITE_NAME: ${{ secrets.chargebee_sitename }}
-          FISCALCLOUD_TEST_GERMANY_VATNR: ${{ inputs.fiscal_vatnr }}
-          FISCALCLOUD_TEST_GERMANY_CAPTION: ${{ inputs.fiscal_caption }}
+          extra_env: ${{ inputs.extra_env }}
 
       - name: Test subfolders
         if: inputs.test_subfolders == 'true'
