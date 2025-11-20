@@ -59,6 +59,7 @@ if [ -n "$CODECOV_TOKEN" ]; then
     TEST_CMD="go test ./... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./..."
     TEST_CMD=$(build_test_cmd "$TEST_CMD")
 
+    echo $TEST_CMD
     eval "$TEST_CMD"
     echo "::endgroup::"
 
@@ -67,6 +68,7 @@ else
     TEST_CMD="go test ./..."
     TEST_CMD=$(build_test_cmd "$TEST_CMD")
 
+    echo $TEST_CMD
     eval "$TEST_CMD"
 fi
 
@@ -77,6 +79,7 @@ fi
 
 # Run build command if specified
 if [ -n "$BUILD_CMD" ]; then
+    echo $BUILD_CMD
     eval "$BUILD_CMD"
 fi
 
