@@ -87,7 +87,7 @@ echo "::endgroup::"
 
 # Print all environment variable names after applying EXTRA_ENV
 echo "::group::Environment variables (names only)"
-env | sort | cut -d'=' -f1
+env | sort 
 
 # Log values for specific FiscalCloud test variables (if present)
 if [ -n "${FISCALCLOUD_TEST_GERMANY_CAPTION+x}" ]; then
