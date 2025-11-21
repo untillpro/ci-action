@@ -44,6 +44,9 @@ on:
       extra_env:
         required: false
         type: string
+      install_tinygo:
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
@@ -69,7 +72,7 @@ jobs:
           ref: ${{ inputs.mode == 'pr' && github.event.pull_request.head.sha || github.ref }}
 
       - name: Install TinyGo
-        if: inputs.mode != 'norebuild'
+        if: inputs.install_tinygo == 'true'
         run: |
           curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/install-tinygo.sh | bash -s "${{ steps.go-setup.outputs.go-version }}"
 

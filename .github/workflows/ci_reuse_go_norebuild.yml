@@ -11,6 +11,9 @@ on:
       ignore_build:
         required: false
         type: string
+      install_tinygo:
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
@@ -24,6 +27,7 @@ jobs:
       ignore_copyright: ${{ inputs.ignore_copyright }}
       test_folder: ${{ inputs.test_folder }}
       ignore_build: ${{ inputs.ignore_build }}
+      install_tinygo: ${{ inputs.install_tinygo }}
       mode: norebuild
     secrets:
       reporeading_token: ${{ secrets.reporeading_token }}

@@ -32,6 +32,9 @@ on:
       fiscal_caption:
         required: false
         type: string
+      install_tinygo:
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
@@ -53,6 +56,7 @@ jobs:
       build_cmd: ${{ inputs.build_cmd }}
       mode: cas
       extra_env: ${{ inputs.extra_env }}
+      install_tinygo: ${{ inputs.install_tinygo }}
     secrets:
       reporeading_token: ${{ secrets.reporeading_token }}
       codecov_token: ${{ secrets.codecov_token }}

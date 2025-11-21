@@ -29,6 +29,9 @@ on:
       extra_env:
         required: false
         type: string
+      install_tinygo:
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
@@ -79,6 +82,7 @@ jobs:
       test_subfolders: ${{ inputs.test_subfolders }}
       mode: pr
       extra_env: ${{ inputs.extra_env }}
+      install_tinygo: ${{ inputs.install_tinygo }}
     secrets:
       reporeading_token: ${{ secrets.reporeading_token }}
       codecov_token: ${{ secrets.codecov_token }}
