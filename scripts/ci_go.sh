@@ -4,6 +4,7 @@
 
 build_test_cmd() {
     local cmd="$1"
+    cmd="$cmd -count=1"
     if [ "$CODECOV_GO_RACE" = "true" ]; then
         cmd="$cmd -race"
     fi
