@@ -104,12 +104,5 @@ elif [ "$LANGUAGE" = "node_js" ]; then
     source "$SCRIPT_DIR/ci_node_js.sh"
 fi
 
-# Step 5: Publish asset if on main branch
-if [ "$BRANCH_NAME" = "$MAIN_BRANCH" ] && [ -n "$PUBLISH_ASSET" ]; then
-    echo "::group::Publish"
-    bash "$SCRIPT_DIR/publish_release.sh" "$PUBLISH_ASSET" "$PUBLISH_TOKEN" "$PUBLISH_KEEP" "$REPOSITORY_OWNER" "$REPOSITORY_NAME" "$GITHUB_SHA"
-    echo "::endgroup::"
-fi
-
 echo "CI completed successfully"
 

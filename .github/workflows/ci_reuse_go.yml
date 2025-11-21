@@ -60,9 +60,50 @@ on:
         required: false
 
 jobs:
-  CI:
-    name: CI
+  validate-code:
+    name: Validate code
     runs-on: ubuntu-22.04
+    outputs:
+      language: ${{ steps.detect-language.outputs.language }}
+    steps:
+      # needed for detect language step
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Codecov
+        if: inputs.mode == 'norebuild'
+        run: |
+          curl -Os https://uploader.codecov.io/latest/linux/codecov
+          chmod +x codecov
+          ./codecov
+
+      - name: Detect language
+        id: detect-language
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          LANGUAGE=$(curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/detect_language.sh | bash)
+          echo "Detected language: $LANGUAGE"
+          if [ "$LANGUAGE" = "unknown" ]; then
+            echo "Error: project language unknown" >&2
+            exit 1
+          fi
+          echo "LANGUAGE=$LANGUAGE" >> "$GITHUB_ENV"
+          echo "language=$LANGUAGE" >> "$GITHUB_OUTPUT"
+
+      - name: Check hidden folders
+        shell: bash
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/reject_hidden_folders.sh | bash -s "${{ inputs.ignore_copyright }}"
+
+      - name: Copyright
+        if: inputs.mode != 'cas' || inputs.build_cmd != ''
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s
+
+  run-tests-go:
+    name: Run tests (Go)
+    runs-on: ubuntu-22.04
+    needs: validate-code
+    if: ${{ needs.validate-code.outputs.language == 'go' }}
     steps:
       - name: Checkout and Set Up Go
         id: go-setup
@@ -73,29 +114,59 @@ jobs:
 
       - name: Install TinyGo
         if: inputs.install_tinygo == 'true'
-        run: |
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/install-tinygo.sh | bash -s "${{ steps.go-setup.outputs.go-version }}"
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/install-tinygo.sh | bash -s "${{ steps.go-setup.outputs.go-version }}"
 
-      - name: Codecov
-        if: inputs.mode == 'norebuild'
+      - name: Apply EXTRA_ENV
+        if: inputs.extra_env != ''
+        shell: bash
         run: |
-          curl -Os https://uploader.codecov.io/latest/linux/codecov
-          chmod +x codecov
-          ./codecov
+          set -Eeuo pipefail
+          EXTRA_ENV="${{ inputs.extra_env }}"
+          while IFS= read -r line; do
+            if [ -z "$line" ] || [[ "$line" =~ ^[[:space:]]*# ]]; then
+              continue
+            fi
+            if [[ "$line" != *=* ]]; then
+              echo "Error: invalid EXTRA_ENV entry (no '='): $line" >&2
+              exit 1
+            fi
+            var_name="${line%%=*}"
+            var_value="${line#*=}"
+            if [ -z "$var_name" ]; then
+              echo "Error: invalid EXTRA_ENV entry (empty name): $line" >&2
+              exit 1
+            fi
+            if [ -z "$var_value" ]; then
+              echo "Skipping EXTRA_ENV $var_name with empty value" >&2
+              continue
+            fi
+            echo "$var_name=$var_value" >> "$GITHUB_ENV"
+            echo "Exported EXTRA_ENV $var_name=$var_value" >&2
+          done <<< "$EXTRA_ENV"
 
-      - name: CI
-        uses: untillpro/ci-action@main
-        with:
-          ignore: ${{ inputs.ignore_copyright }}
-          test-folder: ${{ inputs.test_folder }}
-          organization: "untillpro,heeus"
-          token: ${{ secrets.reporeading_token }}
-          codecov-token: ${{ secrets.codecov_token }}
-          short-test: ${{ inputs.short_test }}
-          ignore-build: ${{ inputs.ignore_build }}
-          codecov-go-race: ${{ inputs.go_race }}
-          run-mod-tidy: false
-          extra_env: ${{ inputs.extra_env }}
+      - name: Check go.mod
+        shell: bash
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_gomod.sh | bash -s
+
+      - name: Run tests
+        shell: bash
+        env:
+          IGNORE: ${{ inputs.ignore_copyright }}
+          ORGANIZATION: "untillpro,heeus"
+          TOKEN: ${{ secrets.reporeading_token }}
+          CODECOV_TOKEN: ${{ secrets.codecov_token }}
+          CODECOV_GO_RACE: ${{ inputs.go_race }}
+          PUBLISH_ASSET: ""
+          PUBLISH_TOKEN: ${{ github.token }}
+          PUBLISH_KEEP: "8"
+          REPOSITORY: ${{ github.repository }}
+          RUN_MOD_TIDY: "false"
+          MAIN_BRANCH: "main"
+          IGNORE_BUILD: ${{ inputs.ignore_build }}
+          TEST_FOLDER: ${{ inputs.test_folder }}
+          SHORT_TEST: ${{ inputs.short_test }}
+          BUILD_CMD: ""
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/ci_go.sh | bash -s
 
       - name: Test subfolders
         if: inputs.test_subfolders == 'true'
@@ -105,10 +176,6 @@ jobs:
           else
             curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s full
           fi
-
-      - name: Copyright
-        if: inputs.mode != 'cas' || inputs.build_cmd != ''
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s
 
       - name: Linters
         if: inputs.mode != 'cas' && inputs.mode != 'norebuild'
@@ -120,6 +187,25 @@ jobs:
         if: inputs.mode == 'norebuild'
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
 
+  run-tests-nodejs:
+    name: Run tests (Node.js)
+    runs-on: ubuntu-22.04
+    needs: validate-code
+    if: ${{ needs.validate-code.outputs.language == 'node_js' }}
+    steps:
+      - name: Run tests (Node.js)
+        shell: bash
+        env:
+          CODECOV_TOKEN: ${{ secrets.codecov_token }}
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/ci_node_js.sh | bash -s
+
+  build-and-upload:
+    name: Build and upload
+    runs-on: ubuntu-22.04
+    needs:
+      - run-tests-go
+      - run-tests-nodejs
+    steps:
       - name: Build executable
         if: inputs.mode == 'cas'
         run: |

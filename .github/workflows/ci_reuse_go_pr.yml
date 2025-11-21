@@ -41,7 +41,7 @@ on:
         required: true
 
 jobs:
-  pull-reauest-check:
+  pull-request-check:
     name: Pull request check
     runs-on: ubuntu-22.04
     steps:
@@ -69,7 +69,7 @@ jobs:
 
   CI:
     name: CI
-    needs: pull-reauest-check
+    needs: pull-request-check
     uses: ./.github/workflows/ci_reuse_go.yml
     with:
       ignore_copyright: ${{ inputs.ignore_copyright }}

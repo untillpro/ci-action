@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
 # Node.js language-specific CI logic, extracted from ci_main.sh
 
