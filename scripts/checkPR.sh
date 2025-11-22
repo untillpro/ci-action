@@ -13,8 +13,9 @@ doCheckPR ()  {
 
   # Set git token
   header="Accept: application/vnd.github+json"
-  repo_full_name=$(git config --get remote.origin.url | sed 's/.*:\/\/github.com\///;s/.git$//')
-  files="https://api.github.com/repos/$repo_full_name/pulls/$pr_number/files"
+  files="https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${pr_number}/files"
+
+  echo "files: $files"
 
   body=$(curl -s -u "${token}:x-oauth-basic" -H "$header" "$files")
 
@@ -37,6 +38,8 @@ doCheckPR ()  {
   done
 
   echo "Number of files in Pull request: $fcnt"
+  echo "Largest file size: $maxln"
+  echo "Total size of changed files: $ln"
 
   if [ $ln -gt $overalsize ];then
 	echo "::error::Total size $ln of changed files exceeds limit $overalsize bytes"

@@ -54,13 +54,6 @@ jobs:
           branch: ${{ github.event.pull_request.head.ref }}
           runningworkflow: ${{ inputs.running_workflow }}
 
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          token: ${{ inputs.token || github.token }}
-          fetch-depth: 1
-          ref: ${{ github.event.pull_request.head.sha }}
-
       - name: Check pull request file size
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/checkPR.sh | bash
         env:

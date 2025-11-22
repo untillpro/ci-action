@@ -1,5 +1,5 @@
-name: Checkout and Setup Go
-description: Checkout repository and install Go based on go.work/go.mod
+name: Checkout (if not yet) and Setup Go
+description: Checkout repository if not checked out yet and install Go with version based on go.work/go.mod
 
 inputs:
   fetch_depth:
@@ -32,12 +32,12 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: Checkout
+    - name: Checkout (if not yet)
       uses: actions/checkout@v5
+      if: ${{ hashFiles('.git/HEAD') == '' }} # checkout only if not checked out yet
       with:
         token: ${{ inputs.token || github.token }}
-        fetch-depth: ${{ inputs.fetch_depth }}
-        ref: ${{ inputs.ref || github.ref }}
+        ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
         submodules: ${{ inputs.submodules }}
         path: ${{ inputs.path }}
 

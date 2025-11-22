@@ -66,9 +66,6 @@ jobs:
     outputs:
       language: ${{ steps.detect-language.outputs.language }}
     steps:
-      # needed for detect language step
-      - name: Checkout
-        uses: actions/checkout@v5
 
       - name: Codecov
         if: inputs.mode == 'norebuild'
@@ -80,6 +77,8 @@ jobs:
       - name: Detect language
         id: detect-language
         shell: bash
+        env:
+          github_token: ${{ secrets.reporeading_token }}
         run: |
           set -Eeuo pipefail
           LANGUAGE=$(curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/detect_language.sh | bash)
@@ -105,12 +104,10 @@ jobs:
     needs: validate-code
     if: ${{ needs.validate-code.outputs.language == 'go' }}
     steps:
-      - name: Checkout and Set Up Go
+
+      - name: Checkout (if not yet) and Set Up Go
         id: go-setup
         uses: untillpro/ci-action/checkout-and-setup-go@main
-        with:
-          fetch_depth: ${{ inputs.mode == 'pr' && 0 || 1 }}
-          ref: ${{ inputs.mode == 'pr' && github.event.pull_request.head.sha || github.ref }}
 
       - name: Install TinyGo
         if: inputs.install_tinygo == 'true'
