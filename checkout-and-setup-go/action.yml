@@ -7,21 +7,21 @@ inputs:
     required: false
     default: 1
   ref:
-    description: 'Git ref to checkout; defaults to github.ref when not set'
+    description: "Git ref to checkout; defaults to github.ref when not set"
     required: false
   token:
-    description: 'Token for checkout; defaults to GITHUB_TOKEN when not set'
+    description: "Token for checkout; defaults to GITHUB_TOKEN when not set"
     required: false
   submodules:
-    description: 'Submodules option for actions/checkout@v4 (for example: recursive)'
+    description: "Submodules option for actions/checkout@v4 (for example: recursive)"
     required: false
   path:
-    description: 'Path to checkout the repository into (relative to $GITHUB_WORKSPACE)'
+    description: "Path to checkout the repository into (relative to $GITHUB_WORKSPACE)"
     required: false
-    default: '.'
+    default: "."
   go-version:
     # Need for repositories that contain few languages, e.g. air-devops. Language can not be detected for abomber
-    description: 'Go version to use; if not specified, version will be detected from go.work/go.mod'
+    description: "Go version to use; if not specified, version will be detected from go.work/go.mod"
     required: false
 
 outputs:
@@ -37,7 +37,7 @@ runs:
       if: ${{ hashFiles('.git/HEAD') == '' }} # checkout only if not checked out yet
       with:
         token: ${{ inputs.token || github.token }}
-        ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        ref: ${{ inputs.ref || (github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha) }}
         submodules: ${{ inputs.submodules }}
         path: ${{ inputs.path }}
 
@@ -52,4 +52,3 @@ runs:
       with:
         go-version: ${{ inputs.go-version || steps.detect-go.outputs.go-version }}
         cache: true
-
