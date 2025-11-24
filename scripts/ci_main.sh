@@ -93,6 +93,15 @@ echo "::endgroup::"
 # Step 2: Check source copyright - eliminated, will be checked later by calling check_copyright.sh
 
 # Step 3: Detect language
+# Ensure github_token is initialized for detect_language.sh
+if [ -z "${github_token-}" ]; then
+    if [ -n "${TOKEN-}" ]; then
+        github_token="$TOKEN"
+    else
+        github_token="${GITHUB_TOKEN-}"
+    fi
+fi
+export github_token
 LANGUAGE=$(bash "$SCRIPT_DIR/detect_language.sh")
 
 # Step 4: Language-specific build and test
