@@ -204,7 +204,6 @@ jobs:
       - run-tests-nodejs
     steps:
       - name: Build executable
-        if: inputs.mode == 'cas'
         run: |
           git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/heeus".insteadOf "https://github.com/heeus"
           git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/untillpro".insteadOf "https://github.com/untillpro"
@@ -213,7 +212,6 @@ jobs:
           GOPRIVATE: "github.com/untillpro/*,github.com/heeus/*"
 
       - name: Upload project
-        if: inputs.mode == 'cas'
         uses: actions/upload-artifact@v4
         with:
           name: project-files
