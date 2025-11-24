@@ -46,7 +46,7 @@ fi
 # Run tests with or without codecov
 if [ -n "$CODECOV_TOKEN" ]; then
     echo "::group::Codecov"
-    go install github.com/heeus/gocov@latest
+    go install github.com/untillpro/gocov@latest
 
     TEST_CMD="go test ./... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./..."
     TEST_CMD=$(build_test_cmd "$TEST_CMD")
