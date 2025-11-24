@@ -50,7 +50,7 @@ on:
     secrets:
       reporeading_token:
         required: true
-      codecov_token:
+      codecov_token: # deprecated
         required: false
       personal_token:
         required: false
@@ -66,7 +66,6 @@ jobs:
     outputs:
       language: ${{ steps.detect-language.outputs.language }}
     steps:
-
       - name: Codecov
         if: inputs.mode == 'norebuild'
         run: |
@@ -104,7 +103,6 @@ jobs:
     needs: validate-code
     if: ${{ needs.validate-code.outputs.language == 'go' }}
     steps:
-
       - name: Checkout (if not yet) and Set Up Go
         id: go-setup
         uses: untillpro/ci-action/checkout-and-setup-go@main

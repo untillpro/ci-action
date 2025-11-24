@@ -38,7 +38,7 @@ on:
     secrets:
       reporeading_token:
         required: true
-      codecov_token:
+      codecov_token: # deprecated
         required: false
       chargebee_token:
         required: true

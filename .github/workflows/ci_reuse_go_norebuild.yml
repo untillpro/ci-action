@@ -17,8 +17,8 @@ on:
     secrets:
       reporeading_token:
         required: true
-      codecov_token:
-        required: true
+      codecov_token: # deprecated
+        required: false
 
 jobs:
   build:
