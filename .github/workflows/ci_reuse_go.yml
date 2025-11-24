@@ -197,10 +197,14 @@ jobs:
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/ci_node_js.sh | bash -s
 
   build-and-upload:
-    name: Build and upload Go project
+    name: Build and upload Go project (deprecated)
     runs-on: ubuntu-22.04
     needs: run-tests-go
     steps:
+
+      - name: Chechout
+        uses: actions/checkout@v5
+
       - name: Build executable
         run: |
           git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/heeus".insteadOf "https://github.com/heeus"
