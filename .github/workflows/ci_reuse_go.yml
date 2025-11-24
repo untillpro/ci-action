@@ -91,6 +91,15 @@ jobs:
           echo "LANGUAGE=$LANGUAGE" >> "$GITHUB_ENV"
           echo "language=$LANGUAGE" >> "$GITHUB_OUTPUT"
 
+          - name: Checkout (if not yet)
+      - uses: actions/checkout@v5
+        if: ${{ hashFiles('.git/HEAD') == '' }} # checkout only if not checked out yet
+        with:
+          token: ${{ inputs.token || github.token }}
+          ref: ${{ inputs.ref || (github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha) }}
+          submodules: ${{ inputs.submodules }}
+          path: ${{ inputs.path }}
+
       - name: Check hidden folders
         shell: bash
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/reject_hidden_folders.sh | bash -s
