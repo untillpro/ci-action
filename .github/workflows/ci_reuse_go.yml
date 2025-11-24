@@ -197,11 +197,9 @@ jobs:
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/ci_node_js.sh | bash -s
 
   build-and-upload:
-    name: Build and upload
+    name: Build and upload Go project
     runs-on: ubuntu-22.04
-    needs:
-      - run-tests-go
-      - run-tests-nodejs
+    needs: run-tests-go
     steps:
       - name: Build executable
         run: |
