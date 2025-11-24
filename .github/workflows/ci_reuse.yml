@@ -55,4 +55,4 @@ jobs:
       with:
         ignore: ${{ inputs.ignore_copyright }}
         organization: 'untillpro'
-
+        github_token: ${{ secrets.reporeading_token }}
