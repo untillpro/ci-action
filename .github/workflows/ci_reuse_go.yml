@@ -175,14 +175,9 @@ jobs:
           fi
 
       - name: Linters
-        if: inputs.mode != 'cas' && inputs.mode != 'norebuild'
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
         env:
           testfolder: ${{ inputs.test_folder }}
-
-      - name: Linters (norebuild)
-        if: inputs.mode == 'norebuild'
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
 
       - name: Vulnerability check
         shell: bash
