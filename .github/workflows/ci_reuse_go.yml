@@ -180,7 +180,7 @@ jobs:
       - name: Vulnerability check
         shell: bash
         if: inputs.short_test != 'true'
-        run: url -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/vulncheck.sh | bash -s
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/vulncheck.sh | bash -s
 
   run-tests-nodejs:
     name: Run tests (Node.js)
