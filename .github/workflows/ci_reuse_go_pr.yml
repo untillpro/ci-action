@@ -2,13 +2,15 @@ name: CI - golang
 on:
   workflow_call:
     inputs:
+      # used in Voedger to skip copyright check in cmd/voedger/sys.monitor/site.main
       ignore_copyright:
         required: false
         type: string
+      # used in Voedger to run tests in pkg/ only
       test_folder:
         required: false
         type: string
-      ignore_bp3:
+      ignore_bp3: # deprecated
         required: false
         type: string
       short_test:
@@ -67,7 +69,6 @@ jobs:
     with:
       ignore_copyright: ${{ inputs.ignore_copyright }}
       test_folder: ${{ inputs.test_folder }}
-      ignore_bp3: ${{ inputs.ignore_bp3 }}
       short_test: ${{ inputs.short_test }}
       running_workflow: ${{ inputs.running_workflow }}
       ignore_build: ${{ inputs.ignore_build }}
