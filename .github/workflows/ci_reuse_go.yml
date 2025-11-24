@@ -16,9 +16,6 @@ on:
       short_test:
         required: false
         type: string
-      commit_name: # deprecated
-        required: false
-        type: string
       go_race:
         required: false
         type: string
