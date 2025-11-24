@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       # used in Voedger to skip copyright check in cmd/voedger/sys.monitor/site.main
-      ignore_copyright:
+      ignore_copyright: # deprecated
         required: false
         type: string
       # used in Voedger to run tests in pkg/ only
@@ -96,7 +96,7 @@ jobs:
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/reject_hidden_folders.sh | bash -s
 
       - name: Check copyright
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s "${{ inputs.ignore_copyright }}"
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s
 
   run-tests-go:
     name: Run tests (Go)
@@ -147,7 +147,6 @@ jobs:
       - name: Run tests
         shell: bash
         env:
-          IGNORE: ${{ inputs.ignore_copyright }}
           ORGANIZATION: "untillpro"
           TOKEN: ${{ secrets.reporeading_token }}
           CODECOV_TOKEN: ${{ secrets.codecov_token }}

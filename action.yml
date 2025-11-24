@@ -31,7 +31,7 @@ inputs:
   main-branch:
     description: Main branch name
     default: main
-  ignore-copyright:
+  ignore-copyright: # deprecated
     description: 'Do not check the copyright in first comments of source code'
     default: 'false'
   test-folder:
@@ -75,7 +75,6 @@ runs:
         INPUT_REPOSITORY: ${{ inputs.repository }}
         INPUT_RUN_MOD_TIDY: ${{ inputs.run-mod-tidy }}
         INPUT_MAIN_BRANCH: ${{ inputs.main-branch }}
-        INPUT_IGNORE_COPYRIGHT: ${{ inputs.ignore-copyright }}
         INPUT_IGNORE_BUILD: ${{ inputs.ignore-build }}
         INPUT_TEST_FOLDER: ${{ inputs.test-folder }}
         INPUT_SHORT_TEST: ${{ inputs.short-test }}

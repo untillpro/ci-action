@@ -2,7 +2,7 @@ name: CI - node
 on:
   workflow_call:
     inputs:
-      ignore_copyright:
+      ignore_copyright: # deprecated
         required: false
         type: string
       test_folder:
@@ -53,6 +53,5 @@ jobs:
     - name: CI
       uses: untillpro/ci-action@main
       with:
-        ignore: ${{ inputs.ignore_copyright }}
         organization: 'untillpro'
         token: ${{ secrets.reporeading_token }}
