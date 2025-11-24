@@ -4,19 +4,21 @@ set -Eeuo pipefail
 err=0
 errstr=""
 
+IGNORE_LIST="${1:-}"
+root_dir=${2:-.}
+
+IFS=',' read -ra IGNORE_ARRAY <<< "$IGNORE_LIST"
+
 check_file() {
   local filename=$1
   local content
 
-  # read file once
   content=$(<"$filename") || return
 
-  # skip generated files
   if [[ $content =~ Code[[:space:]]generated[[:space:]]by[[:space:]].*DO[[:space:]]NOT[[:space:]]EDIT ]]; then
     return
   fi
 
-  # all allowed copyright variants in one regexp
   local copyright_re='Copyright \(c\) 202[0-9]-present ((unTill Pro|Sigma-Soft|Heeus), Ltd(., (unTill Pro|Sigma-Soft|Heeus), Ltd\.)?|unTill Software Development Group B\. ?V\.|Voedger Authors\.)'
 
   if [[ ! $content =~ $copyright_re ]]; then
@@ -25,11 +27,26 @@ check_file() {
   fi
 }
 
-# root dir can be passed as $1, default '.'
-root_dir=${1:-.}
+is_ignored_path() {
+  local rel="$1"
+  for ignored in "${IGNORE_ARRAY[@]}"; do
+    ignored=$(echo "$ignored" | xargs)
+    if [ -z "$ignored" ]; then
+      continue
+    fi
+    if [[ "$rel" == "$ignored" || "$rel" == "$ignored"/* ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
 
-# find all .go and .sql files and check each
 while IFS= read -r -d '' filename; do
+  local_rel="${filename#"$root_dir"/}"
+  local_rel="${local_rel#./}"
+  if is_ignored_path "$local_rel"; then
+    continue
+  fi
   check_file "$filename"
 done < <(find "$root_dir" -type f \( -name '*.go' -o -name '*.sql' \) -print0)
 

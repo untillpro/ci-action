@@ -93,11 +93,10 @@ jobs:
 
       - name: Check hidden folders
         shell: bash
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/reject_hidden_folders.sh | bash -s "${{ inputs.ignore_copyright }}"
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/reject_hidden_folders.sh | bash -s
 
-      - name: Copyright
-        if: inputs.mode != 'cas' || inputs.build_cmd != ''
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s
+      - name: Check copyright
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s "${{ inputs.ignore_copyright }}"
 
   run-tests-go:
     name: Run tests (Go)
