@@ -94,24 +94,15 @@ echo "::endgroup::"
 
 # Step 3: Detect language
 # Ensure github_token is initialized for detect_language.sh
-echo "1"
 if [ -z "${github_token-}" ]; then
-    echo "2"
     if [ -n "${TOKEN-}" ]; then
-        echo "3"
         github_token="$TOKEN"
-        echo "4"
     else
-        echo "5"
         github_token="${GITHUB_TOKEN-}"
-        echo "6"
     fi
 fi
-echo "7"
 export github_token
-echo "8"
 LANGUAGE=$(bash "$SCRIPT_DIR/detect_language.sh")
-echo "9"
 
 # Step 4: Language-specific build and test
 if [ "$LANGUAGE" = "go" ]; then
