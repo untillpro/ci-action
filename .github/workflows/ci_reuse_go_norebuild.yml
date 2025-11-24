@@ -18,7 +18,7 @@ on:
       reporeading_token:
         required: true
       codecov_token:
-        required: true
+        required: false
 
 jobs:
   build:
