@@ -33,8 +33,6 @@ Continuous Integration action for go- and node- projects
 ```yaml
 - uses: untillpro/ci-action@main
   with:
-    # Folders and files that will be ignored when checking (comma separated)
-    ignore: ''
 
     # The name of the organization(s) on GitHub containing private repositories (comma separated)
     organization: 'untillpro'

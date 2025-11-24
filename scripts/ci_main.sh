@@ -7,7 +7,6 @@
 set -Eeuo pipefail
 
 # Input parameters (passed as environment variables)
-IGNORE="${INPUT_IGNORE:-}"
 ORGANIZATION="${INPUT_ORGANIZATION:-untillpro}"
 TOKEN="${INPUT_TOKEN:-}"
 CODECOV_TOKEN="${INPUT_CODECOV_TOKEN:-}"
@@ -87,7 +86,7 @@ echo "::endgroup::"
 
 # Step 1: Reject hidden folders
 echo "::group::Checking for unexpected hidden folders"
-bash "$SCRIPT_DIR/reject_hidden_folders.sh" "$IGNORE"
+bash "$SCRIPT_DIR/reject_hidden_folders.sh"
 echo "::endgroup::"
 
 # Step 2: Check source copyright - eliminated, will be checked later by calling check_copyright.sh
