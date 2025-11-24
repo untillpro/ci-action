@@ -54,9 +54,9 @@ on:
         required: false
       personal_token:
         required: false
-      chargebee_token:
+      chargebee_token: # deprecated
         required: false
-      chargebee_sitename:
+      chargebee_sitename: # deprecated
         required: false
 
 jobs:
