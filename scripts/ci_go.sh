@@ -17,16 +17,10 @@ build_test_cmd() {
 
 echo "::group::Build & test"
 
-# Configure GOPRIVATE for organizations
-IFS=',' read -ra ORG_ARRAY <<< "$ORGANIZATION"
-for org in "${ORG_ARRAY[@]}"; do
-    org=$(echo "$org" | xargs)
-    export GOPRIVATE="github.com/$org/*"
-
-    if [ -n "$TOKEN" ]; then
-        git config --global url."https://${TOKEN}:x-oauth-basic@github.com/${org}".insteadOf "https://github.com/${org}"
-    fi
-done
+export GOPRIVATE="github.com/untillpro/*"
+if [ -n "$TOKEN" ]; then
+    git config --global url."https://${TOKEN}:x-oauth-basic@github.com/untillpro".insteadOf "https://github.com/untillpro"
+fi
 
 # Change to test folder if specified
 if [ -n "$TEST_FOLDER" ]; then
