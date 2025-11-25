@@ -158,7 +158,6 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.codecov_token }}
           CODECOV_GO_RACE: ${{ inputs.go_race }}
           REPOSITORY: ${{ github.repository }}
-          MAIN_BRANCH: "main"
           TEST_FOLDER: ${{ inputs.test_folder }}
           SHORT_TEST: ${{ inputs.short_test }}
           BUILD_CMD: ""
