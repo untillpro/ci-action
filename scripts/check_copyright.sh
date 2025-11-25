@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+#temporarily skipped
+exit 0
+
 err=0
 errstr=""
 

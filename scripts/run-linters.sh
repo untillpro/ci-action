@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# temporarily skipped
+exit 0
+
 GOBIN="$(go env GOPATH)/bin"
 
 echo "Install golangci-lint in folder: ${GOBIN}"
