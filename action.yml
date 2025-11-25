@@ -14,9 +14,6 @@ inputs:
   repository:
     description: 'Repository name with owner. For example, untillpro/ci-action'
     default: ${{ github.repository }}
-  main-branch:
-    description: Main branch name
-    default: main
   ignore-copyright: # deprecated
     description: 'Do not check the copyright in first comments of source code'
     default: 'false'
@@ -52,7 +49,6 @@ runs:
         INPUT_CODECOV_TOKEN: ${{ inputs.codecov-token }} # deprecated
         INPUT_CODECOV_GO_RACE: ${{ inputs.codecov-go-race }} # deprecated
         INPUT_REPOSITORY: ${{ inputs.repository }}
-        INPUT_MAIN_BRANCH: ${{ inputs.main-branch }}
         INPUT_TEST_FOLDER: ${{ inputs.test-folder }}
         INPUT_SHORT_TEST: ${{ inputs.short-test }}
         INPUT_BUILD_CMD: ${{ inputs.build-cmd }}
