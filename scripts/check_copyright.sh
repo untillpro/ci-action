@@ -9,10 +9,6 @@ FILE_EXT_FILTER='\.(go|vsql)$'
 err=0
 errstr=""
 
-echo "HEAD commit: $(git rev-parse HEAD || echo 'no git')"
-echo "Event name: ${GITHUB_EVENT_NAME:-unset}"
-echo "Base ref: ${GITHUB_BASE_REF:-unset}"
-
 check_file() {
 	local filename=$1
 	local content
