@@ -9,6 +9,10 @@ FILE_EXT_FILTER='\.(go|vsql)$'
 err=0
 errstr=""
 
+echo "HEAD commit: $(git rev-parse HEAD || echo 'no git')"
+echo "Event name: ${GITHUB_EVENT_NAME:-unset}"
+echo "Base ref: ${GITHUB_BASE_REF:-unset}"
+
 check_file() {
 	local filename=$1
 	local content
@@ -47,7 +51,7 @@ check_file() {
 }
 
 files_to_check() {
-  addef_files=$(git diff --diff-filter=A --name-only $(git merge-base HEAD main) || true)
+  addef_files=$(git diff --diff-filter=A --name-only $(git merge-base HEAD origin/main) || true)
   echo "$addef_files" | grep -E "$FILE_EXT_FILTER" || true
 }
 
