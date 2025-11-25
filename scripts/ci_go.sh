@@ -34,9 +34,7 @@ if [ -n "$TEST_FOLDER" ]; then
 fi
 
 # Run go mod tidy
-if [ "$RUN_MOD_TIDY" = "true" ]; then
-    go mod tidy
-fi
+go mod tidy
 
 # Run tests with or without codecov
 if [ -n "$CODECOV_TOKEN" ]; then
