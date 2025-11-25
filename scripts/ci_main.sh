@@ -7,7 +7,6 @@
 set -Eeuo pipefail
 
 # Input parameters (passed as environment variables)
-ORGANIZATION="${INPUT_ORGANIZATION:-untillpro}"
 TOKEN="${INPUT_TOKEN:-}"
 CODECOV_TOKEN="${INPUT_CODECOV_TOKEN:-}"
 CODECOV_GO_RACE="${INPUT_CODECOV_GO_RACE:-true}"
@@ -71,7 +70,6 @@ BRANCH_NAME="${GITHUB_REF#refs/heads/}"
 # Print context information
 echo "::group::Context"
 echo "repository: $REPOSITORY"
-echo "organization: $ORGANIZATION"
 echo "repositoryOwner: $REPOSITORY_OWNER"
 echo "repositoryName: $REPOSITORY_NAME"
 echo "actor: $GITHUB_ACTOR"

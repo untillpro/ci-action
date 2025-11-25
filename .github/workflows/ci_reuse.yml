@@ -53,5 +53,4 @@ jobs:
     - name: CI
       uses: untillpro/ci-action@main
       with:
-        organization: 'untillpro'
         token: ${{ secrets.reporeading_token }}

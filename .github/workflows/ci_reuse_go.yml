@@ -154,7 +154,6 @@ jobs:
       - name: Run tests
         shell: bash
         env:
-          ORGANIZATION: "untillpro"
           TOKEN: ${{ secrets.reporeading_token }}
           CODECOV_TOKEN: ${{ secrets.codecov_token }}
           CODECOV_GO_RACE: ${{ inputs.go_race }}

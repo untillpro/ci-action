@@ -33,9 +33,6 @@ Continuous Integration action for go- and node- projects
 - uses: untillpro/ci-action@main
   with:
 
-    # The name of the organization(s) on GitHub containing private repositories (comma separated)
-    organization: 'untillpro'
-
     # Auth token used to fetch dependencies from private repositories
     token: ''
 

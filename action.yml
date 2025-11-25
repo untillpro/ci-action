@@ -1,9 +1,6 @@
 name: 'ci-action'
 description: 'Continious Integration action for go- and node- projects'
 inputs:
-  organization:
-    description: The name of the organization(s) on GitHub containing private repositories (comma separated)
-    default: untillpro
   token:
     description: Auth token used to fetch dependencies from private repositories
   codecov-token: # deprecated
@@ -51,7 +48,6 @@ runs:
     - name: Run CI
       shell: bash
       env:
-        INPUT_ORGANIZATION: ${{ inputs.organization }}
         INPUT_TOKEN: ${{ inputs.token }}
         INPUT_CODECOV_TOKEN: ${{ inputs.codecov-token }} # deprecated
         INPUT_CODECOV_GO_RACE: ${{ inputs.codecov-go-race }} # deprecated
