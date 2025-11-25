@@ -45,9 +45,6 @@ Continuous Integration action for go- and node- projects
     # Codecov: use Go Race Detector
     codecov-go-race: true
 
-    # Number of kept releases (0 - all)
-    publish-keep: 8
-
     # Repository name with owner. For example, untillpro/ci-action
     repository: ${{ github.repository }}
 

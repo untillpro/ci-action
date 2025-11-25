@@ -14,9 +14,6 @@ inputs:
   ignore-build: # deprecated
     description: 'Ignores go build'
     default: 'false'
-  publish-keep:
-    description: Number of kept releases (0 - all)
-    default: 8
   repository:
     description: 'Repository name with owner. For example, untillpro/ci-action'
     default: ${{ github.repository }}
@@ -64,7 +61,6 @@ runs:
         INPUT_TOKEN: ${{ inputs.token }}
         INPUT_CODECOV_TOKEN: ${{ inputs.codecov-token }} # deprecated
         INPUT_CODECOV_GO_RACE: ${{ inputs.codecov-go-race }} # deprecated
-        INPUT_PUBLISH_KEEP: ${{ inputs.publish-keep }}
         INPUT_REPOSITORY: ${{ inputs.repository }}
         INPUT_RUN_MOD_TIDY: ${{ inputs.run-mod-tidy }}
         INPUT_MAIN_BRANCH: ${{ inputs.main-branch }}
