@@ -47,7 +47,7 @@ check_file() {
 }
 
 files_to_check() {
-  addef_files=$(git diff --diff-filter=A --name-only $(git merge-base HEAD origin/main) || true)
+  addef_files=$(git diff --diff-filter=A --name-only $(git merge-base HEAD main) || true)
   echo "$addef_files" | grep -E "$FILE_EXT_FILTER" || true
 }
 
