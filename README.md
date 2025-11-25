@@ -45,12 +45,6 @@ Continuous Integration action for go- and node- projects
     # Codecov: use Go Race Detector
     codecov-go-race: true
 
-    # File / dir name to publish
-    publish-asset: ''
-
-    # Auth token used to publish
-    publish-token: ${{ github.token }}
-
     # Number of kept releases (0 - all)
     publish-keep: 8
 

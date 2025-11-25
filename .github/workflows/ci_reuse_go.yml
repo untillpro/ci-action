@@ -158,8 +158,6 @@ jobs:
           TOKEN: ${{ secrets.reporeading_token }}
           CODECOV_TOKEN: ${{ secrets.codecov_token }}
           CODECOV_GO_RACE: ${{ inputs.go_race }}
-          PUBLISH_ASSET: ""
-          PUBLISH_TOKEN: ${{ github.token }}
           PUBLISH_KEEP: "8"
           REPOSITORY: ${{ github.repository }}
           RUN_MOD_TIDY: "false"

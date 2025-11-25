@@ -14,11 +14,6 @@ inputs:
   ignore-build: # deprecated
     description: 'Ignores go build'
     default: 'false'
-  publish-asset:
-    description: File / dir name to publish
-  publish-token:
-    description: Auth token used to publish
-    default: ${{ github.token }}
   publish-keep:
     description: Number of kept releases (0 - all)
     default: 8
@@ -69,8 +64,6 @@ runs:
         INPUT_TOKEN: ${{ inputs.token }}
         INPUT_CODECOV_TOKEN: ${{ inputs.codecov-token }} # deprecated
         INPUT_CODECOV_GO_RACE: ${{ inputs.codecov-go-race }} # deprecated
-        INPUT_PUBLISH_ASSET: ${{ inputs.publish-asset }}
-        INPUT_PUBLISH_TOKEN: ${{ inputs.publish-token }}
         INPUT_PUBLISH_KEEP: ${{ inputs.publish-keep }}
         INPUT_REPOSITORY: ${{ inputs.repository }}
         INPUT_RUN_MOD_TIDY: ${{ inputs.run-mod-tidy }}
