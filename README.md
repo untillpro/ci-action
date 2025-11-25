@@ -53,9 +53,6 @@ Continuous Integration action for go- and node- projects
 
     # Short tests
     short-test: false
-
-    # Command to build project
-    build-cmd: ''
 ```
 
 ## Outputs

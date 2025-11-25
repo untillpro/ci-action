@@ -23,7 +23,7 @@ inputs:
   short-test:
     description: 'Test onlywith flag -short'
     default: 'false'
-  build-cmd:
+  build-cmd: # deprecated
     description: 'command to makke build'
     default: ''
   extra_env:
@@ -51,7 +51,6 @@ runs:
         INPUT_REPOSITORY: ${{ inputs.repository }}
         INPUT_TEST_FOLDER: ${{ inputs.test-folder }}
         INPUT_SHORT_TEST: ${{ inputs.short-test }}
-        INPUT_BUILD_CMD: ${{ inputs.build-cmd }}
         INPUT_EXTRA_ENV: ${{ inputs.extra_env }}
       run: |
         bash ${{ github.action_path }}/scripts/ci_main.sh

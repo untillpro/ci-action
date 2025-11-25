@@ -62,11 +62,5 @@ if [ -n "$TEST_FOLDER" ]; then
     cd -
 fi
 
-# Run build command if specified
-if [ -n "$BUILD_CMD" ]; then
-    echo $BUILD_CMD
-    eval "$BUILD_CMD"
-fi
-
 echo "::endgroup::"
 
