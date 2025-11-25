@@ -10,14 +10,30 @@ err=0
 errstr=""
 
 check_file() {
-  local filename=$1
-  local content
+	local filename=$1
+	local content
+	local full_path="$filename"
 
-  # read file once
-  content=$(<"$filename") || return
+	# If we're in a git repo, resolve the path relative to the repo root.
+	# This makes it work even when the repository is checked out into a
+	# subdirectory (actions/checkout with `path:`) or when the script is
+	# run from a different working directory.
+	if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+		local repo_root
+		repo_root=$(git rev-parse --show-toplevel 2>/dev/null || echo "")
+		if [[ -n "$repo_root" ]]; then
+			full_path="${repo_root}/${filename}"
+		fi
+	fi
 
-  # skip generated files
-  if [[ $content =~ Code[[:space:]]generated[[:space:]]by[[:space:]].*DO[[:space:]]NOT[[:space:]]EDIT ]]; then
+	# read file once
+	content=$(<"$full_path") || {
+		echo "Error: cannot read file '$full_path'" >&2
+		return
+	}
+
+	# skip generated files
+	if [[ $content =~ Code[[:space:]]generated[[:space:]]by[[:space:]].*DO[[:space:]]NOT[[:space:]]EDIT ]]; then
     return
   fi
 
@@ -31,15 +47,8 @@ check_file() {
 }
 
 files_to_check() {
-	if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-		echo "Error: not inside a git repository" >&2
-		exit 1
-	fi
-
-	# List files added in the current commit and filter by extension.
-	# Use "|| true" so that lack of matches doesn't cause the script to exit
-	# due to "set -e -o pipefail".
-	git show --pretty="" --name-only --diff-filter=A HEAD | grep -E "$FILE_EXT_FILTER" || true
+  addef_files=$(git diff --diff-filter=A --name-only $(git merge-base HEAD origin/main) || true)
+  echo "$addef_files" | grep -E "$FILE_EXT_FILTER" || true
 }
 
 # Collect the result into an array

@@ -37,7 +37,8 @@ runs:
       if: ${{ hashFiles('.git/HEAD') == '' }} # checkout only if not checked out yet
       with:
         token: ${{ inputs.token || github.token }}
-        ref: ${{ inputs.ref || (github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha) }}
+        # note: both pull_request_target and pull_request events are needed to make check_copyright.sh work properly
+        ref: ${{ inputs.ref || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.head.sha || github.sha) }}
         submodules: ${{ inputs.submodules }}
         path: ${{ inputs.path }}
 
