@@ -2,7 +2,7 @@ name: CI - golang
 on:
   workflow_call:
     inputs:
-      ignore_copyright: #deprecated
+      ignore_copyright: # deprecated
         required: false
         type: string
       ignore_linter:
@@ -14,7 +14,7 @@ on:
       short_test:
         required: false
         type: string
-      ignore_build:
+      ignore_build: # deprecated
         required: false
         type: string
       go_race:
@@ -50,7 +50,6 @@ jobs:
     with:
       test_folder: ${{ inputs.test_folder }}
       short_test: ${{ inputs.short_test }}
-      ignore_build: ${{ inputs.ignore_build }}
       go_race: ${{ inputs.go_race }}
       build_cmd: ${{ inputs.build_cmd }}
       mode: cas

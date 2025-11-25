@@ -8,7 +8,7 @@ on:
       test_folder:
         required: false
         type: string
-      ignore_build:
+      ignore_build: # deprecated
         required: false
         type: string
       install_tinygo:
@@ -25,7 +25,6 @@ jobs:
     uses: ./.github/workflows/ci_reuse_go.yml
     with:
       test_folder: ${{ inputs.test_folder }}
-      ignore_build: ${{ inputs.ignore_build }}
       install_tinygo: ${{ inputs.install_tinygo }}
       mode: norebuild
     secrets:

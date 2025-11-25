@@ -19,7 +19,7 @@ on:
       running_workflow:
         required: false
         type: string
-      ignore_build:
+      ignore_build: # deprecated
         required: false
         type: string
       go_race:
@@ -70,7 +70,6 @@ jobs:
       test_folder: ${{ inputs.test_folder }}
       short_test: ${{ inputs.short_test }}
       running_workflow: ${{ inputs.running_workflow }}
-      ignore_build: ${{ inputs.ignore_build }}
       go_race: ${{ inputs.go_race }}
       test_subfolders: ${{ inputs.test_subfolders }}
       mode: pr

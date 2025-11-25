@@ -38,11 +38,6 @@ if [ "$RUN_MOD_TIDY" = "true" ]; then
     go mod tidy
 fi
 
-# Build
-if [ "$IGNORE_BUILD" != "true" ]; then
-    go build ./...
-fi
-
 # Run tests with or without codecov
 if [ -n "$CODECOV_TOKEN" ]; then
     echo "::group::Codecov"

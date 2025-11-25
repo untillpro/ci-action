@@ -17,7 +17,6 @@ Continuous Integration action for go- and node- projects
   * Auto-detect Go projects (via `go.mod` or `*.go` files)
   * Configure GOPRIVATE for private repositories
   * Run `go mod tidy` (optional)
-  * Run `go build ./...` (unless `ignore-build` is set)
   * Run `go test ./...` with optional race detection and short mode
   * Support for custom test folders
   * Codecov integration with coverage reports
@@ -45,9 +44,6 @@ Continuous Integration action for go- and node- projects
 
     # Codecov: use Go Race Detector
     codecov-go-race: true
-
-    # Ignore go build step
-    ignore-build: false
 
     # File / dir name to publish
     publish-asset: ''

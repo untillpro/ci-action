@@ -19,7 +19,7 @@ on:
       go_race:
         required: false
         type: string
-      ignore_build:
+      ignore_build: # deprecated
         required: false
         type: string
       test_subfolders:
@@ -163,7 +163,6 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           RUN_MOD_TIDY: "false"
           MAIN_BRANCH: "main"
-          IGNORE_BUILD: ${{ inputs.ignore_build }}
           TEST_FOLDER: ${{ inputs.test_folder }}
           SHORT_TEST: ${{ inputs.short_test }}
           BUILD_CMD: ""

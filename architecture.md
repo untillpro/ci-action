@@ -157,7 +157,6 @@ The composite action executes the following workflow via `ci_main.sh`:
 
 3. **Build & Test**
    - Optionally runs `go mod tidy`
-   - Runs `go build ./...` (unless `ignore-build` is set)
    - Runs `go test ./...` with optional:
      - Race detection (`-race`)
      - Short mode (`-short`)

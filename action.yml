@@ -11,7 +11,7 @@ inputs:
   codecov-go-race: # deprecated
     description: 'Codecov: use Go Race Detector'
     default: 'true'
-  ignore-build:
+  ignore-build: # deprecated
     description: 'Ignores go build'
     default: 'false'
   publish-asset:
@@ -75,7 +75,6 @@ runs:
         INPUT_REPOSITORY: ${{ inputs.repository }}
         INPUT_RUN_MOD_TIDY: ${{ inputs.run-mod-tidy }}
         INPUT_MAIN_BRANCH: ${{ inputs.main-branch }}
-        INPUT_IGNORE_BUILD: ${{ inputs.ignore-build }}
         INPUT_TEST_FOLDER: ${{ inputs.test-folder }}
         INPUT_SHORT_TEST: ${{ inputs.short-test }}
         INPUT_BUILD_CMD: ${{ inputs.build-cmd }}
