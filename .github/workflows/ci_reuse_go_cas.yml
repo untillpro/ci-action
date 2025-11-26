@@ -52,7 +52,6 @@ jobs:
       short_test: ${{ inputs.short_test }}
       go_race: ${{ inputs.go_race }}
       build_cmd: ${{ inputs.build_cmd }}
-      mode: cas
       extra_env: ${{ inputs.extra_env }}
       install_tinygo: ${{ inputs.install_tinygo }}
     secrets:

@@ -26,7 +26,6 @@ jobs:
     with:
       test_folder: ${{ inputs.test_folder }}
       install_tinygo: ${{ inputs.install_tinygo }}
-      mode: norebuild
     secrets:
       reporeading_token: ${{ secrets.reporeading_token }}
       codecov_token: ${{ secrets.codecov_token }}

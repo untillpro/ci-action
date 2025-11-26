@@ -37,9 +37,6 @@ on:
       fiscal_caption:
         required: false
         type: string
-      mode:
-        required: false
-        type: string
       extra_env:
         required: false
         type: string
@@ -157,7 +154,7 @@ jobs:
       - name: Test subfolders
         if: inputs.test_subfolders == 'true'
         run: |
-          if [ "${{ inputs.short_test }}" == "true" || "${{ inputs.mode }}" = "pr" ]; then
+          if [ "${{ inputs.short_test }}" == "true" ]; then
             curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s short
           else
             curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s full

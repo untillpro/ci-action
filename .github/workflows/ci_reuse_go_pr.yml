@@ -72,7 +72,6 @@ jobs:
       running_workflow: ${{ inputs.running_workflow }}
       go_race: ${{ inputs.go_race }}
       test_subfolders: ${{ inputs.test_subfolders }}
-      mode: pr
       extra_env: ${{ inputs.extra_env }}
       install_tinygo: ${{ inputs.install_tinygo }}
     secrets:
