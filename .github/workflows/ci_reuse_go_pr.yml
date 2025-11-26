@@ -40,7 +40,7 @@ on:
       codecov_token: # deprecated
         required: false
       personal_token:
-        required: true
+        required: false
 
 jobs:
   pull-request-check:
