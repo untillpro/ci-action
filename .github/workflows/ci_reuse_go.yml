@@ -28,7 +28,7 @@ on:
       running_workflow:
         required: false
         type: string
-      build_cmd:
+      build_cmd: # deprecated
         required: false
         type: string
       fiscal_vatnr:
@@ -154,19 +154,12 @@ jobs:
       - name: Run tests
         shell: bash
         env:
-          ORGANIZATION: "untillpro"
           TOKEN: ${{ secrets.reporeading_token }}
           CODECOV_TOKEN: ${{ secrets.codecov_token }}
           CODECOV_GO_RACE: ${{ inputs.go_race }}
-          PUBLISH_ASSET: ""
-          PUBLISH_TOKEN: ${{ github.token }}
-          PUBLISH_KEEP: "8"
           REPOSITORY: ${{ github.repository }}
-          RUN_MOD_TIDY: "false"
-          MAIN_BRANCH: "main"
           TEST_FOLDER: ${{ inputs.test_folder }}
           SHORT_TEST: ${{ inputs.short_test }}
-          BUILD_CMD: ""
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/ci_go.sh | bash -s
 
       - name: Test subfolders

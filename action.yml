@@ -1,9 +1,6 @@
 name: 'ci-action'
 description: 'Continious Integration action for go- and node- projects'
 inputs:
-  organization:
-    description: The name of the organization(s) on GitHub containing private repositories (comma separated)
-    default: untillpro
   token:
     description: Auth token used to fetch dependencies from private repositories
   codecov-token: # deprecated
@@ -14,23 +11,9 @@ inputs:
   ignore-build: # deprecated
     description: 'Ignores go build'
     default: 'false'
-  publish-asset:
-    description: File / dir name to publish
-  publish-token:
-    description: Auth token used to publish
-    default: ${{ github.token }}
-  publish-keep:
-    description: Number of kept releases (0 - all)
-    default: 8
   repository:
     description: 'Repository name with owner. For example, untillpro/ci-action'
     default: ${{ github.repository }}
-  run-mod-tidy:
-    description: 'Only for go-projects: execute `go mod tidy`'
-    default: 'true'
-  main-branch:
-    description: Main branch name
-    default: main
   ignore-copyright: # deprecated
     description: 'Do not check the copyright in first comments of source code'
     default: 'false'
@@ -40,10 +23,7 @@ inputs:
   short-test:
     description: 'Test onlywith flag -short'
     default: 'false'
-  stop-test:
-    description: 'Does not make test'
-    default: 'false'
-  build-cmd:
+  build-cmd: # deprecated
     description: 'command to makke build'
     default: ''
   extra_env:
@@ -65,19 +45,12 @@ runs:
     - name: Run CI
       shell: bash
       env:
-        INPUT_ORGANIZATION: ${{ inputs.organization }}
         INPUT_TOKEN: ${{ inputs.token }}
         INPUT_CODECOV_TOKEN: ${{ inputs.codecov-token }} # deprecated
         INPUT_CODECOV_GO_RACE: ${{ inputs.codecov-go-race }} # deprecated
-        INPUT_PUBLISH_ASSET: ${{ inputs.publish-asset }}
-        INPUT_PUBLISH_TOKEN: ${{ inputs.publish-token }}
-        INPUT_PUBLISH_KEEP: ${{ inputs.publish-keep }}
         INPUT_REPOSITORY: ${{ inputs.repository }}
-        INPUT_RUN_MOD_TIDY: ${{ inputs.run-mod-tidy }}
-        INPUT_MAIN_BRANCH: ${{ inputs.main-branch }}
         INPUT_TEST_FOLDER: ${{ inputs.test-folder }}
         INPUT_SHORT_TEST: ${{ inputs.short-test }}
-        INPUT_BUILD_CMD: ${{ inputs.build-cmd }}
         INPUT_EXTRA_ENV: ${{ inputs.extra_env }}
       run: |
         bash ${{ github.action_path }}/scripts/ci_main.sh

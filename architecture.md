@@ -202,7 +202,6 @@ Example usage:
 ```yaml
 - uses: untillpro/ci-action@main
   with:
-    organization: 'untillpro'
     token: ${{ secrets.REPOREADING_TOKEN }}
     codecov-token: ${{ secrets.CODECOV_TOKEN }}
     codecov-go-race: true

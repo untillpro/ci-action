@@ -17,16 +17,10 @@ build_test_cmd() {
 
 echo "::group::Build & test"
 
-# Configure GOPRIVATE for organizations
-IFS=',' read -ra ORG_ARRAY <<< "$ORGANIZATION"
-for org in "${ORG_ARRAY[@]}"; do
-    org=$(echo "$org" | xargs)
-    export GOPRIVATE="github.com/$org/*"
-
-    if [ -n "$TOKEN" ]; then
-        git config --global url."https://${TOKEN}:x-oauth-basic@github.com/${org}".insteadOf "https://github.com/${org}"
-    fi
-done
+export GOPRIVATE="github.com/untillpro/*"
+if [ -n "$TOKEN" ]; then
+    git config --global url."https://${TOKEN}:x-oauth-basic@github.com/untillpro".insteadOf "https://github.com/untillpro"
+fi
 
 # Change to test folder if specified
 if [ -n "$TEST_FOLDER" ]; then
@@ -34,9 +28,7 @@ if [ -n "$TEST_FOLDER" ]; then
 fi
 
 # Run go mod tidy
-if [ "$RUN_MOD_TIDY" = "true" ]; then
-    go mod tidy
-fi
+go mod tidy
 
 # Run tests with or without codecov
 if [ -n "$CODECOV_TOKEN" ]; then
@@ -62,12 +54,6 @@ fi
 # Return to original directory
 if [ -n "$TEST_FOLDER" ]; then
     cd -
-fi
-
-# Run build command if specified
-if [ -n "$BUILD_CMD" ]; then
-    echo $BUILD_CMD
-    eval "$BUILD_CMD"
 fi
 
 echo "::endgroup::"

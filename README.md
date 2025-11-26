@@ -33,9 +33,6 @@ Continuous Integration action for go- and node- projects
 - uses: untillpro/ci-action@main
   with:
 
-    # The name of the organization(s) on GitHub containing private repositories (comma separated)
-    organization: 'untillpro'
-
     # Auth token used to fetch dependencies from private repositories
     token: ''
 
@@ -45,23 +42,8 @@ Continuous Integration action for go- and node- projects
     # Codecov: use Go Race Detector
     codecov-go-race: true
 
-    # File / dir name to publish
-    publish-asset: ''
-
-    # Auth token used to publish
-    publish-token: ${{ github.token }}
-
-    # Number of kept releases (0 - all)
-    publish-keep: 8
-
     # Repository name with owner. For example, untillpro/ci-action
     repository: ${{ github.repository }}
-
-    # Only for go-projects: execute `go mod tidy`
-    run-mod-tidy: true
-
-    # Main branch name
-    main-branch: 'main'
 
     # Do not check the copyright in first comments of source code
     ignore-copyright: false
@@ -71,12 +53,6 @@ Continuous Integration action for go- and node- projects
 
     # Short tests
     short-test: false
-
-    # Stop tests
-    stop-test: false
-
-    # Command to build project
-    build-cmd: ''
 ```
 
 ## Outputs

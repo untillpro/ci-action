@@ -7,19 +7,12 @@
 set -Eeuo pipefail
 
 # Input parameters (passed as environment variables)
-ORGANIZATION="${INPUT_ORGANIZATION:-untillpro}"
 TOKEN="${INPUT_TOKEN:-}"
 CODECOV_TOKEN="${INPUT_CODECOV_TOKEN:-}"
 CODECOV_GO_RACE="${INPUT_CODECOV_GO_RACE:-true}"
-PUBLISH_ASSET="${INPUT_PUBLISH_ASSET:-}"
-PUBLISH_TOKEN="${INPUT_PUBLISH_TOKEN:-}"
-PUBLISH_KEEP="${INPUT_PUBLISH_KEEP:-8}"
 REPOSITORY="${INPUT_REPOSITORY:-}"
-RUN_MOD_TIDY="${INPUT_RUN_MOD_TIDY:-true}"
-MAIN_BRANCH="${INPUT_MAIN_BRANCH:-main}"
 TEST_FOLDER="${INPUT_TEST_FOLDER:-}"
 SHORT_TEST="${INPUT_SHORT_TEST:-false}"
-BUILD_CMD="${INPUT_BUILD_CMD:-}"
 GOPRIVATE="${GOPRIVATE:-}"
 EXTRA_ENV="${INPUT_EXTRA_ENV:-}"
 
@@ -75,7 +68,6 @@ BRANCH_NAME="${GITHUB_REF#refs/heads/}"
 # Print context information
 echo "::group::Context"
 echo "repository: $REPOSITORY"
-echo "organization: $ORGANIZATION"
 echo "repositoryOwner: $REPOSITORY_OWNER"
 echo "repositoryName: $REPOSITORY_NAME"
 echo "actor: $GITHUB_ACTOR"
