@@ -46,8 +46,6 @@ runs:
       shell: bash
       env:
         INPUT_TOKEN: ${{ inputs.token }}
-        INPUT_CODECOV_TOKEN: ${{ inputs.codecov-token }} # deprecated
-        INPUT_CODECOV_GO_RACE: ${{ inputs.codecov-go-race }} # deprecated
         INPUT_REPOSITORY: ${{ inputs.repository }}
         INPUT_TEST_FOLDER: ${{ inputs.test-folder }}
         INPUT_SHORT_TEST: ${{ inputs.short-test }}
