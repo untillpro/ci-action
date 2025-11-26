@@ -83,11 +83,12 @@ jobs:
         uses: actions/checkout@v5
         if: ${{ hashFiles('.git/HEAD') == '' }} # checkout only if not checked out yet
         with:
-          token: ${{ inputs.token || github.token }}
+          token: ${{ secrets.reporeading_token }}
           ref: ${{ inputs.ref || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.head.sha || github.sha) }}
           submodules: true
           path: ${{ inputs.path }}
           fetch-depth: 0 # note: 0 need to make check_copyright.sh work properly (getting diff between PR and main)
+
 
       - name: Check hidden folders
         shell: bash
@@ -177,10 +178,17 @@ jobs:
     needs: validate-code
     if: ${{ needs.validate-code.outputs.language == 'node_js' }}
     steps:
+
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.reporeading_token }}
+          ref: ${{ inputs.ref || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.head.sha || github.sha) }}
+          submodules: true
+          path: ${{ inputs.path }}
+
       - name: Run tests (Node.js)
         shell: bash
-        env:
-          CODECOV_TOKEN: ${{ secrets.codecov_token }}
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/ci_node_js.sh | bash -s
 
   build-and-upload:
