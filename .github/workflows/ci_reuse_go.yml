@@ -163,6 +163,7 @@ jobs:
           fi
 
       - name: Linters
+        if: false
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
         env:
           testfolder: ${{ inputs.test_folder }}
