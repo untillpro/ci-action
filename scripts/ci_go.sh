@@ -30,26 +30,11 @@ fi
 # Run go mod tidy
 go mod tidy
 
-# Run tests with or without codecov
-if [ -n "$CODECOV_TOKEN" ]; then
-    echo "::group::Codecov"
-    go install github.com/untillpro/gocov@latest
-
-    TEST_CMD="go test ./... -coverprofile=coverage.txt -covermode=atomic -coverpkg=./..."
-    TEST_CMD=$(build_test_cmd "$TEST_CMD")
-
-    echo $TEST_CMD
-    eval "$TEST_CMD"
-    echo "::endgroup::"
-
-    bash -c "bash <(curl -Os https://uploader.codecov.io/latest/linux/codecov) -t ${CODECOV_TOKEN}"
-else
-    TEST_CMD="go test ./..."
-    TEST_CMD=$(build_test_cmd "$TEST_CMD")
-
-    echo $TEST_CMD
-    eval "$TEST_CMD"
-fi
+# Run go test 
+TEST_CMD="go test ./..."
+TEST_CMD=$(build_test_cmd "$TEST_CMD")
+echo $TEST_CMD
+eval "$TEST_CMD"
 
 # Return to original directory
 if [ -n "$TEST_FOLDER" ]; then
