@@ -146,6 +146,7 @@ jobs:
         shell: bash
         env:
           TOKEN: ${{ secrets.reporeading_token }}
+          CODECOV_GO_RACE: ${{ inputs.go_race }}
           REPOSITORY: ${{ github.repository }}
           TEST_FOLDER: ${{ inputs.test_folder }}
           SHORT_TEST: ${{ inputs.short_test }}
