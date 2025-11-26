@@ -4,7 +4,7 @@ set -Eeuo pipefail
 # root dir can be passed as $1, default '.'
 root_dir=${1:-.}
 
-FILE_EXT_FILTER='\.(go|vsql)$'
+FILE_EXT_FILTER='\.(go|vsql|ts|tsx|js|jsx)$'
 
 err=0
 errstr=""
