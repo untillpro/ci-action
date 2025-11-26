@@ -85,7 +85,7 @@ jobs:
         with:
           token: ${{ inputs.token || github.token }}
           ref: ${{ inputs.ref || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.head.sha || github.sha) }}
-          submodules: ${{ inputs.submodules }}
+          submodules: true
           path: ${{ inputs.path }}
           fetch-depth: 0 # note: 0 need to make check_copyright.sh work properly (getting diff between PR and main)
 
