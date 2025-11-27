@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-br=$(git symbolic-ref --short HEAD)
+br=""
+if git rev-parse --git-dir > /dev/null 2>&1; then
+  br=$(git symbolic-ref --short HEAD 2>/dev/null || echo "")
+fi
+
 # Fallback to the environment variable 'branch' if 'br' is empty
 if [ -z "$br" ]; then
   br="$branch"
