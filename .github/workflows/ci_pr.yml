@@ -65,7 +65,7 @@ jobs:
   CI:
     name: CI
     needs: pull-request-check
-    uses: ./.github/workflows/ci_reuse_go.yml
+    uses: ./.github/workflows/ci.yml
     with:
       test_folder: ${{ inputs.test_folder }}
       short_test: ${{ inputs.short_test }}
