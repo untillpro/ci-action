@@ -1,6 +1,5 @@
-#!/bin/bash
-
-set -e
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 export GOWORK=off
 

@@ -1,6 +1,5 @@
-#!/bin/bash
-
-set -e
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 # This script generates usage documentation for ci-action
 # It collects usage data from GitHub repositories and creates a Mermaid visualization

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# set -Eeuo pipefail
+set -Eeuo pipefail
 
 br=$(git symbolic-ref --short HEAD)
 # Fallback to the environment variable 'branch' if 'br' is empty
