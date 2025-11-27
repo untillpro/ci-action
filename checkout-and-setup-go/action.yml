@@ -46,7 +46,7 @@ runs:
       id: detect-go
       if: ${{ !inputs.go-version }}
       shell: bash
-      run: bash "$GITHUB_ACTION_PATH/../scripts/detect-go-version.sh"
+      run: bash "$GITHUB_ACTION_PATH/../scripts/detect-go-version.sh" "${{ inputs.path }}"
 
     - name: Setup Go
       uses: actions/setup-go@v5
