@@ -22,7 +22,7 @@ on:
       ignore_build: # deprecated
         required: false
         type: string
-      test_subfolders:
+      test_subfolders: # deprecated
         required: false
         type: string
       running_workflow:
