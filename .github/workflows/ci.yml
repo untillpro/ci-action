@@ -31,10 +31,10 @@ on:
       build_cmd: # deprecated
         required: false
         type: string
-      fiscal_vatnr:
+      fiscal_vatnr: # deprecated
         required: false
         type: string
-      fiscal_caption:
+      fiscal_caption: # deprecated
         required: false
         type: string
       extra_env:
@@ -48,7 +48,7 @@ on:
         required: true
       codecov_token: # deprecated
         required: false
-      personal_token:
+      personal_token: # deprecated, used in ci_pr.yml only
         required: false
       chargebee_token: # deprecated
         required: false
