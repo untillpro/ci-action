@@ -22,7 +22,7 @@ on:
       ignore_build: # deprecated
         required: false
         type: string
-      test_subfolders:
+      test_subfolders: # deprecated
         required: false
         type: string
       running_workflow:
@@ -152,15 +152,6 @@ jobs:
           TEST_FOLDER: ${{ inputs.test_folder }}
           SHORT_TEST: ${{ inputs.short_test }}
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/ci_go.sh | bash -s
-
-      - name: Test subfolders
-        if: inputs.test_subfolders == 'true'
-        run: |
-          if [ "${{ inputs.short_test }}" == "true" ]; then
-            curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s short
-          else
-            curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s full
-          fi
 
       - name: Linters
         if: false

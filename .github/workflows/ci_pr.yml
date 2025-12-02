@@ -25,7 +25,7 @@ on:
       go_race:
         required: false
         type: string
-      test_subfolders:
+      test_subfolders: # deprecated
         required: false
         type: string
       extra_env:
@@ -67,11 +67,9 @@ jobs:
     needs: pull-request-check
     uses: ./.github/workflows/ci.yml
     with:
-      test_folder: ${{ inputs.test_folder }}
       short_test: ${{ inputs.short_test }}
       running_workflow: ${{ inputs.running_workflow }}
       go_race: ${{ inputs.go_race }}
-      test_subfolders: ${{ inputs.test_subfolders }}
       extra_env: ${{ inputs.extra_env }}
       install_tinygo: ${{ inputs.install_tinygo }}
     secrets:
