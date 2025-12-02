@@ -8,7 +8,7 @@ on:
       ignore_linter:
         required: false
         type: string
-      test_folder:
+      test_folder: # deprecated
         required: false
         type: string
       short_test:
@@ -48,7 +48,6 @@ jobs:
   build:
     uses: ./.github/workflows/ci_reuse_go.yml
     with:
-      test_folder: ${{ inputs.test_folder }}
       short_test: ${{ inputs.short_test }}
       go_race: ${{ inputs.go_race }}
       build_cmd: ${{ inputs.build_cmd }}

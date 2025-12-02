@@ -5,7 +5,7 @@ on:
       ignore_copyright: # deprecated
         required: false
         type: string
-      test_folder:
+      test_folder: # deprecated
         required: false
         type: string
     secrets:

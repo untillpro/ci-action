@@ -31,10 +31,5 @@ TEST_CMD=$(build_test_cmd "$TEST_CMD")
 echo $TEST_CMD
 eval "$TEST_CMD"
 
-# Return to original directory
-if [ -n "$TEST_FOLDER" ]; then
-    cd -
-fi
-
 echo "::endgroup::"
 

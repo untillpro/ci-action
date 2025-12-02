@@ -5,7 +5,7 @@ on:
       ignore_copyright: # deprecated
         required: false
         type: string
-      test_folder:
+      test_folder: #deprecated
         required: false
         type: string
       ignore_build: # deprecated
@@ -24,7 +24,6 @@ jobs:
   build:
     uses: ./.github/workflows/ci_reuse_go.yml
     with:
-      test_folder: ${{ inputs.test_folder }}
       install_tinygo: ${{ inputs.install_tinygo }}
     secrets:
       reporeading_token: ${{ secrets.reporeading_token }}

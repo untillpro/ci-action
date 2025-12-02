@@ -9,7 +9,6 @@ set -Eeuo pipefail
 # Input parameters (passed as environment variables)
 TOKEN="${INPUT_TOKEN:-}"
 REPOSITORY="${INPUT_REPOSITORY:-}"
-TEST_FOLDER="${INPUT_TEST_FOLDER:-}"
 SHORT_TEST="${INPUT_SHORT_TEST:-false}"
 GOPRIVATE="${GOPRIVATE:-}"
 EXTRA_ENV="${INPUT_EXTRA_ENV:-}"
