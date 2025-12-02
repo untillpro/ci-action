@@ -22,15 +22,10 @@ if [ -n "$TOKEN" ]; then
     git config --global url."https://${TOKEN}:x-oauth-basic@github.com/untillpro".insteadOf "https://github.com/untillpro"
 fi
 
-# Change to test folder if specified
-if [ -n "$TEST_FOLDER" ]; then
-    cd "$TEST_FOLDER"
-fi
-
 # Run go mod tidy
 go mod tidy
 
-# Run go test 
+# Run go test
 TEST_CMD="go test ./..."
 TEST_CMD=$(build_test_cmd "$TEST_CMD")
 echo $TEST_CMD

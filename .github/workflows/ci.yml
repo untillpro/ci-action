@@ -7,7 +7,7 @@ on:
         required: false
         type: string
       # used in Voedger to run tests in pkg/ only
-      test_folder:
+      test_folder: # deprecated
         required: false
         type: string
       ignore_bp3: # deprecated
@@ -153,18 +153,8 @@ jobs:
           TOKEN: ${{ secrets.reporeading_token }}
           CODECOV_GO_RACE: ${{ inputs.go_race }}
           REPOSITORY: ${{ github.repository }}
-          TEST_FOLDER: ${{ inputs.test_folder }}
           SHORT_TEST: ${{ inputs.short_test }}
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/ci_go.sh | bash -s
-
-      - name: Test subfolders
-        if: inputs.test_subfolders == 'true'
-        run: |
-          if [ "${{ inputs.short_test }}" == "true" ]; then
-            curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s short
-          else
-            curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s full
-          fi
 
       - name: Linters
         if: false
