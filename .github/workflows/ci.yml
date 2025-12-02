@@ -165,25 +165,6 @@ jobs:
         if: inputs.short_test != 'true'
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/vulncheck.sh | bash -s
 
-  run-tests-nodejs:
-    name: Run tests (Node.js)
-    runs-on: ubuntu-22.04
-    needs: validate-code
-    if: ${{ needs.validate-code.outputs.language == 'node_js' }}
-    steps:
-
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          token: ${{ secrets.reporeading_token }}
-          ref: ${{ inputs.ref || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.head.sha || github.sha) }}
-          submodules: true
-          path: ${{ inputs.path }}
-
-      - name: Run tests (Node.js)
-        shell: bash
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/ci_node_js.sh | bash -s
-
   build-and-upload:
     name: Build and upload Go project (deprecated)
     runs-on: ubuntu-22.04
