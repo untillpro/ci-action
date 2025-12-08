@@ -8,11 +8,7 @@ curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install
 
 "${GOBIN}/golangci-lint" --version
 
-mydir=""
-if test -n "$testfolder"; then
-  mydir="${testfolder}/..."
-fi
-cmd="${GOBIN}/golangci-lint run ${mydir} --verbose"
+cmd="${GOBIN}/golangci-lint run ./... --verbose"
 echo "$cmd"
 eval "$cmd"
 
