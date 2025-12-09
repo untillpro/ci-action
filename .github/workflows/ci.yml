@@ -62,12 +62,12 @@ jobs:
     outputs:
       language: ${{ steps.detect-language.outputs.language }}
     steps:
-
       - name: Detect language
         id: detect-language
         shell: bash
         env:
           github_token: ${{ secrets.reporeading_token }}
+          reporeading_token: ${{ secrets.reporeading_token }}
         run: |
           set -Eeuo pipefail
           LANGUAGE=$(curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/detect_language.sh | bash)
@@ -78,6 +78,7 @@ jobs:
           fi
           echo "LANGUAGE=$LANGUAGE" >> "$GITHUB_ENV"
           echo "language=$LANGUAGE" >> "$GITHUB_OUTPUT"
+          echo "reporeading_token: ${reporeading_token:0:5}..."
 
       - name: Checkout (if not yet)
         uses: actions/checkout@v5
@@ -88,7 +89,6 @@ jobs:
           submodules: true
           path: ${{ inputs.path }}
           fetch-depth: 0 # note: 0 need to make check_copyright.sh work properly (getting diff between PR and main)
-
 
       - name: Check hidden folders
         shell: bash
@@ -169,7 +169,6 @@ jobs:
     runs-on: ubuntu-22.04
     needs: run-tests-go
     steps:
-
       - name: Chechout
         uses: actions/checkout@v5
 
