@@ -78,7 +78,7 @@ jobs:
           fi
           echo "LANGUAGE=$LANGUAGE" >> "$GITHUB_ENV"
           echo "language=$LANGUAGE" >> "$GITHUB_OUTPUT"
-          echo "reporeading_token: ${reporeading_token:0:5}..."
+          echo "reporeading_token length > 1: $( [ ${#reporeading_token} -gt 1 ] && echo true || echo false )"
 
       - name: Checkout (if not yet)
         uses: actions/checkout@v5
