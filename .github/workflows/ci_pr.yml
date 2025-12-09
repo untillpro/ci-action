@@ -55,4 +55,3 @@ jobs:
       install_tinygo: ${{ inputs.install_tinygo }}
     secrets:
       reporeading_token: ${{ secrets.reporeading_token }}
-      personal_token: ${{ secrets.personal_token }}
