@@ -22,6 +22,8 @@ USES_ACTION_REGEX = re.compile(r'uses:\s+untillpro/ci-action@(\S+)')
 USES_WORKFLOW_REGEX = re.compile(r'uses:\s+untillpro/ci-action/(\.github/workflows/[^@]+)@(\S+)')
 CURL_SCRIPT_REGEX = re.compile(r'https://raw\.githubusercontent\.com/untillpro/ci-action/(\S+?)/scripts/([^\s|]+)')
 CURL_ANY_REGEX = re.compile(r'https://raw\.githubusercontent\.com/untillpro/ci-action/(\S+?)/([^\s|]+)')
+# Match $GITHUB_ACTION_PATH/../scripts/script.sh pattern (with or without quotes)
+ACTION_PATH_SCRIPT_REGEX = re.compile(r'\$GITHUB_ACTION_PATH/\.\./scripts/([^\s"\']+)')
 
 # Constants
 GITHUB_API_BASE = "https://api.github.com"
@@ -164,6 +166,14 @@ def extract_usages_from_line(line: str, repo_info: Dict, file_path: str, line_nu
                 'source_url': source_url
             })
 
+    # Check for $GITHUB_ACTION_PATH/../scripts/ usage
+    action_path_match = ACTION_PATH_SCRIPT_REGEX.search(line)
+    if action_path_match:
+        usages.append({
+            'ci_action_file': f'scripts/{action_path_match.group(1)}',
+            'source_url': source_url
+        })
+
     return usages
 
 
@@ -265,6 +275,40 @@ def get_all_ci_action_files_local(ci_action_path: Path) -> List[Dict]:
     return sorted(files, key=lambda x: x['path'])
 
 
+def scan_ci_action_internal_usages_local(ci_action_path: Path) -> List[Dict]:
+    """Scan ci-action's own files for internal script usages."""
+    usages = []
+    repo_info = {'owner': ORG_NAME, 'name': 'ci-action', 'default_branch': 'main'}
+
+    # Scan checkout-and-setup-go/action.yml
+    action_file = ci_action_path / 'checkout-and-setup-go' / 'action.yml'
+    if action_file.exists():
+        content = action_file.read_text(encoding='utf-8')
+        for line_number, line in enumerate(content.splitlines(), start=1):
+            line_usages = extract_usages_from_line(line, repo_info, 'checkout-and-setup-go/action.yml', line_number)
+            usages.extend(line_usages)
+
+    return usages
+
+
+def scan_ci_action_internal_usages_github(client: GitHubClient) -> List[Dict]:
+    """Scan ci-action's own files for internal script usages from GitHub."""
+    usages = []
+    repo_info = {'owner': ORG_NAME, 'name': 'ci-action', 'default_branch': 'main'}
+
+    # Scan checkout-and-setup-go/action.yml
+    url = f"{GITHUB_API_BASE}/repos/{ORG_NAME}/ci-action/contents/checkout-and-setup-go/action.yml"
+    response = client.get(url)
+    if response['status_code'] == 200:
+        import base64
+        content = base64.b64decode(response['data']['content']).decode('utf-8')
+        for line_number, line in enumerate(content.splitlines(), start=1):
+            line_usages = extract_usages_from_line(line, repo_info, 'checkout-and-setup-go/action.yml', line_number)
+            usages.extend(line_usages)
+
+    return usages
+
+
 def main():
     """Main entry point."""
     work_dir = Path.cwd()
@@ -273,13 +317,15 @@ def main():
     # Initialize GitHub client
     client = GitHubClient()
 
-    # Get all ci-action files
-    if (ci_action_path / 'action.yml').exists():
+    # Get all ci-action files and scan for internal usages
+    if (ci_action_path / 'checkout-and-setup-go' / 'action.yml').exists():
         print("Using local ci-action folder...")
         all_ci_action_files = get_all_ci_action_files_local(ci_action_path)
+        internal_usages = scan_ci_action_internal_usages_local(ci_action_path)
     else:
         print("Local ci-action folder not found, fetching from GitHub...")
         all_ci_action_files = get_all_ci_action_files_from_github(client)
+        internal_usages = scan_ci_action_internal_usages_github(client)
 
     # Load outdated repos
     outdated_repos_file = work_dir / 'outdated-repos.txt'
@@ -293,7 +339,7 @@ def main():
     print(f"Found {len(repos)} non-archived repositories")
 
     # Scan repositories
-    usages = []
+    usages = list(internal_usages)  # Start with internal ci-action usages
     repos_with_usages = set()
     skipped_count = 0
 
