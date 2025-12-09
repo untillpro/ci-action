@@ -2,39 +2,13 @@ name: CI
 on:
   workflow_call:
     inputs:
-      # used in Voedger to skip copyright check in cmd/voedger/sys.monitor/site.main
-      ignore_copyright: # deprecated
-        required: false
-        type: string
-      # used in Voedger to run tests in pkg/ only
-      test_folder: # deprecated
-        required: false
-        type: string
-      ignore_bp3: # deprecated
-        required: false
-        type: string
       short_test:
         required: false
         type: string
       go_race:
         required: false
         type: string
-      ignore_build: # deprecated
-        required: false
-        type: string
-      test_subfolders: # deprecated
-        required: false
-        type: string
       running_workflow:
-        required: false
-        type: string
-      build_cmd: # deprecated
-        required: false
-        type: string
-      fiscal_vatnr: # deprecated
-        required: false
-        type: string
-      fiscal_caption: # deprecated
         required: false
         type: string
       extra_env:
@@ -46,10 +20,6 @@ on:
     secrets:
       reporeading_token:
         required: true
-      codecov_token: # deprecated
-        required: false
-      personal_token: # deprecated, used in ci_pr.yml only
-        required: false
 
 jobs:
   validate-code:
