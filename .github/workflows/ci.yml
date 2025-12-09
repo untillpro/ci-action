@@ -28,7 +28,6 @@ jobs:
     outputs:
       language: ${{ steps.detect-language.outputs.language }}
     steps:
-
       - name: Detect language
         id: detect-language
         shell: bash
@@ -54,7 +53,6 @@ jobs:
           submodules: true
           path: ${{ inputs.path }}
           fetch-depth: 0 # note: 0 need to make check_copyright.sh work properly (getting diff between PR and main)
-
 
       - name: Check hidden folders
         shell: bash
@@ -128,4 +126,7 @@ jobs:
       - name: Vulnerability check
         shell: bash
         if: inputs.short_test != 'true'
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/vulncheck.sh | bash -s
+        run: |
+          set -Eeuo pipefail
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          govulncheck ./...
