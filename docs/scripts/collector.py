@@ -28,6 +28,14 @@ GITHUB_API_BASE = "https://api.github.com"
 ORG_NAME = "untillpro"
 REQUEST_TIMEOUT = 30
 
+# Repositories to skip
+SKIP_REPOS = {"untillpro/voedger"}
+
+# Additional repositories to scan (outside untillpro org)
+ADDITIONAL_REPOS = [
+    {"name": "voedger", "owner": "voedger", "default_branch": "main"}
+]
+
 
 class GitHubClient:
     """GitHub API client with authentication and rate limiting."""
@@ -104,9 +112,9 @@ def fetch_non_archived_repos(client: GitHubClient) -> List[Dict]:
     return all_repos
 
 
-def fetch_github_directory_contents(client: GitHubClient, repo_name: str, dir_path: str) -> Optional[List[Dict]]:
+def fetch_github_directory_contents(client: GitHubClient, owner: str, repo_name: str, dir_path: str) -> Optional[List[Dict]]:
     """Fetch contents of a directory from GitHub."""
-    url = f"{GITHUB_API_BASE}/repos/{ORG_NAME}/{repo_name}/contents/{dir_path}"
+    url = f"{GITHUB_API_BASE}/repos/{owner}/{repo_name}/contents/{dir_path}"
     response = client.get(url)
 
     if response['status_code'] == 404:
@@ -180,13 +188,16 @@ def scan_github_file(client: GitHubClient, repo_info: Dict, file_path: str, down
 
 def scan_github_directory(client: GitHubClient, repo_info: Dict, dir_path: str) -> List[Dict]:
     """Recursively scan a GitHub directory for ci-action usages."""
-    contents = fetch_github_directory_contents(client, repo_info['name'], dir_path)
+    contents = fetch_github_directory_contents(client, repo_info['owner'], repo_info['name'], dir_path)
     if not contents:
         return []
 
     usages = []
     for item in contents:
         if item['type'] == 'file':
+            # Skip markdown files
+            if item['name'].endswith('.md'):
+                continue
             file_usages = scan_github_file(client, repo_info, item['path'], item['download_url'])
             usages.extend(file_usages)
         elif item['type'] == 'dir':
@@ -212,7 +223,7 @@ def get_all_ci_action_files_from_github(client: GitHubClient) -> List[Dict]:
         files['action.yml'] = {'path': 'action.yml'}
 
     # Get workflow files
-    workflows = fetch_github_directory_contents(client, 'ci-action', '.github/workflows')
+    workflows = fetch_github_directory_contents(client, ORG_NAME, 'ci-action', '.github/workflows')
     if workflows:
         for item in workflows:
             if item['type'] == 'file' and item['name'].endswith('.yml'):
@@ -220,7 +231,7 @@ def get_all_ci_action_files_from_github(client: GitHubClient) -> List[Dict]:
                 files[path] = {'path': path}
 
     # Get script files
-    scripts = fetch_github_directory_contents(client, 'ci-action', 'scripts')
+    scripts = fetch_github_directory_contents(client, ORG_NAME, 'ci-action', 'scripts')
     if scripts:
         for item in scripts:
             if item['type'] == 'file' and item['name'].endswith('.sh'):
@@ -288,24 +299,40 @@ def main():
 
     for idx, repo in enumerate(repos, 1):
         repo_name = repo['name']
-        full_repo_name = f"{ORG_NAME}/{repo_name}"
+        full_repo_name = f"{repo['owner']}/{repo_name}"
 
         if repo_name in outdated_repos or full_repo_name in outdated_repos:
             skipped_count += 1
             continue
 
-        print(f"Scanning {repo_name} ({idx}/{len(repos)})...")
+        if full_repo_name in SKIP_REPOS:
+            skipped_count += 1
+            continue
+
+        print(f"Scanning {full_repo_name} ({idx}/{len(repos)})...")
 
         try:
             repo_usages = scan_repository_from_github(client, repo)
             if repo_usages:
                 usages.extend(repo_usages)
-                repos_with_usages.add(repo_name)
+                repos_with_usages.add(full_repo_name)
         except Exception as e:
-            print(f"Warning: Error scanning {repo_name}: {e}", file=sys.stderr)
+            print(f"Warning: Error scanning {full_repo_name}: {e}", file=sys.stderr)
 
     if skipped_count > 0:
         print(f"Skipped {skipped_count} outdated repositories")
+
+    # Scan additional repositories
+    for repo in ADDITIONAL_REPOS:
+        full_repo_name = f"{repo['owner']}/{repo['name']}"
+        print(f"Scanning additional repo {full_repo_name}...")
+        try:
+            repo_usages = scan_repository_from_github(client, repo)
+            if repo_usages:
+                usages.extend(repo_usages)
+                repos_with_usages.add(full_repo_name)
+        except Exception as e:
+            print(f"Warning: Error scanning {full_repo_name}: {e}", file=sys.stderr)
 
     # Find unused ci-action files and add them to usages with source_url=null
     used_files = set()

@@ -12,7 +12,7 @@ cd docs
 ```
 
 This will:
-1. Collect usage data from all untillpro repositories
+1. Collect usage data from all untillpro repositories (voedger/voedger instead of untillpro/voedger)
 2. Generate a Mermaid visualization
 3. Save the output as `ci-action-usages.md` in this directory
 
