@@ -11,5 +11,3 @@ curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install
 cmd="${GOBIN}/golangci-lint run ./... --verbose"
 echo "$cmd"
 eval "$cmd"
-
-status="$?"
