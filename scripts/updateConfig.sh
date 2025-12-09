@@ -8,7 +8,11 @@ fi
 
 # Fallback to the environment variable 'branch' if 'br' is empty
 if [ -z "$br" ]; then
-  br="$branch"
+  br="${branch:-}"
+  if [ -z "$br" ]; then
+    echo "Error: branch could not be detected from git and 'branch' environment variable is not set"
+    exit 1
+  fi
 fi
 echo "Branch: $br"
 
