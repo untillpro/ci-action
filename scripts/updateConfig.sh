@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
+# updates ./airs-config-sync/stacks/dev/stack.yml
+# determines whether dev, euro or rc stack should be used based on the current branch (main, rc, release) in . dir
+
 set -Eeuo pipefail
+
+echo "current git: $(git rev-parse --git-dir 2>/dev/null || echo 'not a git repository')"
+echo "current branch: $(git symbolic-ref --short HEAD 2>/dev/null || echo 'unknown')"
 
 br=""
 if git rev-parse --git-dir > /dev/null 2>&1; then
