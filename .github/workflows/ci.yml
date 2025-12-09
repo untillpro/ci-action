@@ -159,26 +159,3 @@ jobs:
         shell: bash
         if: inputs.short_test != 'true'
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/vulncheck.sh | bash -s
-
-  build-and-upload:
-    name: Build and upload Go project (deprecated)
-    runs-on: ubuntu-22.04
-    needs: run-tests-go
-    steps:
-
-      - name: Chechout
-        uses: actions/checkout@v5
-
-      - name: Build executable
-        run: |
-          git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/untillpro".insteadOf "https://github.com/untillpro"
-          ${{ inputs.build_cmd }}
-        env:
-          GOPRIVATE: "github.com/untillpro/*"
-
-      - name: Upload project
-        uses: actions/upload-artifact@v4
-        with:
-          name: project-files
-          path: .
-          retention-days: 1
