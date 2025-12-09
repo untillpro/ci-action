@@ -50,10 +50,6 @@ on:
         required: false
       personal_token: # deprecated, used in ci_pr.yml only
         required: false
-      chargebee_token: # deprecated
-        required: false
-      chargebee_sitename: # deprecated
-        required: false
 
 jobs:
   validate-code:
