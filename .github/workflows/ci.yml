@@ -60,9 +60,9 @@ jobs:
         shell: bash
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/reject_hidden_folders.sh | bash -s
 
-      # - name: Check bash headers
-      #   shell: bash
-      #   run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_sh_header.sh | bash -s
+      - name: Check bash headers
+        shell: bash
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_sh_header.sh | bash -s
 
       - name: Check copyright
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s
