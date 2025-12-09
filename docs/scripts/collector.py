@@ -216,11 +216,11 @@ def get_all_ci_action_files_from_github(client: GitHubClient) -> List[Dict]:
     """Get all ci-action files from the ci-action repository."""
     files = {}  # Use dict to automatically handle duplicates
 
-    # Check for action.yml
-    url = f"{GITHUB_API_BASE}/repos/{ORG_NAME}/ci-action/contents/action.yml"
+    # Check for checkout-and-setup-go/action.yml
+    url = f"{GITHUB_API_BASE}/repos/{ORG_NAME}/ci-action/contents/checkout-and-setup-go/action.yml"
     response = client.get(url)
     if response['status_code'] == 200:
-        files['action.yml'] = {'path': 'action.yml'}
+        files['checkout-and-setup-go/action.yml'] = {'path': 'checkout-and-setup-go/action.yml'}
 
     # Get workflow files
     workflows = fetch_github_directory_contents(client, ORG_NAME, 'ci-action', '.github/workflows')
@@ -246,9 +246,9 @@ def get_all_ci_action_files_local(ci_action_path: Path) -> List[Dict]:
     """Get all ci-action files from local ci-action repository."""
     files = []
 
-    # Check for action.yml
-    if (ci_action_path / 'action.yml').exists():
-        files.append({'path': 'action.yml'})
+    # Check for checkout-and-setup-go/action.yml
+    if (ci_action_path / 'checkout-and-setup-go' / 'action.yml').exists():
+        files.append({'path': 'checkout-and-setup-go/action.yml'})
 
     # Get workflow files
     workflows_path = ci_action_path / '.github' / 'workflows'
