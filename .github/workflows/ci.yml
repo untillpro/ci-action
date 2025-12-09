@@ -157,7 +157,6 @@ jobs:
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/ci_go.sh | bash -s
 
       - name: Linters
-        if: false
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
 
       - name: Vulnerability check
