@@ -16,11 +16,11 @@ Files in ci-action repository that are called by other repositories:
   - [web-portals: ci_payment.yml](https://github.com/untillpro/web-portals/blob/main/.github/workflows/ci_payment.yml#L20)
   - [web-portals: ci_reseller.yml](https://github.com/untillpro/web-portals/blob/main/.github/workflows/ci_reseller.yml#L19)
   - [voedger: ci-full.yml](https://github.com/voedger/voedger/blob/main/.github/workflows/ci-full.yml#L11)
-  - [voedger: ci-pkg-cmd.yml](https://github.com/voedger/voedger/blob/main/.github/workflows/ci-pkg-cmd.yml#L13)
+  - [voedger: ci.yml](https://github.com/voedger/voedger/blob/main/.github/workflows/ci.yml#L13)
 - [.github/workflows/ci_pr.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_pr.yml)
   - [airc-backoffice2: ci-pr.yml](https://github.com/untillpro/airc-backoffice2/blob/main/.github/workflows/ci-pr.yml#L13)
   - [airs-bp3: ci_pr.yml](https://github.com/untillpro/airs-bp3/blob/main/.github/workflows/ci_pr.yml#L15)
-  - [voedger: ci-pkg-cmd_pr.yml](https://github.com/voedger/voedger/blob/main/.github/workflows/ci-pkg-cmd_pr.yml#L11)
+  - [voedger: ci_pr.yml](https://github.com/voedger/voedger/blob/main/.github/workflows/ci_pr.yml#L11)
 - [.github/workflows/cp.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/cp.yml)
   - [airc-backoffice2: cp.yml](https://github.com/untillpro/airc-backoffice2/blob/main/.github/workflows/cp.yml#L14)
   - [airc-backoffice2: cronecprelease.yml](https://github.com/untillpro/airc-backoffice2/blob/main/.github/workflows/cronecprelease.yml#L42)
@@ -195,9 +195,9 @@ Files in all repositories that call ci-action files:
   - [.github/workflows/ci.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci.yml)
 - [voedger: ci-full.yml](https://github.com/voedger/voedger/blob/main/.github/workflows/ci-full.yml#L34)
   - [.github/workflows/create_issue.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/create_issue.yml)
-- [voedger: ci-pkg-cmd.yml](https://github.com/voedger/voedger/blob/main/.github/workflows/ci-pkg-cmd.yml#L13)
+- [voedger: ci.yml](https://github.com/voedger/voedger/blob/main/.github/workflows/ci.yml#L13)
   - [.github/workflows/ci.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci.yml)
-- [voedger: ci-pkg-cmd_pr.yml](https://github.com/voedger/voedger/blob/main/.github/workflows/ci-pkg-cmd_pr.yml#L11)
+- [voedger: ci_pr.yml](https://github.com/voedger/voedger/blob/main/.github/workflows/ci_pr.yml#L11)
   - [.github/workflows/ci_pr.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/ci_pr.yml)
 - [voedger: ci_amazon.yml](https://github.com/voedger/voedger/blob/main/.github/workflows/ci_amazon.yml#L65)
   - [.github/workflows/create_issue.yml](https://github.com/untillpro/ci-action/blob/main/.github/workflows/create_issue.yml)
@@ -225,10 +225,10 @@ graph LR
     F7["web-portals/.github/workflows/ci_payment.yml"]
     F8["web-portals/.github/workflows/ci_reseller.yml"]
     F9["voedger/.github/workflows/ci-full.yml"]
-    F10["voedger/.github/workflows/ci-pkg-cmd.yml"]
+    F10["voedger/.github/workflows/ci.yml"]
     F11["airs-bp3/.github/workflows/ci_pr.yml"]
     F12["airc-backoffice2/.github/workflows/ci-pr.yml"]
-    F13["voedger/.github/workflows/ci-pkg-cmd_pr.yml"]
+    F13["voedger/.github/workflows/ci_pr.yml"]
     F14["airs-bp3/.github/workflows/cp.yml"]
     F15["airc-backoffice2/.github/workflows/cp.yml"]
     F16["airc-backoffice2/.github/workflows/cronecprelease.yml"]

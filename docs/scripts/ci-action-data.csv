@@ -49,8 +49,8 @@ scripts/updateConfig.sh,https://github.com/untillpro/airc-web-pos/blob/main/.git
 scripts/deleteDockerImages.sh,https://github.com/untillpro/airc-web-pos/blob/main/.github/workflows/cd.yml#L115
 .github/workflows/ci.yml,https://github.com/voedger/voedger/blob/main/.github/workflows/ci-full.yml#L11
 .github/workflows/create_issue.yml,https://github.com/voedger/voedger/blob/main/.github/workflows/ci-full.yml#L34
-.github/workflows/ci.yml,https://github.com/voedger/voedger/blob/main/.github/workflows/ci-pkg-cmd.yml#L13
-.github/workflows/ci_pr.yml,https://github.com/voedger/voedger/blob/main/.github/workflows/ci-pkg-cmd_pr.yml#L11
+.github/workflows/ci.yml,https://github.com/voedger/voedger/blob/main/.github/workflows/ci.yml#L13
+.github/workflows/ci_pr.yml,https://github.com/voedger/voedger/blob/main/.github/workflows/ci_pr.yml#L11
 .github/workflows/create_issue.yml,https://github.com/voedger/voedger/blob/main/.github/workflows/ci_amazon.yml#L65
 .github/workflows/create_issue.yml,https://github.com/voedger/voedger/blob/main/.github/workflows/ci_cas.yml#L48
 .github/workflows/cp.yml,https://github.com/voedger/voedger/blob/main/.github/workflows/cp.yml#L15
