@@ -1,245 +1,130 @@
 # ci-action
 
-Continuous Integration action for go- and node- projects
+Reusable CI/CD workflows and scripts for Go projects.
 
-**Implementation**: This action is implemented as a **composite action** using bash scripts, providing a lightweight and transparent CI/CD solution without Node.js dependencies.
+## Reusable Workflows
 
-## Features
+### ci.yml - Main CI Workflow
 
-* **Repository Validation**
-  * Reject ".*" folders (except `ignore` folders and `.git`, `.github`, `.husky`, `.augment`)
-* **Source Code Validation** (except `ignore` and first comments which include `DO NOT EDIT`)
-  * Reject sources which do not have "Copyright" word in first comment
-  * Reject sources which have LICENSE word in first comment but LICENSE file does not exist
-* **Go Project Validation**
-  * Reject go.mod with local replaces
-* **Go Projects**
-  * Auto-detect Go projects (via `go.mod` or `*.go` files)
-  * Configure GOPRIVATE for private repositories
-  * Run `go mod tidy` (optional)
-  * Run `go test ./...` with optional race detection and short mode
-  * Support for custom test folders
-  * Codecov integration with coverage reports
-* **Node.js Projects**
-  * Auto-detect Node.js projects (via `*.js`, `*.jsx`, `*.ts`, `*.tsx` files)
-  * Run `npm install`, `npm run build --if-present` and `npm test`
-  * Codecov integration
-
-**Note**: Linting (golangci-lint) and vulnerability checks (govulncheck) are available as separate scripts in the `scripts/` directory and are typically run as separate workflow steps. See the reusable workflows in `.github/workflows/` for examples.
-
-## Usage
+Reusable workflow for Go projects that performs validation and testing.
 
 ```yaml
-- uses: untillpro/ci-action@main
-  with:
-
-    # Auth token used to fetch dependencies from private repositories
-    token: ''
-
-    # Codecov token
-    codecov-token: ''
-
-    # Codecov: use Go Race Detector
-    codecov-go-race: true
-
-    # Repository name with owner. For example, untillpro/ci-action
-    repository: ${{ github.repository }}
-
-    # Do not check the copyright in first comments of source code
-    ignore-copyright: false
-
-    # Test only in folder
-    test-folder: ''
-
-    # Short tests
-    short-test: false
-```
-
-## Outputs
-
-In case of publish release:
-
-* `release_id`: The ID of the created Release
-* `release_name`: The name (version) of the created Release
-* `release_html_url`: The URL users can navigate to in order to view the release
-* `release_upload_url`: The URL for uploading assets to the release
-* `asset_browser_download_url`: The URL users can navigate to in order to download the uploaded asset
-
-## Scenarios
-
-### Creating CODECOV_TOKEN
-
-* Go to appropriate codecov resource, e.g. <https://codecov.io/gh/untillpro/ci-action>
-* Copy token from there
-* Use it for CODECOV_TOKEN secret, say <https://github.com/untillpro/ci-action/settings/secrets>
-
-### Go project
-
-* If private modules are used:
-  * [Create personal access token](https://github.com/settings/tokens)
-    * [See also](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token)
-  * Create secret with the received token named "REPOREADING_TOKEN"
-* For automatic uploading reports to [Codecov](https://codecov.io/)
-  * Create secret with Codecov token named "CODECOV_TOKEN"
-* Create action workflow "ci.yml" with the following contents:
-
-```yaml
-name: CI-Go
+name: CI
 on: [push, pull_request_target]
 jobs:
   build:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout and setup Go
-        id: go-setup
-        uses: untillpro/ci-action/checkout-and-setup-go@main
-        with:
-          fetch_depth: 0
-          # ref: ${{ github.event.pull_request.head.sha }}  # optional for PRs
-
-      - name: CI
-        uses: untillpro/ci-action@main
-        with:
-          token: ${{ secrets.REPOREADING_TOKEN }}
-          codecov-token: ${{ secrets.CODECOV_TOKEN }}
-```
-
-### Go project with TinyGo
-
-For projects requiring TinyGo:
-
-```yaml
-name: CI-Go-TinyGo
-on: [push, pull_request_target]
-jobs:
-  build:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout and setup Go
-        id: go-setup
-        uses: untillpro/ci-action/checkout-and-setup-go@main
-        with:
-          fetch_depth: 0
-          # ref: ${{ github.event.pull_request.head.sha }}  # optional for PRs
-
-      - name: Install TinyGo
-        run: |
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/install-tinygo.sh | bash -s "${{ steps.go-setup.outputs.go-version }}"
-
-      - name: CI
-        uses: untillpro/ci-action@main
-        with:
-          token: ${{ secrets.REPOREADING_TOKEN }}
-          codecov-token: ${{ secrets.CODECOV_TOKEN }}
-```
-
-### Node.js project
-
-* For automatic uploading reports to [Codecov](https://codecov.io/)
-  * Create secret with Codecov token named "CODECOV_TOKEN"
-* Create action workflow "ci.yml" with the following contents:
-
-```yaml
-name: CI-Node.js
-on: [push, pull_request_target]
-jobs:
-  build:
-    runs-on: ubuntu-22.04
-    steps:
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Cache Node - npm
-      uses: actions/cache@v4
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-    - name: CI
-      uses: untillpro/ci-action@main
-      with:
-        codecov-token: ${{ secrets.CODECOV_TOKEN }}
-```
-### Reusable workflows
-
-For repositories that want to reuse the CI logic from this repository, you can call the reusable workflows via `workflow_call`.
-
-**Go reusable workflow**
-
-```yaml
-name: CI-Go
-on: [push, pull_request_target]
-jobs:
-  build:
-    uses: untillpro/ci-action/.github/workflows/ci_reuse_go.yml@main
+    uses: untillpro/ci-action/.github/workflows/ci.yml@main
+    with:
+      short_test: 'false'      # Run short tests only
+      go_race: 'false'         # Enable race detector
+      install_tinygo: 'false'  # Install TinyGo
+      extra_env: ''            # Additional environment variables
     secrets:
       reporeading_token: ${{ secrets.REPOREADING_TOKEN }}
-      codecov_token: ${{ secrets.CODECOV_TOKEN }}
 ```
 
-**Go PR reusable workflow**
+**What it does:**
+1. Detects Go language
+2. Checks hidden folders
+3. Checks bash script headers
+4. Checks copyright notices
+5. Validates go.mod (no local replaces)
+6. Runs tests
+7. Runs linters (golangci-lint)
+8. Runs vulnerability check (govulncheck)
+
+### ci_pr.yml - PR Workflow
+
+Extends ci.yml with pull request-specific checks:
 
 ```yaml
-name: CI-Go-PR
+name: CI-PR
 on: pull_request_target
 jobs:
   build:
-    uses: untillpro/ci-action/.github/workflows/ci_reuse_go_pr.yml@main
+    uses: untillpro/ci-action/.github/workflows/ci_pr.yml@main
+    with:
+      running_workflow: 'CI-PR'  # Cancel duplicate workflows
     secrets:
       reporeading_token: ${{ secrets.REPOREADING_TOKEN }}
-      codecov_token: ${{ secrets.CODECOV_TOKEN }}
       personal_token: ${{ secrets.PERSONAL_TOKEN }}
 ```
 
-**Node.js reusable workflow**
+**Additional checks:**
+- Cancel duplicate running workflows
+- Check PR file size limits
+
+### cp.yml - Cherry Pick Workflow
+
+Cherry pick commits to rc/release branches via issue creation.
+
+### rc.yml - Release Candidate Workflow
+
+Re-create release branch from main.
+
+### create_issue.yml - Create Issue Workflow
+
+Create issues programmatically.
+
+## Composite Action
+
+### checkout-and-setup-go
+
+Checkout repository and setup Go with auto-detected version:
 
 ```yaml
-name: CI-Node
-on: [push, pull_request_target]
-jobs:
-  build:
-    uses: untillpro/ci-action/.github/workflows/ci_reuse.yml@main
-    secrets:
-      reporeading_token: ${{ secrets.REPOREADING_TOKEN }}
+- uses: untillpro/ci-action/checkout-and-setup-go@main
+  with:
+    fetch_depth: 0
+    # ref: ${{ github.event.pull_request.head.sha }}
 ```
 
-## Architecture
+**Inputs:**
+- `fetch_depth` - Fetch depth for checkout (default: 1)
+- `ref` - Git ref to checkout
+- `token` - Token for checkout
+- `submodules` - Submodules option
+- `path` - Path to checkout into (default: ".")
+- `go-version` - Go version (auto-detected from go.work/go.mod if not specified)
 
-- [architecture.md](architecture.md)
+**Outputs:**
+- `go-version` - The Go version being used
 
-## Implementation
+## Scripts
 
-This action is implemented using **bash scripts** instead of Node.js/JavaScript:
+Located in `scripts/` directory:
 
-- **Type**: Composite action (defined in `action.yml`)
-- **Runtime**: Bash shell (no Node.js required)
-- **Dependencies**: Standard Unix tools + GitHub CLI (for publishing)
-- **Scripts**: Located in `scripts/` directory
+| Script | Purpose |
+|--------|---------|
+| `detect_language.sh` | Auto-detect Go projects |
+| `detect-go-version.sh` | Detect Go version from go.work/go.mod |
+| `reject_hidden_folders.sh` | Validate repository structure |
+| `check_copyright.sh` | Validate copyright notices |
+| `check_gomod.sh` | Validate go.mod has no local replaces |
+| `check_sh_header.sh` | Validate bash script headers |
+| `ci_go.sh` | Run Go tests |
+| `run-linters.sh` | Run golangci-lint |
+| `install-tinygo.sh` | Install TinyGo |
+| `checkPR.sh` | Check PR file size |
+| `cancelworkflow.sh` | Cancel duplicate workflows |
+| `cp.sh` | Cherry pick commits |
+| `rc.sh` | Create release candidate |
+| `git-release.sh` | Git release utilities |
+| `createissue.sh` | Create GitHub issues |
+| `close-issue.sh` | Close GitHub issues |
+| `add-issue-commit.sh` | Add comment to issue |
+| `unlinkmilestone.sh` | Unlink milestone from issue |
+| `domergepr.sh` | Merge pull request |
+| `updateConfig.sh` | Update configuration |
+| `deleteDockerImages.sh` | Delete Docker images |
 
-### Main Scripts
+## Setup
 
-| Script                              | Purpose                               |
-|-------------------------------------|---------------------------------------|
-| `ci_main.sh`                        | Main CI orchestration                 |
-| `reject_hidden_folders.sh`          | Validate repository structure         |
-| `detect_language.sh`                | Auto-detect Go or Node.js projects    |
-| `check_source_copyright.sh`         | Validate copyright notices            |
-| `check_gomod.sh`                    | Validate go.mod has no local replaces |
-| `publish_release.sh`                | Create and publish GitHub releases    |
-| `checkout-and-setup-go/action.yml`  | Helper composite: checkout + Go setup |
-
-### Additional Scripts
-
-The `scripts/` directory also contains standalone scripts for:
-- `run-linters.sh` - Run golangci-lint
-- `vulncheck.sh` / `execgovuln.sh` - Run govulncheck
-- `check_copyright.sh` - Alternative copyright checker
-- Various other utility scripts
+1. Create a personal access token: [GitHub Settings > Tokens](https://github.com/settings/tokens)
+2. Add secret `REPOREADING_TOKEN` to your repository
+3. Create workflow file calling the reusable workflows
 
 ## License
 
 The scripts and documentation in this project are released under the [MIT License](LICENSE)
+
