@@ -25,9 +25,26 @@ jobs:
   validate-code:
     name: Validate code
     runs-on: ubuntu-22.04
+    outputs:
+      language: ${{ steps.detect-language.outputs.language }}
     steps:
+      - name: Detect language
+        id: detect-language
+        shell: bash
+        env:
+          github_token: ${{ secrets.reporeading_token }}
+        run: |
+          set -Eeuo pipefail
+          LANGUAGE=$(curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/detect_language.sh | bash)
+          echo "Detected language: $LANGUAGE"
+          if [ "$LANGUAGE" = "unknown" ]; then
+            echo "Error: project language unknown" >&2
+            exit 1
+          fi
+          echo "LANGUAGE=$LANGUAGE" >> "$GITHUB_ENV"
+          echo "language=$LANGUAGE" >> "$GITHUB_OUTPUT"
 
-      - name: Checkout
+      - name: Checkout (if not yet)
         uses: actions/checkout@v5
         if: ${{ hashFiles('.git/HEAD') == '' }} # checkout only if not checked out yet
         with:
@@ -52,6 +69,7 @@ jobs:
     name: Run tests (Go)
     runs-on: ubuntu-22.04
     needs: validate-code
+    if: ${{ needs.validate-code.outputs.language == 'go' }}
     steps:
       - name: Checkout (if not yet) and Set Up Go
         id: go-setup
