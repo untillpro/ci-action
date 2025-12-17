@@ -25,23 +25,25 @@ jobs:
 
 **What it does:**
 
-**Job 1: validate-code**
-1. Checks hidden folders (no `.folder` allowed)
-2. Checks bash script headers (`#!/usr/bin/env bash` + `set -Eeuo pipefail`)
-3. Checks copyright notices
+**Job 1: `validate-code`**
+1. Detects project language (Go or Node.js)
+2. Checks out code
+3. Checks hidden folders (no `.folder` allowed)
+4. Checks bash script headers (`#!/usr/bin/env bash` + `set -Eeuo pipefail`)
+5. Checks copyright notices
 
-**Job 2: run-tests-go**
-1. Checks out code and sets up Go (auto-detects version from go.work/go.mod)
+**Job 2: `run-tests-go`** (runs only if language is Go)
+1. Checks out code and sets up Go (auto-detects version from `go.work`/`go.mod`)
 2. Optionally installs TinyGo (if `install_tinygo: 'true'`)
 3. Applies extra environment variables (if `extra_env` provided)
-4. Validates go.mod (no local `replace` directives)
-5. Runs Go tests with private repo access
-6. Runs linters (golangci-lint)
-7. Runs vulnerability check (govulncheck) unless `short_test: 'true'`
+4. Validates `go.mod` (no local `replace` directives)
+5. Runs Go tests with private repo access (`github.com/untillpro/*`, `github.com/heeus/*`)
+6. Runs linters (`golangci-lint`)
+7. Runs vulnerability check (`govulncheck`) unless `short_test: 'true'`
 
-### ci_pr.yml - PR Workflow
+### ci_pr.yml - Pull Request Workflow
 
-Extends ci.yml with pull request-specific checks:
+Extends `ci.yml` with pull request-specific checks. Automatically cancels duplicate workflow runs for the same PR using GitHub's native concurrency control.
 
 ```yaml
 name: CI-PR
@@ -50,19 +52,24 @@ jobs:
   build:
     uses: untillpro/ci-action/.github/workflows/ci_pr.yml@main
     with:
-      running_workflow: 'CI-PR'  # Optional: cancel duplicate workflows
       short_test: 'false'        # Optional: same as ci.yml
       go_race: 'false'           # Optional: same as ci.yml
       install_tinygo: 'false'    # Optional: same as ci.yml
       extra_env: ''              # Optional: same as ci.yml
     secrets:
       reporeading_token: ${{ secrets.REPOREADING_TOKEN }}
-      personal_token: ${{ secrets.PERSONAL_TOKEN }}  # Required only if running_workflow is set
 ```
 
-**Additional checks (before running ci.yml):**
-- Cancel duplicate running workflows (if `running_workflow` is set)
-- Check PR file size limits
+**What it does:**
+
+**Concurrency Control:**
+- Automatically cancels previous workflow runs for the same PR when a new commit is pushed
+
+**Job 1: `pull-request-check`**
+- Checks PR file size limits
+
+**Job 2: `CI`**
+- Calls `ci.yml` with all the same inputs and secrets
 
 ### cp.yml - Cherry Pick Workflow
 
@@ -102,7 +109,15 @@ Checkout repository and setup Go with auto-detected version:
 
 ## Scripts
 
-Located in `scripts/` directory and called directly via `curl` from workflows:
+Located in `scripts/` directory and called directly via `curl` from workflows.
+
+### Core CI Scripts
+| Script | Purpose |
+|--------|---------|
+| `detect_language.sh` | Auto-detect project language (Go or Node.js) |
+| `detect-go-version.sh` | Detect Go version from `go.work`/`go.mod` |
+| `ci_go.sh` | Run Go tests with private repo access |
+| `ci_node_js.sh` | Run Node.js tests |
 
 ### Validation Scripts
 | Script | Purpose |
@@ -110,26 +125,23 @@ Located in `scripts/` directory and called directly via `curl` from workflows:
 | `reject_hidden_folders.sh` | Validate repository structure (no hidden folders) |
 | `check_sh_header.sh` | Validate bash script headers |
 | `check_copyright.sh` | Validate copyright notices |
-| `check_gomod.sh` | Validate go.mod has no local `replace` directives |
+| `check_gomod.sh` | Validate `go.mod` has no local `replace` directives |
 
-### Go Build & Test Scripts
+### Go Tooling Scripts
 | Script | Purpose |
 |--------|---------|
-| `detect-go-version.sh` | Detect Go version from go.work/go.mod |
-| `ci_go.sh` | Run Go tests with private repo access |
-| `run-linters.sh` | Run golangci-lint |
+| `run-linters.sh` | Run `golangci-lint` |
 | `install-tinygo.sh` | Install TinyGo for a specific Go version |
 
-### PR & Workflow Scripts
+### PR Scripts
 | Script | Purpose |
 |--------|---------|
 | `checkPR.sh` | Check PR file size limits |
-| `cancelworkflow.sh` | Cancel duplicate running workflows |
 
 ### Release & Issue Management Scripts
 | Script | Purpose |
 |--------|---------|
-| `cp.sh` | Cherry pick commits to rc/release branches |
+| `cp.sh` | Cherry-pick commits to rc/release branches |
 | `rc.sh` | Create release candidate branch |
 | `git-release.sh` | Git release utilities |
 | `createissue.sh` | Create GitHub issues |
@@ -148,17 +160,13 @@ Located in `scripts/` directory and called directly via `curl` from workflows:
 
 ### Required Secrets
 
-1. **`REPOREADING_TOKEN`** (required)
-   - Create a personal access token: [GitHub Settings > Tokens](https://github.com/settings/tokens)
-   - Needs `repo` scope to access private repositories
-   - Add as repository or organization secret
-   - Used for:
-     - Checking out code
-     - Accessing private Go modules (`github.com/untillpro/*`, `github.com/heeus/*`)
-
-2. **`PERSONAL_TOKEN`** (optional, only for PR workflows with `running_workflow` set)
-   - Used to cancel duplicate running workflows
-   - Needs `actions:write` scope
+**`REPOREADING_TOKEN`** (required)
+- Create a personal access token: [GitHub Settings > Tokens](https://github.com/settings/tokens)
+- Needs `repo` scope to access private repositories
+- Add as repository or organization secret
+- Used for:
+  - Checking out code
+  - Accessing private Go modules (`github.com/untillpro/*`, `github.com/heeus/*`)
 
 ### Example Workflow Setup
 
@@ -179,7 +187,7 @@ jobs:
       reporeading_token: ${{ secrets.REPOREADING_TOKEN }}
 ```
 
-**For PR with duplicate cancellation:**
+**For pull requests:**
 
 ```yaml
 # .github/workflows/ci-pr.yml
@@ -190,11 +198,8 @@ on:
 jobs:
   build:
     uses: untillpro/ci-action/.github/workflows/ci_pr.yml@main
-    with:
-      running_workflow: 'CI-PR'
     secrets:
       reporeading_token: ${{ secrets.REPOREADING_TOKEN }}
-      personal_token: ${{ secrets.PERSONAL_TOKEN }}
 ```
 
 **For voedger (with TinyGo and extra env):**

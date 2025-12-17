@@ -20,22 +20,18 @@ on:
     secrets:
       reporeading_token:
         required: true
-      personal_token:
+      personal_token: # deprecated
         required: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   pull-request-check:
     name: Pull request check
     runs-on: ubuntu-22.04
     steps:
-      - name: Check if another PR workflow running and cancel it
-        if: inputs.running_workflow != ''
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/cancelworkflow.sh | bash
-        env:
-          GH_TOKEN: ${{ secrets.personal_token }}
-          repo: ${{ github.repository }}
-          branch: ${{ github.event.pull_request.head.ref }}
-          runningworkflow: ${{ inputs.running_workflow }}
 
       - name: Check pull request file size
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/checkPR.sh | bash
