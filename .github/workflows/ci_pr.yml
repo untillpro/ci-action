@@ -2,30 +2,13 @@ name: CI for Pull Request
 on:
   workflow_call:
     inputs:
-      # used in Voedger to skip copyright check in cmd/voedger/sys.monitor/site.main
-      ignore_copyright: # deprecated
-        required: false
-        type: string
-      # used in Voedger to run tests in pkg/ only
-      test_folder:
-        required: false
-        type: string
-      ignore_bp3: # deprecated
-        required: false
-        type: string
       short_test:
         required: false
         type: string
       running_workflow:
         required: false
         type: string
-      ignore_build: # deprecated
-        required: false
-        type: string
       go_race:
-        required: false
-        type: string
-      test_subfolders:
         required: false
         type: string
       extra_env:
@@ -37,24 +20,18 @@ on:
     secrets:
       reporeading_token:
         required: true
-      codecov_token: # deprecated
+      personal_token: # deprecated
         required: false
-      personal_token:
-        required: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   pull-request-check:
     name: Pull request check
     runs-on: ubuntu-22.04
     steps:
-      - name: Check if another PR workflow running and cancel it
-        if: inputs.running_workflow != ''
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/cancelworkflow.sh | bash
-        env:
-          GH_TOKEN: ${{ secrets.personal_token }}
-          repo: ${{ github.repository }}
-          branch: ${{ github.event.pull_request.head.ref }}
-          runningworkflow: ${{ inputs.running_workflow }}
 
       - name: Check pull request file size
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/checkPR.sh | bash
@@ -67,14 +44,10 @@ jobs:
     needs: pull-request-check
     uses: ./.github/workflows/ci.yml
     with:
-      test_folder: ${{ inputs.test_folder }}
       short_test: ${{ inputs.short_test }}
       running_workflow: ${{ inputs.running_workflow }}
       go_race: ${{ inputs.go_race }}
-      test_subfolders: ${{ inputs.test_subfolders }}
       extra_env: ${{ inputs.extra_env }}
       install_tinygo: ${{ inputs.install_tinygo }}
     secrets:
       reporeading_token: ${{ secrets.reporeading_token }}
-      codecov_token: ${{ secrets.codecov_token }}
-      personal_token: ${{ secrets.personal_token }}

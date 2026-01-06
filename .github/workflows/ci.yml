@@ -2,39 +2,13 @@ name: CI
 on:
   workflow_call:
     inputs:
-      # used in Voedger to skip copyright check in cmd/voedger/sys.monitor/site.main
-      ignore_copyright: # deprecated
-        required: false
-        type: string
-      # used in Voedger to run tests in pkg/ only
-      test_folder:
-        required: false
-        type: string
-      ignore_bp3: # deprecated
-        required: false
-        type: string
       short_test:
         required: false
         type: string
       go_race:
         required: false
         type: string
-      ignore_build: # deprecated
-        required: false
-        type: string
-      test_subfolders:
-        required: false
-        type: string
       running_workflow:
-        required: false
-        type: string
-      build_cmd: # deprecated
-        required: false
-        type: string
-      fiscal_vatnr:
-        required: false
-        type: string
-      fiscal_caption:
         required: false
         type: string
       extra_env:
@@ -46,14 +20,6 @@ on:
     secrets:
       reporeading_token:
         required: true
-      codecov_token: # deprecated
-        required: false
-      personal_token:
-        required: false
-      chargebee_token: # deprecated
-        required: false
-      chargebee_sitename: # deprecated
-        required: false
 
 jobs:
   validate-code:
@@ -62,7 +28,6 @@ jobs:
     outputs:
       language: ${{ steps.detect-language.outputs.language }}
     steps:
-
       - name: Detect language
         id: detect-language
         shell: bash
@@ -89,10 +54,13 @@ jobs:
           path: ${{ inputs.path }}
           fetch-depth: 0 # note: 0 need to make check_copyright.sh work properly (getting diff between PR and main)
 
-
       - name: Check hidden folders
         shell: bash
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/reject_hidden_folders.sh | bash -s
+
+      - name: Check bash headers
+        shell: bash
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_sh_header.sh | bash -s
 
       - name: Check copyright
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/check_copyright.sh | bash -s
@@ -149,68 +117,16 @@ jobs:
           TOKEN: ${{ secrets.reporeading_token }}
           CODECOV_GO_RACE: ${{ inputs.go_race }}
           REPOSITORY: ${{ github.repository }}
-          TEST_FOLDER: ${{ inputs.test_folder }}
           SHORT_TEST: ${{ inputs.short_test }}
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/ci_go.sh | bash -s
 
-      - name: Test subfolders
-        if: inputs.test_subfolders == 'true'
-        run: |
-          if [ "${{ inputs.short_test }}" == "true" ]; then
-            curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s short
-          else
-            curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/test_subfolders.sh | bash -s full
-          fi
-
       - name: Linters
-        if: false
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
-        env:
-          testfolder: ${{ inputs.test_folder }}
 
       - name: Vulnerability check
         shell: bash
         if: inputs.short_test != 'true'
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/vulncheck.sh | bash -s
-
-  run-tests-nodejs:
-    name: Run tests (Node.js)
-    runs-on: ubuntu-22.04
-    needs: validate-code
-    if: ${{ needs.validate-code.outputs.language == 'node_js' }}
-    steps:
-
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          token: ${{ secrets.reporeading_token }}
-          ref: ${{ inputs.ref || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.head.sha || github.sha) }}
-          submodules: true
-          path: ${{ inputs.path }}
-
-      - name: Run tests (Node.js)
-        shell: bash
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/ci_node_js.sh | bash -s
-
-  build-and-upload:
-    name: Build and upload Go project (deprecated)
-    runs-on: ubuntu-22.04
-    needs: run-tests-go
-    steps:
-
-      - name: Chechout
-        uses: actions/checkout@v5
-
-      - name: Build executable
         run: |
-          git config --global url."https://${{ secrets.REPOREADING_TOKEN }}:x-oauth-basic@github.com/untillpro".insteadOf "https://github.com/untillpro"
-          ${{ inputs.build_cmd }}
-        env:
-          GOPRIVATE: "github.com/untillpro/*"
-
-      - name: Upload project
-        uses: actions/upload-artifact@v4
-        with:
-          name: project-files
-          path: .
-          retention-days: 1
+          set -Eeuo pipefail
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          govulncheck ./...

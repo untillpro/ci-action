@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
+# updates ./airs-config-sync/stacks/[dev|rc|euro]/stack.yml
+# untillpro/airs-config-sync repo must be checked out in ./airs-config-sync
+# determines whether dev, euro or rc stack should be used based on the current branch (main, rc, release) in . dir
+# if no git repo in . then $branch env var is used to determine the stack. Expected values of $branch are: [rc|release]
+
 set -Eeuo pipefail
+
+echo "current git: $(git rev-parse --git-dir 2>/dev/null || echo 'not a git repository')"
+echo "current branch: $(git symbolic-ref --short HEAD 2>/dev/null || echo 'unknown')"
+echo "branch env var: ${branch:-<not specified>}"
 
 br=""
 if git rev-parse --git-dir > /dev/null 2>&1; then
@@ -8,7 +17,11 @@ fi
 
 # Fallback to the environment variable 'branch' if 'br' is empty
 if [ -z "$br" ]; then
-  br="$branch"
+  br="${branch:-}"
+  if [ -z "$br" ]; then
+    echo "Error: branch could not be detected from git and 'branch' environment variable is not set"
+    exit 1
+  fi
 fi
 echo "Branch: $br"
 
