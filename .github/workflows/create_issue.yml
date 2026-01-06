@@ -1,4 +1,4 @@
-name: Show Current Time
+name: Create Issue
 
 # This specifies when the workflow should run. In this case, it runs on every push to the main branch.
 on:
