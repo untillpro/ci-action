@@ -20,8 +20,6 @@ on:
     secrets:
       reporeading_token:
         required: true
-      personal_token: # deprecated
-        required: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
