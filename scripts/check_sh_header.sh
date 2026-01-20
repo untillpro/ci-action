@@ -51,13 +51,13 @@ while IFS= read -r file; do
 
       if (count == 1) {
         if (!(line ~ /^#!\/usr\/bin\/env[ \t]+bash([ \t]|$)/)) {
-          printf "::error file=%s::Missing or incorrect shebang #!/usr/bin/env bash at the beginning of the file\n", file;
+          printf "::error file=%s::Missing or incorrect shebang #!/usr/bin/env bash at the beginning of the file %s\n", file, file;
           bad = 1;
         }
       }
       else if (count == 2) {
         if (!(line ~ /^set[ \t]+-Eeuo[ \t]+pipefail([ \t]|$)/)) {
-          printf "::error file=%s::Missing set -Eeuo pipefail immediately after the shebang (ignoring comments/blank lines)\n", file;
+          printf "::error file=%s::Missing set -Eeuo pipefail immediately after the shebang (ignoring comments/blank lines) in file %s\n", file, file;
           bad = 1;
         }
         exit bad;
@@ -66,11 +66,11 @@ while IFS= read -r file; do
 
     END {
       if (count == 0) {
-        printf "::error file=%s::Missing or incorrect shebang #!/usr/bin/env bash at the beginning of the file\n", file;
-        printf "::error file=%s::Missing set -Eeuo pipefail immediately after the shebang (ignoring comments/blank lines)\n", file;
+        printf "::error file=%s::Missing or incorrect shebang #!/usr/bin/env bash at the beginning of the file %s\n", file, file;
+        printf "::error file=%s::Missing set -Eeuo pipefail immediately after the shebang (ignoring comments/blank lines) in file %s\n", file, file;
         exit 1;
       } else if (count == 1) {
-        printf "::error file=%s::Missing set -Eeuo pipefail immediately after the shebang (ignoring comments/blank lines)\n", file;
+        printf "::error file=%s::Missing set -Eeuo pipefail immediately after the shebang (ignoring comments/blank lines) in file %s\n", file, file;
         exit 1;
       }
       exit bad;
