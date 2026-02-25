@@ -57,7 +57,7 @@ check_added_file() {
   full_path=$(resolve_path "$filename")
 
   if [[ ! -f "$full_path" ]]; then
-    printf '::error file=%s::Cannot read file\n' "$filename"
+    printf '::error file=%s::Cannot read file %s\n' "$filename" "$filename"
     err=1
     return
   fi
@@ -69,14 +69,14 @@ check_added_file() {
 
   # If typo B. V. appears anywhere, fail
   if grep -qE "$NEW_TYPO_RE" "$full_path"; then
-    printf '::error file=%s::The copyright has spaces between B. and V.. Should be: B.V.\n' "$filename"
+    printf '::error file=%s::The copyright has spaces between B. and V.. Should be: B.V. in file %s\n' "$filename" "$filename"
     err=1
     return
   fi
 
   # New files must contain the correct copyright line
   if ! grep -qE "$NEW_CORRECT_RE" "$full_path"; then
-    printf '::error file=%s::New files must use "unTill Software Development Group B.V." copyright in the header\n' "$filename"
+    printf '::error file=%s::New files must use "unTill Software Development Group B.V." copyright in the header in file %s\n' "$filename" "$filename"
     err=1
     return
   fi
@@ -89,7 +89,7 @@ check_added_file() {
     while IFS='' read -r line; do
       [[ -z "$line" ]] && continue
       if ! grep -qE "$NEW_CORRECT_RE" <<< "$line"; then
-        printf '::error file=%s::New files must not use other copyright holders; only "unTill Software Development Group B.V." is allowed\n' "$filename"
+        printf '::error file=%s::New files must not use other copyright holders; only "unTill Software Development Group B.V." is allowed in file %s\n' "$filename" "$filename"
         err=1
         return
       fi
@@ -122,7 +122,7 @@ check_modified_file() {
   new_c=$(echo "$new_header" | grep -E 'Copyright[[:space:]]\(c\)' || true)
 
   if [[ "$old_c" != "$new_c" ]]; then
-    printf '::error file=%s::Modification of existing copyright header is not allowed\n' "$filename"
+    printf '::error file=%s::Modification of existing copyright header is not allowed in file %s\n' "$filename" "$filename"
     err=1
   fi
 }
