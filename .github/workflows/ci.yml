@@ -123,7 +123,7 @@ jobs:
           SHORT_TEST: ${{ inputs.short_test }}
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/ci_go.sh | bash -s
 
-      - name: Linters
+      - name: Linters (for main branch only)
         if: github.ref == 'refs/heads/main'
         shell: bash
         env:
