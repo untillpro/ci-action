@@ -17,6 +17,9 @@ on:
       install_tinygo:
         required: false
         type: string
+      lint_exclude:
+        required: false
+        type: string
     secrets:
       reporeading_token:
         required: true
@@ -47,5 +50,6 @@ jobs:
       go_race: ${{ inputs.go_race }}
       extra_env: ${{ inputs.extra_env }}
       install_tinygo: ${{ inputs.install_tinygo }}
+      lint_exclude: ${{ inputs.lint_exclude }}
     secrets:
       reporeading_token: ${{ secrets.reporeading_token }}
