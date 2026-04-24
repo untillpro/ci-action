@@ -124,6 +124,7 @@ jobs:
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/ci_go.sh | bash -s
 
       - name: Linters
+        if: github.ref == 'refs/heads/main'
         shell: bash
         env:
           LINT_EXCLUDE: ${{ inputs.lint_exclude }}
