@@ -23,7 +23,7 @@ for folder in .*/ ; do
     fi
 
     # Allow specific hidden folders
-    if [ "$folder" = ".git" ] || [ "$folder" = ".github" ] || [ "$folder" = ".husky" ] || [ "$folder" = ".augment" ]; then
+    if [ "$folder" = ".git" ] || [ "$folder" = ".github" ] || [ "$folder" = ".husky" ] || [ "$folder" = ".augment" ] || [ "$folder" = ".claude" ]; then
         continue
     fi
 
