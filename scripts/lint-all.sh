@@ -9,6 +9,11 @@ set -Eeuo pipefail
 # --exclude DIR...   Skip each DIR and everything under it. Consumes every
 #                    following argument until the next --flag. Repeatable.
 #                    Also accepted as --exclude=DIR (single value).
+#
+# A module directory is also skipped if it (or any ancestor directory up to
+# the starting directory) contains a `.nolint` marker file. Subdirectories of
+# a directory carrying `.nolint` are skipped even when they do not have their
+# own `.nolint` file.
 
 # Select GNU find explicitly. On Windows, `find` in PATH can resolve to
 # Windows' FIND.EXE when bash is launched from PowerShell/cmd, so rely on
@@ -70,6 +75,25 @@ is_excluded() {
 	return 1
 }
 
+# Returns 0 if $1 or any ancestor up to '.' contains a `.nolint` file.
+has_nolint_ancestor() {
+	local d=$1
+
+	while :; do
+		if [ -f "$d/.nolint" ]; then
+			return 0
+		fi
+		if [ "$d" = "." ]; then
+			return 1
+		fi
+		if [[ "$d" == */* ]]; then
+			d=${d%/*}
+		else
+			d=.
+		fi
+	done
+}
+
 find_prunes=(
 	-path './vendor' -o -path '*/vendor'
 	-o -path './node_modules' -o -path '*/node_modules'
@@ -80,6 +104,7 @@ failed=0
 found=0
 scanned_dirs=()
 excluded_dirs=()
+nolint_dirs=()
 
 while IFS= read -r -d '' gomod; do
 	dir=${gomod%/go.mod}
@@ -88,6 +113,11 @@ while IFS= read -r -d '' gomod; do
 
 	if is_excluded "$dir"; then
 		excluded_dirs+=("$dir")
+		continue
+	fi
+
+	if has_nolint_ancestor "$dir"; then
+		nolint_dirs+=("$dir")
 		continue
 	fi
 
@@ -120,6 +150,13 @@ fi
 if [ "${#excluded_dirs[@]}" -gt 0 ]; then
 	printf 'modules excluded:\n'
 	for dir in "${excluded_dirs[@]}"; do
+		printf '  %s\n' "$dir"
+	done
+fi
+
+if [ "${#nolint_dirs[@]}" -gt 0 ]; then
+	printf 'modules skipped (.nolint):\n'
+	for dir in "${nolint_dirs[@]}"; do
 		printf '  %s\n' "$dir"
 	done
 fi
