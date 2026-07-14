@@ -90,7 +90,7 @@ Re-create release branch from main.
 
 Create issues programmatically.
 
-## Composite Action
+## Composite Actions
 
 ### checkout-and-setup-go
 
@@ -115,6 +115,34 @@ Checkout repository and setup Go with auto-detected version:
 **Outputs:**
 
 - `go-version` - The Go version being used
+
+### wait-for-scylla
+
+Poll a Scylla/Cassandra service container until CQL is ready, failing with container state and logs on timeout. Runs inside the calling job, so it operates on that job's service container:
+
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    services:
+      scylladb:
+        image: scylladb/scylla:5.1.13
+        ports:
+          - 9042:9042
+    steps:
+      - uses: untillpro/ci-action/checkout-and-setup-go@main
+      - uses: untillpro/ci-action/wait-for-scylla@main
+        with:
+          container-id: ${{ job.services.scylladb.id }}
+          attempts: "60" # Optional: readiness attempts, one per second (default: 60)
+          # port: "9042" # Optional: CQL port to probe (default: 9042)
+```
+
+**Inputs:**
+
+- `container-id` - ID of the Scylla service container (e.g. `${{ job.services.scylladb.id }}`) (required)
+- `port` - CQL port to probe (default: "9042")
+- `attempts` - Maximum number of readiness attempts, one per second (default: "60")
 
 ## Scripts
 

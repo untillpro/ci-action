@@ -1,0 +1,62 @@
+name: Wait for Scylla CQL
+description: Poll a Scylla/Cassandra service container until CQL is ready, failing with diagnostics on timeout
+
+inputs:
+  container-id:
+    description: "ID of the Scylla service container (e.g. ${{ job.services.scylladb.id }})"
+    required: true
+  port:
+    description: "CQL port to probe"
+    required: false
+    default: "9042"
+  attempts:
+    description: "Maximum number of readiness attempts, one per second"
+    required: false
+    default: "60"
+
+runs:
+  using: composite
+  steps:
+    - name: Wait for Scylla CQL
+      shell: bash
+      env:
+        SCYLLA_CONTAINER: ${{ inputs.container-id }}
+        SCYLLA_PORT: ${{ inputs.port }}
+        SCYLLA_ATTEMPTS: ${{ inputs.attempts }}
+      run: |
+        container="$SCYLLA_CONTAINER"
+        if ! scylla_ip="$(docker inspect \
+          --format '{{range .NetworkSettings.Networks}}{{println .IPAddress}}{{end}}' \
+          "$container" | awk 'NF && !found { print; found=1 }')"; then
+          echo "::error::Failed to inspect the Scylla service container"
+          docker ps -a --filter "id=$container"
+          exit 1
+        fi
+
+        if [[ -z "$scylla_ip" ]]; then
+          echo "::error::Failed to extract Scylla container IP address"
+          docker inspect "$container"
+          exit 1
+        fi
+
+        echo "Scylla container IP: $scylla_ip"
+
+        for attempt in $(seq 1 "$SCYLLA_ATTEMPTS"); do
+          if timeout --kill-after=1s 5s docker exec "$container" \
+            cqlsh "$scylla_ip" "$SCYLLA_PORT" \
+            -e "DESCRIBE KEYSPACES" >/dev/null 2>&1; then
+            echo "Scylla CQL is ready"
+            exit 0
+          fi
+
+          echo "Waiting for Scylla CQL readiness, attempt ${attempt}/${SCYLLA_ATTEMPTS}..."
+          sleep 1
+        done
+
+        echo "::error::Scylla CQL did not become ready"
+        timeout --kill-after=1s 5s docker exec "$container" \
+          cqlsh "$scylla_ip" "$SCYLLA_PORT" \
+          -e "DESCRIBE KEYSPACES" || true
+        docker ps -a --filter "id=$container"
+        docker logs --tail 200 "$container"
+        exit 1
