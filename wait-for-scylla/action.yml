@@ -3,7 +3,7 @@ description: Poll a Scylla/Cassandra service container until CQL is ready, faili
 
 inputs:
   container-id:
-    description: "ID of the Scylla service container (e.g. ${{ job.services.scylladb.id }})"
+    description: "ID of the Scylla service container, e.g. job.services.scylladb.id"
     required: true
   port:
     description: "CQL port to probe"
