@@ -4,13 +4,7 @@ set -Eeuo pipefail
 # Recursively finds every Go module under the current directory and runs
 # `golangci-lint run ./...` in each module directory.
 #
-# Usage: lint-all.sh [--exclude DIR...]
-#
-# --exclude DIR...   Skip each DIR and everything under it. Consumes every
-#                    following argument until the next --flag. Repeatable.
-#                    Also accepted as --exclude=DIR (single value).
-#
-# A module directory is also skipped if it (or any ancestor directory up to
+# A module directory is skipped if it (or any ancestor directory up to
 # the starting directory) contains a `.nolint` marker file. Subdirectories of
 # a directory carrying `.nolint` are skipped even when they do not have their
 # own `.nolint` file.
@@ -32,47 +26,6 @@ esac
 [ -x "$FIND" ] || command -v "$FIND" >/dev/null 2>&1 || {
 	echo "error: find not found at $FIND" >&2
 	exit 2
-}
-
-raw_excluded=()
-
-while [ "$#" -gt 0 ]; do
-	case "$1" in
-		--exclude)
-			shift
-			while [ "$#" -gt 0 ] && [[ "$1" != --* ]]; do
-				raw_excluded+=("$1")
-				shift
-			done
-			;;
-		--exclude=*)
-			raw_excluded+=("${1#--exclude=}")
-			shift
-			;;
-		*)
-			shift
-			;;
-	esac
-done
-
-excluded=()
-for arg in "${raw_excluded[@]}"; do
-	e=${arg#./}
-	e=${e%/}
-	[ -n "$e" ] && excluded+=("$e")
-done
-
-is_excluded() {
-	local dir=$1
-	local e
-
-	for e in "${excluded[@]}"; do
-		if [ "$dir" = "$e" ] || [[ "$dir" == "$e"/* ]]; then
-			return 0
-		fi
-	done
-
-	return 1
 }
 
 # Returns 0 if $1 or any ancestor up to '.' contains a `.nolint` file.
@@ -103,18 +56,12 @@ find_prunes=(
 failed=0
 found=0
 scanned_dirs=()
-excluded_dirs=()
 nolint_dirs=()
 
 while IFS= read -r -d '' gomod; do
 	dir=${gomod%/go.mod}
 	dir=${dir#./}
 	[ -z "$dir" ] && dir=.
-
-	if is_excluded "$dir"; then
-		excluded_dirs+=("$dir")
-		continue
-	fi
 
 	if has_nolint_ancestor "$dir"; then
 		nolint_dirs+=("$dir")
@@ -143,13 +90,6 @@ if [ "$found" -eq 0 ]; then
 else
 	printf 'modules scanned:\n'
 	for dir in "${scanned_dirs[@]}"; do
-		printf '  %s\n' "$dir"
-	done
-fi
-
-if [ "${#excluded_dirs[@]}" -gt 0 ]; then
-	printf 'modules excluded:\n'
-	for dir in "${excluded_dirs[@]}"; do
 		printf '  %s\n' "$dir"
 	done
 fi

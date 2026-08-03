@@ -19,7 +19,6 @@ jobs:
       go_race: "false" # Optional: enable race detector
       install_tinygo: "false" # Optional: install TinyGo (needed for voedger)
       extra_env: "" # Optional: additional environment variables (multi-line KEY=VALUE)
-      lint_exclude: "" # Optional: space-separated dirs to exclude from linting (passed to lint-all.sh --exclude)
     secrets:
       reporeading_token: ${{ secrets.REPOREADING_TOKEN }}
 ```
@@ -44,6 +43,8 @@ jobs:
 6. Runs linters (`golangci-lint`)
 7. Runs vulnerability check (`govulncheck`) unless `short_test: 'true'`
 
+To skip a directory and its descendant Go modules during linting, place an empty `.nolint` file in that directory.
+
 ### ci_pr.yml - Pull Request Workflow
 
 Extends `ci.yml` with pull request-specific checks. Automatically cancels duplicate workflow runs for the same PR using GitHub's native concurrency control.
@@ -59,7 +60,6 @@ jobs:
       go_race: "false" # Optional: same as ci.yml
       install_tinygo: "false" # Optional: same as ci.yml
       extra_env: "" # Optional: same as ci.yml
-      lint_exclude: "" # Optional: same as ci.yml
     secrets:
       reporeading_token: ${{ secrets.REPOREADING_TOKEN }}
 ```

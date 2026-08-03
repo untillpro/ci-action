@@ -10,4 +10,4 @@ curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install
 
 export PATH="${GOBIN}:${PATH}"
 
-curl -sSfL https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/lint-all.sh | bash -s -- "$@"
+curl -sSfL https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/lint-all.sh | bash -s

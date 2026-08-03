@@ -17,9 +17,6 @@ on:
       install_tinygo:
         required: false
         type: string
-      lint_exclude:
-        required: false
-        type: string
     secrets:
       reporeading_token:
         required: true
@@ -125,16 +122,7 @@ jobs:
 
       - name: Linters
         shell: bash
-        env:
-          LINT_EXCLUDE: ${{ inputs.lint_exclude }}
-        run: |
-          set -Eeuo pipefail
-          args=()
-          if [ -n "$LINT_EXCLUDE" ]; then
-            # shellcheck disable=SC2206
-            args=(--exclude $LINT_EXCLUDE)
-          fi
-          curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s -- "${args[@]}"
+        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
 
       - name: Vulnerability check
         shell: bash
