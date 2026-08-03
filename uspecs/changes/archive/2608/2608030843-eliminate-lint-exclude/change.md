@@ -43,26 +43,26 @@ Out of scope:
 
 References:
 
-- [main reusable workflow input and linter invocation](../../../.github/workflows/ci.yml)
-- [pull-request workflow input forwarding](../../../.github/workflows/ci_pr.yml)
-- [linter bootstrap and delegation](../../../scripts/run-linters.sh)
-- [recursive module discovery and exclusion semantics](../../../scripts/lint-all.sh)
-- [public reusable-workflow examples](../../../README.md)
+- [main reusable workflow input and linter invocation](../../../../../.github/workflows/ci.yml)
+- [pull-request workflow input forwarding](../../../../../.github/workflows/ci_pr.yml)
+- [linter bootstrap and delegation](../../../../../scripts/run-linters.sh)
+- [recursive module discovery and exclusion semantics](../../../../../scripts/lint-all.sh)
+- [public reusable-workflow examples](../../../../../README.md)
 - [completed Voedger migration to `.nolint` markers](https://github.com/voedger/voedger/commit/97ee1cd59b7306c74e35a9136893b02f14f0449d)
 
 ## Provisioning and configuration
 
-- [x] update: [main reusable workflow](../../../.github/workflows/ci.yml): remove the `lint_exclude` workflow-call input and invoke the linter chain without exclusion environment values or arguments (manual edit - no CLI available)
-- [x] update: [pull-request reusable workflow](../../../.github/workflows/ci_pr.yml): remove the `lint_exclude` workflow-call input and stop forwarding it to the main reusable workflow (manual edit - no CLI available)
+- [x] update: [main reusable workflow](../../../../../.github/workflows/ci.yml): remove the `lint_exclude` workflow-call input and invoke the linter chain without exclusion environment values or arguments (manual edit - no CLI available)
+- [x] update: [pull-request reusable workflow](../../../../../.github/workflows/ci_pr.yml): remove the `lint_exclude` workflow-call input and stop forwarding it to the main reusable workflow (manual edit - no CLI available)
 
 ## Construction
 
-- [x] update: [scripts/lint-all.sh](../../../scripts/lint-all.sh)
+- [x] update: [scripts/lint-all.sh](../../../../../scripts/lint-all.sh)
   - remove the `--exclude` usage contract, argument parsing, path normalization, module filtering, and explicit-exclusion summary output
   - retain `.nolint` ancestor detection as the only configurable exclusion path while preserving module discovery, built-in directory pruning, failure aggregation, and summary behavior
-- [x] update: [scripts/run-linters.sh](../../../scripts/run-linters.sh)
+- [x] update: [scripts/run-linters.sh](../../../../../scripts/run-linters.sh)
   - invoke `lint-all.sh` without forwarding command-line arguments
-- [x] update: [README.md](../../../README.md)
+- [x] update: [README.md](../../../../../README.md)
   - remove `lint_exclude` from the main and pull-request reusable-workflow examples
   - document empty `.nolint` marker files as the supported way to skip a directory and its descendant Go modules
 - [x] verify: lint exclusion removal and retained marker behavior
