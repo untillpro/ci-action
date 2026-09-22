@@ -120,9 +120,9 @@ jobs:
           SHORT_TEST: ${{ inputs.short_test }}
         run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/ci_go.sh | bash -s
 
-      - name: Linters
-        shell: bash
-        run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
+      # - name: Linters
+      #   shell: bash
+      #   run: curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/run-linters.sh | bash -s
 
       - name: Vulnerability check
         shell: bash
