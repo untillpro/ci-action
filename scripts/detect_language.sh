@@ -6,18 +6,7 @@
 
 set -Eeuo pipefail
 
-# Detect project language (go or node_js)
-
-tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t detectlang)
-cleanup() { rm -rf "$tmpdir"; }
-trap cleanup EXIT
-
-git config --global url.https://${github_token}@github.com/.insteadOf https://github.com/
-git init "$tmpdir/repo" >/dev/null 2>&1
-cd "$tmpdir/repo"
-git remote add origin "https://github.com/${GITHUB_REPOSITORY}" >/dev/null 2>&1
-git fetch --depth=1 origin "$GITHUB_SHA" >/dev/null 2>&1
-git checkout FETCH_HEAD >/dev/null 2>&1
+# Detect project language (go or node_js) in the current checkout.
 
 if [ -f "go.mod" ]; then
     echo "go"

@@ -28,22 +28,6 @@ jobs:
     outputs:
       language: ${{ steps.detect-language.outputs.language }}
     steps:
-      - name: Detect language
-        id: detect-language
-        shell: bash
-        env:
-          github_token: ${{ secrets.reporeading_token }}
-        run: |
-          set -Eeuo pipefail
-          LANGUAGE=$(curl -s https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/detect_language.sh | bash)
-          echo "Detected language: $LANGUAGE"
-          if [ "$LANGUAGE" = "unknown" ]; then
-            echo "Error: project language unknown" >&2
-            exit 1
-          fi
-          echo "LANGUAGE=$LANGUAGE" >> "$GITHUB_ENV"
-          echo "language=$LANGUAGE" >> "$GITHUB_OUTPUT"
-
       - name: Checkout (if not yet)
         uses: actions/checkout@v5
         if: ${{ hashFiles('.git/HEAD') == '' }} # checkout only if not checked out yet
@@ -53,6 +37,20 @@ jobs:
           submodules: true
           path: ${{ inputs.path }}
           fetch-depth: 0 # note: 0 need to make check_copyright.sh work properly (getting diff between PR and main)
+
+      - name: Detect language
+        id: detect-language
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          LANGUAGE=$(curl -fsSL https://raw.githubusercontent.com/untillpro/ci-action/main/scripts/detect_language.sh | bash)
+          echo "Detected language: $LANGUAGE"
+          if [ "$LANGUAGE" = "unknown" ]; then
+            echo "Error: project language unknown" >&2
+            exit 1
+          fi
+          echo "LANGUAGE=$LANGUAGE" >> "$GITHUB_ENV"
+          echo "language=$LANGUAGE" >> "$GITHUB_OUTPUT"
 
       - name: Check hidden folders
         shell: bash

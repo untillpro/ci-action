@@ -27,8 +27,8 @@ jobs:
 
 **Job 1: `validate-code`**
 
-1. Detects project language (Go or Node.js)
-2. Checks out code
+1. Checks out code (the PR head commit for pull request events)
+2. Detects project language (Go or Node.js) from that checkout
 3. Checks hidden folders (no `.folder` allowed)
 4. Checks bash script headers (`#!/usr/bin/env bash` + `set -Eeuo pipefail`)
 5. Checks copyright notices
@@ -152,10 +152,12 @@ Located in `scripts/` directory and called directly via `curl` from workflows.
 
 | Script                 | Purpose                                      |
 | ---------------------- | -------------------------------------------- |
-| `detect_language.sh`   | Auto-detect project language (Go or Node.js) |
+| `detect_language.sh`   | Detect Go/Node.js in the current checkout    |
 | `detect-go-version.sh` | Detect Go version from `go.work`/`go.mod`    |
 | `ci_go.sh`             | Run Go tests with private repo access        |
 | `ci_node_js.sh`        | Run Node.js tests                            |
+
+Run `detect_language.sh` from the checked-out project root.
 
 ### Validation Scripts
 
